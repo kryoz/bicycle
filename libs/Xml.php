@@ -2,22 +2,22 @@
 class Xml extends DOMDocument{
 
     private
-    $_xpath = false,
-    $_xpath_xml = false;
+    	$_xpath = false,
+    	$_xpath_xml = false;
     public
-    $formatOutput = true,
-    $preserveWhiteSpace = false;
+    	$formatOutput = true,
+    	$preserveWhiteSpace = false;
 
 
 
     /**
-     * СЃРѕР·РґР°РµС‚ xml РґРѕРєСѓРјРµРЅС‚ РёР· РјР°СЃСЃРёРІР°
+     * создает xml документ из массива
      *
-     * РґР»СЏ РїРµСЂРµРґР°С‡Рё Р°С‚СЂРёР±СѓС‚РѕРІ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РјР°СЃСЃРёРІ СЃ РєР»СЋС‡РµРј "_xml_attr"
-     * РЅР°РїСЂ. foo => array( "_xml_attr" => array( id => 40 ) ) РІРµСЂРЅРµС‚ <foo "id"="40" />
+     * для передачи атрибутов используется массив с ключем "_xml_attr"
+     * напр. foo => array( "_xml_attr" => array( id => 40 ) ) вернет <foo "id"="40" />
      *
-     * @param mixed $xml xml РѕР±СЉРµРєС‚ РёР»Рё null
-     * @param array $arr РјР°СЃСЃРёРІ Р»РґР»СЏ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ
+     * @param mixed $xml xml объект или null
+     * @param array $arr массив лдля преобразования
      *
      * @return object $xml
      */
@@ -107,20 +107,20 @@ class Xml extends DOMDocument{
 
 
     /**
-     * РєРѕРЅРІРµСЂС‚РёСЂСѓРµРј xml РІ РјР°СЃСЃРёРІ
+     * конвертируем xml в массив
      *
-     * @todo РїСЂРѕРґСѓРјР°С‚СЊ РєСЌС€РёСЂРѕРІР°РЅРёРµ $zeroed_array!!!
+     * @todo продумать кэширование $zeroed_array!!!
      *
      * @param object $xml
-     * @param string $zeroed_anyway СЃС‚СЂРѕРєР° СЃ РёРјРµРЅР°РјРё СѓР·Р»РѕРІ (С‡РµСЂРµР· РїСЂРѕР±РµР») - РёСЃРєРѕСЋС‡РµРЅРёР№ РґР»СЏ "СЃС…Р»РѕРїС‹РІР°РЅРёСЏ"
-     * @param boolean $lowercase_keys РїРµСЂРµРІРµСЃС‚Рё РєР»СЋС‡Рё РІ РЅРёР¶РЅРёР№ СЂРµРіРёСЃС‚СЂ
+     * @param string $zeroed_anyway строка с именами узлов (через пробел) - искоючений для "схлопывания"
+     * @param boolean $lowercase_keys перевести ключи в нижний регистр
      * @return array
      */
     public function xml2array( $xml, $zeroed_anyway = '', $lowercase_keys = true ){
 
 	$zeroed_anyway = ' ' . $zeroed_anyway . ' ';
 
-	// РєРѕСЂРЅРµРІРѕР№ СѓР·РµР»
+	// корневой узел
 	if( $xml->nodeType == XML_TEXT_NODE ){
 
 	    return $xml->nodeValue;
@@ -204,10 +204,10 @@ class Xml extends DOMDocument{
 	            $xml2array = $this->xml2array( $child, $zeroed_anyway, $lowercase_keys );
 
 	            if( mb_strpos( $zeroed_anyway, ' ' . $child_nodeName . ' ' )
-	                    // РёР»Рё Сѓ СЃР»РµРґСѓСЋС‰РµРіРѕ СЃРѕСЃРµРґР° С‚Р°РєРѕРµ Р¶Рµ РёРјСЏ РЅРѕРґР°
+	                    // или у следующего соседа такое же имя нода
 	                    or ( $child->nextSibling and $child->nextSibling->nodeName == $child->nodeName ) ){
 
-	                    // С‚Рѕ СЃРѕР±РёСЂР°РµРј РІ СЃРїРёСЃРѕРє
+	                    // то собираем в список
 	                $res[ $child_nodeName ][ ] = $xml2array;
 
 	            }
@@ -233,7 +233,7 @@ class Xml extends DOMDocument{
 	            }
 	        }
 		}
-		// РЅРµС‚ РґРѕС‡РµСЂРЅРёС… СЌР»РµРјРµРЅС‚РѕРІ
+		// нет дочерних элементов
 		else{
 			$res = $xml->nodeName;
 		}
@@ -245,7 +245,7 @@ class Xml extends DOMDocument{
 
 
     /**
-     * @todo Р·Р°РµРЅРёС‚СЊ СЌС‚РѕС‚ Р±СЂРµРґ РЅР° С‡С‚Рѕ-РЅРёС‚СЊ РїСЂРёСЃС‚РѕР№РЅРѕРµ!!!!
+     * @todo заенить этот бред на что-нить пристойное!!!!
      */
     public function xpath_init( $xml ){
 

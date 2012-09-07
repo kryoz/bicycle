@@ -97,7 +97,7 @@ class View {
         }
         catch (Exception $e)
         {
-            Debug::log('VIEW CLASS error!<br>Line:'.$e->getLine().'<br>Message: '.$e->getMessage().'<br>');
+            Debug::log('VIEW CLASS error!<br>Message: '.$e->getMessage().'<br>');
         }
         
         header('Content-Type: text/html; charset='.CODEPAGE);
