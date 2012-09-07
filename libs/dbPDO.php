@@ -1,6 +1,6 @@
 <?php
 /**
- * Класс работы с БД SQLite через PDO
+ * Класс работы с БД через PDO
  * Вызывать следует через dbDBO::getInstance()
  * @author Кубинцев А.Н.
  */
@@ -17,19 +17,21 @@ class dbPDO
      * @param string $db Адресная строка для подключения БД
      * @throws Exception
      */
-    function __construct($scheme = SCHEME, $db = DBADRESS, $user = DBUSER, $pass = DBPASS) 
+    private function __construct($scheme = SCHEME, $db = DBADRESS, $user = DBUSER, $pass = DBPASS) 
     {
-        if ( $scheme == 'sqlite' && !file_exists($db)) {
-            throw new Exception("Database {$db} is not accessible!");
-        }
         
-        try {
+        try 
+        {
+            if ( $scheme == 'sqlite' && !file_exists($db)) {
+                throw new Exception("Database {$db} is not accessible!");
+            }
+
             $this->dbh = new PDO($scheme . ':' . $db, $user, $pass);
             $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } 
         catch (PDOException $e) 
         {
-            Debug::log('SQL error: '.$e->getMessage());
+            die('SQL error: '.$e->getMessage());
         }
     }
 

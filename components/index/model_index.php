@@ -13,6 +13,4 @@ class Model_Index
             $data[] = rand(1, 1000);
         return $data;
     }
-    
-    /
 }

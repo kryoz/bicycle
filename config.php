@@ -1,5 +1,5 @@
 <?php
-define ('DEBUG', false);
+define ('DEBUG', true);
 
 define ('DOCROOT', $_SERVER['DOCUMENT_ROOT']); // Корень сайта
 define ('DS', DIRECTORY_SEPARATOR);
@@ -12,13 +12,13 @@ define ('CACHEDIR', ROOT.'cache'.DS); // Путь для файлов кэша
 define ('CACHETTL', 86400*7); // Время жизни кэша. 0 - чтобы отключить
 define ('CODEPAGE', 'utf-8'); // Кодировка HTML
 define ('INNERCODEPAGE', 'utf-8'); // Кодировка БД и строковых преобразований
-define ('URLROOT', '/appfolder/'); // Корень приложения (URL)
+define ('URLROOT', '/bicycle/'); // Корень приложения (URL)
 
 /* Данные для подключения БД */
 define ('SCHEME', 'mysql'); 
-define ('DBADRESS', 'dbname=testdb;host=localhost');
-define ('DBUSER', 'mylogin');
-define ('DBPASS', 'mypass');
+define ('DBADRESS', 'dbname=test;host=localhost');
+define ('DBUSER', 'admin');
+define ('DBPASS', '');
 
 if (DEBUG)
 {

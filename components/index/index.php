@@ -8,7 +8,7 @@ class Controller_index extends Controller_Base
         $model = $this->model;
         $view = $this->view;
         
-        $vars['title'] = 'Бронирование авиабилетов на все направления';
+        $vars['title'] = 'Тест. Вывод рандомного массива из 20 элементов';
         $vars['args'] = $args;
         $vars['data'] = $model->test();
 
