@@ -1,0 +1,151 @@
+/* 
+    Document   : catalog.css
+    Created on : 07.09.2012, 11:27:45
+    Author     : kubintsev
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+#davssearchform table {
+    border-collapse: collapse;
+}
+table, body {
+    font: 11px Verdana, Tahoma, Arial, Helvetica, sans-serif;
+    border-spacing: 0px !important;
+    xmargin: 0px;
+}
+input {
+    outline: none;
+}
+#davssearchform div.top_bord {
+    background: #F5F6FA;
+    border-right: 1px solid #D9DADD;
+    border-left: 1px solid #D9DADD;
+    border-bottom: 1px solid #D9DADD;
+    border-radius: 0 0 10px 10px;
+}
+#davssearchform div.right_bord {
+    border : none;
+}
+#davssearchform .botbg {
+    background: none;
+}
+#davssearchform .sm td.right_bord {
+    background:none;
+}
+#davssearchform .sm td.right_bord:first-child {
+    border-right: 1px solid #D9DADD;
+}
+.depart_time_big {
+    font: 16pt Arial;
+    font-weight: bold;
+}
+#davssearchform .txt {
+    display: inline-block;
+    padding: 0px 0 0 10px;
+    vertical-align: middle;
+}
+#davssearchform .good {
+    margin-bottom: 10px;
+}
+#davssearchform .good {
+    width: 100%;
+}
+
+#davssearchform .good td.first {
+    padding-left: 40px;
+    width: 50px;
+}
+#davssearchform .good td {
+    padding: 2px 5px 2px 0px;
+}
+#davssearchform td {
+    font: 12px arial;
+    border-collapse: collapse;
+}
+#davssearchform .pad {
+    display: inline-block;
+    width: 9px;
+    text-align: center;
+    padding: 10px 16px 10px 8px;
+    vertical-align: middle;
+}
+#davssearchform .r {
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    vertical-align: middle;
+}
+#davssearchform .bbot7px {
+    height: 7px;
+}
+#davssearchform .jqTransformRadioWrapper {
+    margin: 0px;
+    width: 30px;
+}
+
+
+/* "MATRIX" */
+.matrix_main
+{
+	overflow:hidden;
+        margin-bottom: 2em;
+}
+
+.matrix_main table td
+{
+	width:120px;
+	height:40px;
+	text-align:center;
+}
+.matrix_main .td1:first-child {
+    border-left:none;
+}
+.matrix_main .td1 {
+    border:1px solid #d0d1d5;
+    border-right:none;
+}
+.matrix_main .td2:first-child {
+    border-left:none;
+}
+.matrix_main .td2 {
+    border-left:1px solid #d0d1d5;
+}
+.matrix_main .matrix_header
+{
+	position:relative;
+	border:1px solid #d0d1d5;
+	border-bottom:none;
+	background-color:#e7e7ef;
+	height:20px;
+	padding-top:6px;
+}
+.matrix_main .roll_block
+{
+	border-right:1px solid #d0d1d5;
+	border-left:1px solid #d0d1d5;
+        border-bottom: 1px solid #D9DADD;
+        border-radius: 0 0 10px 10px;
+}
+
+
+.matrix_header_text
+{
+	width:100%;
+	text-align:center;
+	font-weight:bold;
+}
+
+.ui-datepicker-trigger {
+    cursor: pointer;
+    position: absolute;
+    right: -25px;
+    top: 3px;
+}
+.ui-datepicker-trigger {
+    right: -15px !important;
+}
+
+#davssearchform #calendar_1, #davssearchform #calendar_2 {
+    left: auto;
+}
