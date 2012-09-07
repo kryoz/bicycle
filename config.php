@@ -10,8 +10,8 @@ define ('GLOBALVIEWS', ROOT.'tmpl'.DS); // Путь к глобальным ша
 
 define ('CACHEDIR', ROOT.'cache'.DS); // Путь для файлов кэша
 define ('CACHETTL', 86400*7); // Время жизни кэша. 0 - чтобы отключить
-define ('CODEPAGE', 'windows-1251'); // Кодировка HTML
-define ('INNERCODEPAGE', 'cp1251'); // Кодировка БД и строковых преобразований
+define ('CODEPAGE', 'utf-8'); // Кодировка HTML
+define ('INNERCODEPAGE', 'utf-8'); // Кодировка БД и строковых преобразований
 define ('URLROOT', '/appfolder/'); // Корень приложения (URL)
 
 /* Данные для подключения БД */
