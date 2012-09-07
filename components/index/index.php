@@ -8,7 +8,7 @@ class Controller_index extends Controller_Base
         $model = $this->model;
         $view = $this->view;
         
-        $vars['title'] = 'Áğîíèğîâàíèå àâèàáèëåòîâ íà âñå íàïğàâëåíèÿ';
+        $vars['title'] = 'Ğ‘Ñ€Ğ¾Ğ½Ğ¸Ñ€Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğµ Ğ°Ğ²Ğ¸Ğ°Ğ±Ğ¸Ğ»ĞµÑ‚Ğ¾Ğ² Ğ½Ğ° Ğ²ÑĞµ Ğ½Ğ°Ğ¿Ñ€Ğ°Ğ²Ğ»ĞµĞ½Ğ¸Ñ';
         $vars['args'] = $args;
         $vars['data'] = $model->test();
 

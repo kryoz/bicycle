@@ -12,7 +12,7 @@ $datacount = count($data);
 
 foreach ( $data as $letter=>$group )
 {
-    if ( ord($letter) > ord('Н') && $column == 1 && $datacount > 1)
+    if ( ord($letter) > ord('Рќ') && $column == 1 && $datacount > 1)
     {
         $column++;
         echo '</td><td valign="top" width="50%">';
@@ -21,7 +21,7 @@ foreach ( $data as $letter=>$group )
     echo "<h4>$letter</h4>";
     
     foreach ($group as $item)
-        echo '<a href="'.Controller_index::makeURL($item['CountryCode']).'">Авиабилеты в '.$item['CountryName']."</a><br>";
+        echo '<a href="'.Controller_index::makeURL($item['CountryCode']).'">РђРІРёР°Р±РёР»РµС‚С‹ РІ '.$item['CountryName']."</a><br>";
 }
 ?>
             </td>

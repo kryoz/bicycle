@@ -1,8 +1,8 @@
 <?php
 /**
- * Êëàññ ðàáîòû ñ ÁÄ SQLite ÷åðåç PDO
- * Âûçûâàòü ñëåäóåò ÷åðåç dbDBO::getInstance()
- * @author Êóáèíöåâ À.Í.
+ * ÐšÐ»Ð°ÑÑ Ñ€Ð°Ð±Ð¾Ñ‚Ñ‹ Ñ Ð‘Ð” SQLite Ñ‡ÐµÑ€ÐµÐ· PDO
+ * Ð’Ñ‹Ð·Ñ‹Ð²Ð°Ñ‚ÑŒ ÑÐ»ÐµÐ´ÑƒÐµÑ‚ Ñ‡ÐµÑ€ÐµÐ· dbDBO::getInstance()
+ * @author ÐšÑƒÐ±Ð¸Ð½Ñ†ÐµÐ² Ð.Ð.
  */
 
 class dbPDO
@@ -13,8 +13,8 @@ class dbPDO
     
     /**
      * 
-     * @param string $scheme Òèï ÁÄ
-     * @param string $db Àäðåñíàÿ ñòðîêà äëÿ ïîäêëþ÷åíèÿ ÁÄ
+     * @param string $scheme Ð¢Ð¸Ð¿ Ð‘Ð”
+     * @param string $db ÐÐ´Ñ€ÐµÑÐ½Ð°Ñ ÑÑ‚Ñ€Ð¾ÐºÐ° Ð´Ð»Ñ Ð¿Ð¾Ð´ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸Ñ Ð‘Ð”
      * @throws Exception
      */
     function __construct($scheme = SCHEME, $db = DBADRESS, $user = DBUSER, $pass = DBPASS) 
@@ -52,7 +52,7 @@ class dbPDO
     }
     
     /**
-     * Çàïðîñ ñ ïîëó÷åíèåì äàííûõ
+     * Ð—Ð°Ð¿Ñ€Ð¾Ñ Ñ Ð¿Ð¾Ð»ÑƒÑ‡ÐµÐ½Ð¸ÐµÐ¼ Ð´Ð°Ð½Ð½Ñ‹Ñ…
      * @param string $sql
      * @param array $params
      * @param int $fetchFlags
@@ -77,10 +77,10 @@ class dbPDO
     }
 
     /**
-     * Çàïðîñ áåç ïîëó÷åíèÿ äàííûõ
+     * Ð—Ð°Ð¿Ñ€Ð¾Ñ Ð±ÐµÐ· Ð¿Ð¾Ð»ÑƒÑ‡ÐµÐ½Ð¸Ñ Ð´Ð°Ð½Ð½Ñ‹Ñ…
      * @param string $sql
      * @param array $params
-     * @return int Âîçâðàùàåò ïîñëåäèé çàòðîíóòûé row_id
+     * @return int Ð’Ð¾Ð·Ð²Ñ€Ð°Ñ‰Ð°ÐµÑ‚ Ð¿Ð¾ÑÐ»ÐµÐ´Ð¸Ð¹ Ð·Ð°Ñ‚Ñ€Ð¾Ð½ÑƒÑ‚Ñ‹Ð¹ row_id
      */
     public function exec( $sql, array $params = array() ) 
     {

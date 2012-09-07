@@ -1,20 +1,20 @@
 <?php
 define ('DEBUG', false);
 
-define ('DOCROOT', $_SERVER['DOCUMENT_ROOT']); // Êîðåíü ñàéòà
+define ('DOCROOT', $_SERVER['DOCUMENT_ROOT']); // ÐšÐ¾Ñ€ÐµÐ½ÑŒ ÑÐ°Ð¹Ñ‚Ð°
 define ('DS', DIRECTORY_SEPARATOR);
-define ('ROOT', dirname(__FILE__).DS); // Êîðåíü ïðèëîæåíèÿ â ôàéëîâîé ñèñòåìå
+define ('ROOT', dirname(__FILE__).DS); // ÐšÐ¾Ñ€ÐµÐ½ÑŒ Ð¿Ñ€Ð¸Ð»Ð¾Ð¶ÐµÐ½Ð¸Ñ Ð² Ñ„Ð°Ð¹Ð»Ð¾Ð²Ð¾Ð¹ ÑÐ¸ÑÑ‚ÐµÐ¼Ðµ
 define ('COMPONENTS', ROOT.'components'.DS); 
-define ('LIBS', ROOT.'libs'.DS); // Ïóòü äëÿ àâòîçàãðóçêè êëàññîâ
-define ('GLOBALVIEWS', ROOT.'tmpl'.DS); // Ïóòü ê ãëîáàëüíûì øàáëîíàì
+define ('LIBS', ROOT.'libs'.DS); // ÐŸÑƒÑ‚ÑŒ Ð´Ð»Ñ Ð°Ð²Ñ‚Ð¾Ð·Ð°Ð³Ñ€ÑƒÐ·ÐºÐ¸ ÐºÐ»Ð°ÑÑÐ¾Ð²
+define ('GLOBALVIEWS', ROOT.'tmpl'.DS); // ÐŸÑƒÑ‚ÑŒ Ðº Ð³Ð»Ð¾Ð±Ð°Ð»ÑŒÐ½Ñ‹Ð¼ ÑˆÐ°Ð±Ð»Ð¾Ð½Ð°Ð¼
 
-define ('CACHEDIR', ROOT.'cache'.DS); // Ïóòü äëÿ ôàéëîâ êýøà
-define ('CACHETTL', 86400*7); // Âðåìÿ æèçíè êýøà. 0 - ÷òîáû îòêëþ÷èòü
-define ('CODEPAGE', 'windows-1251'); // Êîäèðîâêà HTML
-define ('INNERCODEPAGE', 'cp1251'); // Êîäèðîâêà ÁÄ è ñòðîêîâûõ ïðåîáðàçîâàíèé
-define ('URLROOT', '/appfolder/'); // Êîðåíü ïðèëîæåíèÿ (URL)
+define ('CACHEDIR', ROOT.'cache'.DS); // ÐŸÑƒÑ‚ÑŒ Ð´Ð»Ñ Ñ„Ð°Ð¹Ð»Ð¾Ð² ÐºÑÑˆÐ°
+define ('CACHETTL', 86400*7); // Ð’Ñ€ÐµÐ¼Ñ Ð¶Ð¸Ð·Ð½Ð¸ ÐºÑÑˆÐ°. 0 - Ñ‡Ñ‚Ð¾Ð±Ñ‹ Ð¾Ñ‚ÐºÐ»ÑŽÑ‡Ð¸Ñ‚ÑŒ
+define ('CODEPAGE', 'windows-1251'); // ÐšÐ¾Ð´Ð¸Ñ€Ð¾Ð²ÐºÐ° HTML
+define ('INNERCODEPAGE', 'cp1251'); // ÐšÐ¾Ð´Ð¸Ñ€Ð¾Ð²ÐºÐ° Ð‘Ð” Ð¸ ÑÑ‚Ñ€Ð¾ÐºÐ¾Ð²Ñ‹Ñ… Ð¿Ñ€ÐµÐ¾Ð±Ñ€Ð°Ð·Ð¾Ð²Ð°Ð½Ð¸Ð¹
+define ('URLROOT', '/appfolder/'); // ÐšÐ¾Ñ€ÐµÐ½ÑŒ Ð¿Ñ€Ð¸Ð»Ð¾Ð¶ÐµÐ½Ð¸Ñ (URL)
 
-/* Äàííûå äëÿ ïîäêëþ÷åíèÿ ÁÄ */
+/* Ð”Ð°Ð½Ð½Ñ‹Ðµ Ð´Ð»Ñ Ð¿Ð¾Ð´ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸Ñ Ð‘Ð” */
 define ('SCHEME', 'mysql'); 
 define ('DBADRESS', 'dbname=testdb;host=localhost');
 define ('DBUSER', 'mylogin');

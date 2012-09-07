@@ -1,16 +1,16 @@
 <?php
 /**
- * Êîðíåâîé ôàéë ïàðàäèãìû MVC
- * @author Êóáèíöåâ À.Í.
+ * ÐšÐ¾Ñ€Ð½ÐµÐ²Ð¾Ð¹ Ñ„Ð°Ð¹Ð» Ð¿Ð°Ñ€Ð°Ð´Ð¸Ð³Ð¼Ñ‹ MVC
+ * @author ÐšÑƒÐ±Ð¸Ð½Ñ†ÐµÐ² Ð.Ð.
  */
 
 require_once 'config.php';
 require_once LIBS.'Debug.php';
-require_once LIBS.'functions.php'; // ãëîáàëüíûå áåñêëàññîâûå ôóíêöèè
+require_once LIBS.'functions.php'; // Ð³Ð»Ð¾Ð±Ð°Ð»ÑŒÐ½Ñ‹Ðµ Ð±ÐµÑÐºÐ»Ð°ÑÑÐ¾Ð²Ñ‹Ðµ Ñ„ÑƒÐ½ÐºÑ†Ð¸Ð¸
 
 class App 
 {
-    // Ìåòîä àâòîçàãðóçêè êëàññîâ
+    // ÐœÐµÑ‚Ð¾Ð´ Ð°Ð²Ñ‚Ð¾Ð·Ð°Ð³Ñ€ÑƒÐ·ÐºÐ¸ ÐºÐ»Ð°ÑÑÐ¾Ð²
     public static function ClassLoader($class_name) 
     {
         $filename = $class_name . '.php';
@@ -25,7 +25,7 @@ class App
     
     public static function Run()
     {
-        // Ðåãèñòðàöèÿ ìåòîäà àâòîçàãðóçêè êëàññîâ
+        // Ð ÐµÐ³Ð¸ÑÑ‚Ñ€Ð°Ñ†Ð¸Ñ Ð¼ÐµÑ‚Ð¾Ð´Ð° Ð°Ð²Ñ‚Ð¾Ð·Ð°Ð³Ñ€ÑƒÐ·ÐºÐ¸ ÐºÐ»Ð°ÑÑÐ¾Ð²
         spl_autoload_register( array('App', 'ClassLoader') );
         
         $router = new Router();

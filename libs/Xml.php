@@ -11,13 +11,13 @@ class Xml extends DOMDocument{
 
 
     /**
-     * создает xml документ из массива
+     * СЃРѕР·РґР°РµС‚ xml РґРѕРєСѓРјРµРЅС‚ РёР· РјР°СЃСЃРёРІР°
      *
-     * для передачи атрибутов используется массив с ключем "_xml_attr"
-     * напр. foo => array( "_xml_attr" => array( id => 40 ) ) вернет <foo "id"="40" />
+     * РґР»СЏ РїРµСЂРµРґР°С‡Рё Р°С‚СЂРёР±СѓС‚РѕРІ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РјР°СЃСЃРёРІ СЃ РєР»СЋС‡РµРј "_xml_attr"
+     * РЅР°РїСЂ. foo => array( "_xml_attr" => array( id => 40 ) ) РІРµСЂРЅРµС‚ <foo "id"="40" />
      *
-     * @param mixed $xml xml объект или null
-     * @param array $arr массив лдля преобразования
+     * @param mixed $xml xml РѕР±СЉРµРєС‚ РёР»Рё null
+     * @param array $arr РјР°СЃСЃРёРІ Р»РґР»СЏ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ
      *
      * @return object $xml
      */
@@ -107,20 +107,20 @@ class Xml extends DOMDocument{
 
 
     /**
-     * конвертируем xml в массив
+     * РєРѕРЅРІРµСЂС‚РёСЂСѓРµРј xml РІ РјР°СЃСЃРёРІ
      *
-     * @todo продумать кэширование $zeroed_array!!!
+     * @todo РїСЂРѕРґСѓРјР°С‚СЊ РєСЌС€РёСЂРѕРІР°РЅРёРµ $zeroed_array!!!
      *
      * @param object $xml
-     * @param string $zeroed_anyway строка с именами узлов (через пробел) - искоючений для "схлопывания"
-     * @param boolean $lowercase_keys перевести ключи в нижний регистр
+     * @param string $zeroed_anyway СЃС‚СЂРѕРєР° СЃ РёРјРµРЅР°РјРё СѓР·Р»РѕРІ (С‡РµСЂРµР· РїСЂРѕР±РµР») - РёСЃРєРѕСЋС‡РµРЅРёР№ РґР»СЏ "СЃС…Р»РѕРїС‹РІР°РЅРёСЏ"
+     * @param boolean $lowercase_keys РїРµСЂРµРІРµСЃС‚Рё РєР»СЋС‡Рё РІ РЅРёР¶РЅРёР№ СЂРµРіРёСЃС‚СЂ
      * @return array
      */
     public function xml2array( $xml, $zeroed_anyway = '', $lowercase_keys = true ){
 
 	$zeroed_anyway = ' ' . $zeroed_anyway . ' ';
 
-	// корневой узел
+	// РєРѕСЂРЅРµРІРѕР№ СѓР·РµР»
 	if( $xml->nodeType == XML_TEXT_NODE ){
 
 	    return $xml->nodeValue;
@@ -204,10 +204,10 @@ class Xml extends DOMDocument{
 	            $xml2array = $this->xml2array( $child, $zeroed_anyway, $lowercase_keys );
 
 	            if( mb_strpos( $zeroed_anyway, ' ' . $child_nodeName . ' ' )
-	                    // или у следующего соседа такое же имя нода
+	                    // РёР»Рё Сѓ СЃР»РµРґСѓСЋС‰РµРіРѕ СЃРѕСЃРµРґР° С‚Р°РєРѕРµ Р¶Рµ РёРјСЏ РЅРѕРґР°
 	                    or ( $child->nextSibling and $child->nextSibling->nodeName == $child->nodeName ) ){
 
-	                    // то собираем в список
+	                    // С‚Рѕ СЃРѕР±РёСЂР°РµРј РІ СЃРїРёСЃРѕРє
 	                $res[ $child_nodeName ][ ] = $xml2array;
 
 	            }
@@ -233,7 +233,7 @@ class Xml extends DOMDocument{
 	            }
 	        }
 		}
-		// нет дочерних элементов
+		// РЅРµС‚ РґРѕС‡РµСЂРЅРёС… СЌР»РµРјРµРЅС‚РѕРІ
 		else{
 			$res = $xml->nodeName;
 		}
@@ -245,7 +245,7 @@ class Xml extends DOMDocument{
 
 
     /**
-     * @todo заенить этот бред на что-нить пристойное!!!!
+     * @todo Р·Р°РµРЅРёС‚СЊ СЌС‚РѕС‚ Р±СЂРµРґ РЅР° С‡С‚Рѕ-РЅРёС‚СЊ РїСЂРёСЃС‚РѕР№РЅРѕРµ!!!!
      */
     public function xpath_init( $xml ){
 
