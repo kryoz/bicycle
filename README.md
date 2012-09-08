@@ -2,7 +2,7 @@ This is very simple framework which should satisfy for purposes of:
 <ul>
 <li>creation of pages with SEF URL hierarhy
 <li>simple page structure (no support for modules or plugins yet)
-<li>JAX capability
+<li>AJAX capability
 <li>various databases support via PDO
 <li>caching capability
 <li>XML parsing functionality
