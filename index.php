@@ -1,19 +1,24 @@
 <?php
 /**
- * Корневой файл парадигмы MVC
- * @author Кубинцев А.Н.
+ * The entry of MVC framework
+ * Please take a look in config.php before launching application
+ * @author kubintsev
  */
 
 require_once 'config.php';
-require_once LIBS.'Debug.php';
-require_once LIBS.'functions.php'; // глобальные бесклассовые функции
+require_once LIBS.'debug.php';
+require_once LIBS.'functions.php'; // simple global functions
 
 class App 
 {
-    // Метод автозагрузки классов
+    /**
+     * Autoloader for shared classes
+     * @param string $class_name
+     * @return boolean
+     */
     public static function ClassLoader($class_name) 
     {
-        $filename = $class_name . '.php';
+        $filename = strtolower($class_name) . '.php';
         $file = LIBS . $filename;
 
         if (file_exists($file) == false) {
@@ -21,11 +26,11 @@ class App
                 return false;
         }
         require_once ($file);
+        return true;
     }
     
     public static function Run()
     {
-        // Регистрация метода автозагрузки классов
         spl_autoload_register( array('App', 'ClassLoader') );
         
         $router = new Router();

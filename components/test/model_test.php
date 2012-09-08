@@ -3,7 +3,7 @@ class Model_test
 {
 	function anothertest()
 	{
-		$db = dbPDO::getInstance();
+		$db = DB::getInstance();
 
 		$params = array("param1"=>"asd", "param2" => "qwerty");
 

@@ -8,11 +8,12 @@ class Controller_index extends Controller_Base
         $model = $this->model;
         $view = $this->view;
         
-        $vars['title'] = 'Тест. Вывод рандомного массива из 20 элементов';
+        $vars['title'] = 'Example to show work of caching';
         $vars['args'] = $args;
-        $vars['data'] = $model->test();
+        $vars['prev'] = $model->getCache();
+        $vars['data'] = $model->generate();
 
-        $view->loadTemplate("countrylist"); 
+        $view->loadTemplate("cache"); 
 
         $view->loadVars($vars)->render();
 
