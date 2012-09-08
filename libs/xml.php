@@ -8,8 +8,6 @@ class Xml extends DOMDocument{
     	$formatOutput = true,
     	$preserveWhiteSpace = false;
 
-
-
     /**
      * создает xml документ из массива
      *
@@ -17,14 +15,12 @@ class Xml extends DOMDocument{
      * напр. foo => array( "_xml_attr" => array( id => 40 ) ) вернет <foo "id"="40" />
      *
      * @param mixed $xml xml объект или null
-     * @param array $arr массив лдля преобразования
+     * @param array $arr массив для преобразования
      *
      * @return object $xml
      */
-    public function array2xml( $xml = null, $arr = array( ) ){
-
-	//	dump( $xml );
-	//	dump( $arr, 1 );
+    public function array2xml( $xml = null, $arr = array( ) )
+    {
 
 		if( is_null( $xml ) ){
 
@@ -47,7 +43,6 @@ class Xml extends DOMDocument{
 
 			    foreach( $value as $k => $v ){
 
-//	                    dump( $key, 1 );
 					$a = $this->createAttribute( $k );
 					$a->appendChild( $this->createTextNode( (string) $v ) );
 
@@ -58,15 +53,11 @@ class Xml extends DOMDocument{
 			}
 
 
-//			dump( $key );
-
 			$n = $this->createElement( $key );
-
 
 
 			if( is_array( $value ) ){
 
-	//		    if( !empty( $value[ 0 ] ) ){
 			    if( array_key_exists( 0, $value ) ){
 
 				for( $i = 0, $c = sizeof( $value ); $i < $c; $i++ ){
@@ -179,7 +170,6 @@ class Xml extends DOMDocument{
 
 		if( $xml->hasChildNodes() ){
 
-//			$res = array();
 	        $children = $xml->childNodes;
 
 	        for( $i = 0, $c = $children->length; $i < $c; $i++ ){
@@ -241,72 +231,4 @@ class Xml extends DOMDocument{
 
 	return $res;
     }
-
-
-
-    /**
-     * @todo заенить этот бред на что-нить пристойное!!!!
-     */
-    public function xpath_init( $xml ){
-
-		if( !$this->_xpath ){
-
-		    $this->_xpath = new DOMXPath( $xml );
-		}
-    }
-
-
-
-    public function xpath( $path, $zeroed_anyway = '', $lowercase_keys = true ){
-
-		if( !$this->_xpath ){
-
-		    return false;
-		}
-
-		$remove_root = false;
-		if( mb_strpos( $path, '/*' ) == ( mb_strlen( $path ) - 2 ) ){
-
-		    $path = mb_substr( $path, 0, -2 );
-		    $remove_root = true;
-		}
-
-
-		$xpath = $this->_xpath->query( $path );
-
-		if( !isset( $xpath->item( 0 )->nodeName ) ){
-
-		    return false;
-		}
-
-		$root_name = $xpath->item( 0 )->nodeName;
-
-		$dom = new self();
-
-		for( $i = 0, $c = $xpath->length; $i < $c; $i++ ){
-
-		    $dom->appendChild( $dom->importNode( $xpath->item( $i ), true ) );
-		}
-
-		$a = $this->xml2array( $dom, $zeroed_anyway, $lowercase_keys );
-
-
-		if( $remove_root ){
-
-		    if( $lowercase_keys ){
-
-			$root_name = mb_strtolower( $root_name );
-		    }
-
-		    $a = $a[ $root_name ];
-		}
-
-
-	return $a;
-    }
-
-
-
-
-
 }

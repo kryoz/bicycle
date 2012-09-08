@@ -1,20 +1,20 @@
 <?php
 define ('DEBUG', true);
 
-define ('DOCROOT', $_SERVER['DOCUMENT_ROOT']); // Корень сайта
+define ('DOCROOT', $_SERVER['DOCUMENT_ROOT']); // root directory of the site
 define ('DS', DIRECTORY_SEPARATOR);
-define ('ROOT', dirname(__FILE__).DS); // Корень приложения в файловой системе
-define ('COMPONENTS', ROOT.'components'.DS); 
-define ('LIBS', ROOT.'libs'.DS); // Путь для автозагрузки классов
-define ('GLOBALVIEWS', ROOT.'tmpl'.DS); // Путь к глобальным шаблонам
+define ('ROOT', dirname(__FILE__).DS); // root of framework
+define ('COMPONENTS', ROOT.'components'.DS);  // path to your applications
+define ('LIBS', ROOT.'libs'.DS); // path to shared libraries
+define ('GLOBALVIEWS', ROOT.'tmpl'.DS); // path to global templates
 
-define ('CACHEDIR', ROOT.'cache'.DS); // Путь для файлов кэша
-define ('CACHETTL', 86400*7); // Время жизни кэша. 0 - чтобы отключить
-define ('CODEPAGE', 'utf-8'); // Кодировка HTML
-define ('INNERCODEPAGE', 'utf-8'); // Кодировка БД и строковых преобразований
-define ('URLROOT', '/bicycle/'); // Корень приложения (URL)
+define ('CACHEDIR', ROOT.'cache'.DS); 
+define ('CACHETTL', 86400*7); // cache time to live. '0' to disable 
+define ('CODEPAGE', 'utf-8'); // HTML codepage
+define ('INNERCODEPAGE', 'utf-8'); // inner codepage
+define ('URLROOT', '/bicycle/'); // URL path to framework
 
-/* Данные для подключения БД */
+/* DB connection settings */
 define ('SCHEME', 'mysql'); 
 define ('DBADRESS', 'dbname=test;host=localhost');
 define ('DBUSER', 'admin');

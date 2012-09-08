@@ -81,15 +81,16 @@ class View {
                 throw new Exception('"'.$template.'" not found!');
             }
             
-            extract($this->vars);
-
             $debug = DEBUG::getlog();
             
             if (DEBUG) {
                 $debug .= DEBUG::getmem();
             }
             
+            extract($this->vars);
+            
             ob_start();
+            
             require $template;
             
             $content = ob_get_contents();

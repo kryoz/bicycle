@@ -13,9 +13,7 @@ class Controller_index extends Controller_Base
         $vars['prev'] = $model->getCache();
         $vars['data'] = $model->generate();
 
-        $view->loadTemplate("cache"); 
-
-        $view->loadVars($vars)->render();
+        $view->loadTemplate("cache")->loadVars($vars)->render();
 
     }
 

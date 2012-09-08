@@ -23,7 +23,7 @@ Class Router {
         private function setPath($path) 
         {
             $path = $this->deSlash($path);
-            $path = DS.$path.DS;
+            $path = $path.DS;
 
             if (is_dir($path) == false) {
                     throw new Exception ('Invalid controller path: `' . $path . '`');

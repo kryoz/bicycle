@@ -1,9 +1,9 @@
 <?php
-/* Вспомогательные глобальные функции */
+/* small global functions */
 
 
 /**
- * Преобразование числа в соответствие с локалью для вывода на экран
+ * number formatting
  * @param mixed $number число
  */
 function numformat($number)
@@ -13,7 +13,7 @@ function numformat($number)
     return $n;
 }
 /**
- * Метод перевода в верхний регистр первой буквы в строке для любой локали
+ * upcase conversion for all encodings
  * @param string $str
  * @return string
  */
@@ -23,7 +23,7 @@ function mb_ucfirst($str)
 }
 
 /**
- * Вывести дату в русской словоформе
+ * Russian date
  * @return string
  */
 function rus_date() {
