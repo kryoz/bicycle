@@ -1,11 +1,11 @@
 <?php
 /**
- * Класс работы с БД через PDO
- * Вызывать следует через dbDBO::getInstance()
- * @author Кубинцев А.Н.
+ * Database class 
+ * Initialization via dbDBO::getInstance()
+ * @author kubintsev
  */
 
-class dbPDO
+class DB
 {
     private $dbh;
     private $transaction;
@@ -13,8 +13,8 @@ class dbPDO
     
     /**
      * 
-     * @param string $scheme Тип БД
-     * @param string $db Адресная строка для подключения БД
+     * @param string $scheme db type scheme
+     * @param string $db address string for connection
      * @throws Exception
      */
     private function __construct($scheme = SCHEME, $db = DBADRESS, $user = DBUSER, $pass = DBPASS) 
@@ -46,7 +46,7 @@ class dbPDO
     {
         if ( empty( self::$instance))
         {
-            self::$instance = new dbPDO();
+            self::$instance = new DB();
         } 
         
         return self::$instance;
@@ -54,7 +54,7 @@ class dbPDO
     }
     
     /**
-     * Запрос с получением данных
+     * query with data return
      * @param string $sql
      * @param array $params
      * @param int $fetchFlags
@@ -79,10 +79,10 @@ class dbPDO
     }
 
     /**
-     * Запрос без получения данных
+     * query without data return
      * @param string $sql
      * @param array $params
-     * @return int Возвращает последий затронутый row_id
+     * @return int last row_id
      */
     public function exec( $sql, array $params = array() ) 
     {
