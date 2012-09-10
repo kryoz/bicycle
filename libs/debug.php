@@ -9,6 +9,7 @@ class Debug
 {
     private static $mem = array();
     private static $log;
+    private static $timer = 0;
     
     public static function mem($step)
     {
@@ -51,5 +52,21 @@ class Debug
             $str .= "&nbsp;&nbsp;&nbsp;&nbsp;[$step] => ".round($mem/1048576, 2)."Mb<br />";
         }
         return $str;
+    }
+
+    public static function pstart($title = 'your code')
+    {
+        self::$timer['stamp'] = microtime(true);
+        self::$timer['title'] = $title;
+    }
+    
+    public static function pmeasure()
+    {
+        if ( !isset(self::$timer['stamp']))
+            self::$timer['stamp'] = microtime(true);
+            
+        self::$timer['stamp'] = microtime(true) - self::$timer['stamp'];
+        
+        Debug::log('PROFILER measured '.sprintf('%s sec', round(self::$timer['stamp'], 3)).' on '.self::$timer['title']);
     }
 }
