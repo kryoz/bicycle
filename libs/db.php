@@ -96,6 +96,7 @@ class DB
         return $this->dbh->lastInsertId();
     }
 
+
     public function explain( $sql, array $params = array())
     {
         $res = $this->query($sql, $params);
@@ -125,6 +126,13 @@ class DB
         
         return $html;
     }
+
+
+    public function o()
+    {
+        return $this->dbh;
+    }
+    
     
     public function begin()
     {
