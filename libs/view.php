@@ -84,7 +84,7 @@ class View {
             $debug = DEBUG::getlog();
             
             if (DEBUG) {
-                $debug .= DEBUG::getmem();
+                $debug .= '<br>'.DEBUG::getmem();
             }
             
             extract($this->vars);

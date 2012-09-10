@@ -8,17 +8,38 @@
 class Debug 
 {
     private static $mem = array();
+    private static $memcount = 0;
     private static $log;
-    private static $timer = 0;
+    private static $timer = array();
     
-    public static function mem($step)
+    public static function mem($step = false)
     {
+        if ( $step === false )
+            $step = self::$memcount;
+        
         self::$mem[$step] = memory_get_usage();
+        self::$memcount++;
     }
     
     public static function log($str)
     {
         self::$log[] = $str;
+    }
+    
+    public static function pstart($title = 'your code')
+    {
+        self::$timer['stamp'] = microtime(true);
+        self::$timer['title'] = $title;
+    }
+    
+    public static function pmeasure()
+    {
+        if ( !isset(self::$timer['stamp']))
+            self::$timer['stamp'] = microtime(true);
+            
+        self::$timer['stamp'] = microtime(true) - self::$timer['stamp'];
+        
+        Debug::log('PROFILER measured '.sprintf('%s sec', round(self::$timer['stamp'], 3)).' on '.self::$timer['title']);
     }
     
     public static function dprint($var, $echo = 0)
@@ -52,21 +73,5 @@ class Debug
             $str .= "&nbsp;&nbsp;&nbsp;&nbsp;[$step] => ".round($mem/1048576, 2)."Mb<br />";
         }
         return $str;
-    }
-
-    public static function pstart($title = 'your code')
-    {
-        self::$timer['stamp'] = microtime(true);
-        self::$timer['title'] = $title;
-    }
-    
-    public static function pmeasure()
-    {
-        if ( !isset(self::$timer['stamp']))
-            self::$timer['stamp'] = microtime(true);
-            
-        self::$timer['stamp'] = microtime(true) - self::$timer['stamp'];
-        
-        Debug::log('PROFILER measured '.sprintf('%s sec', round(self::$timer['stamp'], 3)).' on '.self::$timer['title']);
     }
 }
