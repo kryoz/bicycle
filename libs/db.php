@@ -95,6 +95,36 @@ class DB
         
         return $this->dbh->lastInsertId();
     }
+
+    public function explain( $sql, array $params = array())
+    {
+        $res = $this->query($sql, $params);
+        $html = '<table width="100%" border="1">';
+        
+        foreach ($res as $i=>$row)
+        {
+            $html .= "<tr>";
+            
+            if ( $i != 0 )
+            {
+                foreach ($row as $k=>$v)
+                {
+                    $html .= "<td>$v</td>";
+                }
+            } else {
+                foreach ($row as $k=>$v)
+                {
+                    $html .= "<th>$k</th>";
+                }
+            }
+            
+            $html .= "</tr>";
+        }
+        
+        $html .= '</table>';
+        
+        return $html;
+    }
     
     public function begin()
     {
