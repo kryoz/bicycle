@@ -7,8 +7,9 @@
 
 class DB
 {
+    private $scheme;
     private $dbh;
-    private $transaction;
+    private $result;
     private static $instance;
     
     /**
@@ -17,21 +18,23 @@ class DB
      * @param string $db address string for connection
      * @throws Exception
      */
-    private function __construct($scheme = SCHEME, $db = DBADRESS, $user = DBUSER, $pass = DBPASS) 
+    function __construct($scheme = SCHEME, $db = DBADRESS, $user = DBUSER, $pass = DBPASS) 
     {
+        $this->scheme = $scheme;
         
+        if ( $this->isSQlite() && !file_exists($db)) 
+        {
+            throw new Exception("Database {$db} is not accessible!");
+        }
+
         try 
         {
-            if ( $scheme == 'sqlite' && !file_exists($db)) {
-                throw new Exception("Database {$db} is not accessible!");
-            }
-
-            $this->dbh = new PDO($scheme . ':' . $db, $user, $pass);
+            $this->dbh = new PDO($scheme . ':' . $db, $user, $pass, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES '.INNERCODEPAGE));
             $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } 
         catch (PDOException $e) 
         {
-            die('SQL error: '.$e->getMessage());
+            Debug::log('PDO init error: '.$e->getMessage());
         }
     }
 
@@ -40,6 +43,11 @@ class DB
         $this->commit();
         
         unset($this->dbh);
+    }
+    
+    private function isSQlite()
+    {
+        return ($this->scheme == 'sqlite');
     }
     
     public static function getInstance()
@@ -54,7 +62,7 @@ class DB
     }
     
     /**
-     * query with data return
+     * query with fetching all data in return
      * @param string $sql
      * @param array $params
      * @param int $fetchFlags
@@ -77,6 +85,45 @@ class DB
         
         return $result;
     }
+    
+    
+    /**
+     * Perform query without fetching it
+     * @param string $sql
+     * @param array $params
+     * @return array
+     */
+    public function get( $sql, array $params = array() ) 
+    {
+       
+        try {
+            $this->result = $this->dbh->prepare($sql);
+            $this->result->execute( $params );
+        } 
+        catch (PDOException $e) 
+        {
+            Debug::log('SQL error: '.$e->getMessage().(DEBUG ? '<br>QUERY: '.$sql : ''));
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * fetch a row from query result $this->get()
+     * @param int $fetchFlags
+     * @return array
+     */
+    public function fetchRow( $fetchFlags = PDO::FETCH_ASSOC ) 
+    {
+        try {
+            return $this->result->fetch($fetchFlags);
+        } 
+        catch (PDOException $e) 
+        {
+            Debug::log('SQL error: '.$e->getMessage().(DEBUG ? '<br>QUERY: '.$sql : ''));
+        }
+
+    }
 
     /**
      * query without data return
@@ -95,7 +142,17 @@ class DB
         
         return $this->dbh->lastInsertId();
     }
-
+    
+    public function begin()
+    {
+        $this->dbh->beginTransaction();
+    }
+    
+    public function commit()
+    {
+        $this->dbh->commit();
+    }
+    
     public function explain( $sql, array $params = array())
     {
         $res = $this->query($sql, $params);
@@ -126,21 +183,8 @@ class DB
         return $html;
     }
     
-    public function begin()
+    public function o()
     {
-        if (!$this->transaction)
-        {
-            $this->exec('BEGIN');
-            $this->transaction = true;
-        }  
-    }
-    
-    public function commit()
-    {
-        if ($this->transaction)
-        {
-            $this->exec('COMMIT');
-            $this->transaction = false;
-        }
+        return $this->dbh;
     }
 }

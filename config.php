@@ -18,7 +18,7 @@ define ('URLROOT', '/bicycle/'); // URL path to framework
 define ('SCHEME', 'mysql'); 
 define ('DBADRESS', 'dbname=test;host=localhost');
 define ('DBUSER', 'admin');
-define ('DBPASS', '');
+define ('DBPASS', 'pass');
 
 if (DEBUG)
 {
@@ -27,6 +27,6 @@ if (DEBUG)
 }
 
 ini_set('max_execution_time', 120);
-setlocale( LC_ALL, 'ru_RU.UTF-8');
-mb_internal_encoding( 'UTF-8' );
+setlocale( LC_ALL, 'ru_RU.'.INNERCODEPAGE);
+mb_internal_encoding( INNERCODEPAGE );
 date_default_timezone_set( 'Europe/Moscow' );
