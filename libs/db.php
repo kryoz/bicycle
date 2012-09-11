@@ -9,7 +9,6 @@ class DB
 {
     private $scheme;
     private $dbh;
-    private $transaction;
     private $result;
     private static $instance;
     
@@ -30,12 +29,12 @@ class DB
 
         try 
         {
-            $this->dbh = new PDO($scheme . ':' . $db, $user, $pass);
+            $this->dbh = new PDO($scheme . ':' . $db, $user, $pass, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES '.INNERCODEPAGE));
             $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } 
         catch (PDOException $e) 
         {
-            Debug::log('SQL error: '.$e->getMessage());
+            Debug::log('PDO init error: '.$e->getMessage());
         }
     }
 
@@ -146,20 +145,12 @@ class DB
     
     public function begin()
     {
-        if (!$this->transaction)
-        {
-            $this->exec('BEGIN'.($this->isSQlite() ? ' TRANSACTION' : ''));
-            $this->transaction = true;
-        }  
+        $this->dbh->beginTransaction();
     }
     
     public function commit()
     {
-        if ($this->transaction)
-        {
-            $this->exec('COMMIT');
-            $this->transaction = false;
-        }
+        $this->dbh->commit();
     }
     
     public function explain( $sql, array $params = array())

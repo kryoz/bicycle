@@ -19,7 +19,23 @@ function numformat($number)
  */
 function mb_ucfirst($str)
 {
-    return mb_substr(mb_strtoupper($str, INNERCODEPAGE), 0, 1, INNERCODEPAGE) . mb_substr($str, 1, mb_strlen($str)-1, INNERCODEPAGE);
+    return mb_convert_case($str, MB_CASE_TITLE);
+}
+
+/**
+ * Russian noun case conversion "в" (in)
+ * @param string $name
+ */
+function caseIn($name)
+{
+    $len = strlen($name)-1;
+    switch ( substr($name, -1, 1) )
+    {
+        case 'а' : $name[$len] = 'у'; break;
+        case 'я' : $name[$len] = 'ю'; break;
+    }
+    
+    return $name;
 }
 
 /**
