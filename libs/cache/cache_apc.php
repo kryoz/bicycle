@@ -19,8 +19,7 @@ class cache_apc implements ICache
      */
     function get($scope)
     {
-        apc_fetch($scope, $success);
-        return $success;
+        return apc_fetch($scope);
     }
     
     /**

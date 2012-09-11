@@ -12,7 +12,7 @@ class Model_Index
         for ($i=0; $i < 20; $i++)
             $data[] = rand(1, 1000);
         
-        $cache->set('index', $data);
+        $cache->set('index2', $data);
         
         return $data;
     }
@@ -20,6 +20,6 @@ class Model_Index
     function getCache()
     {
         $cache = Cache::getInstance();
-        return $cache->get('index');
+        return $cache->get('index2');
     }
 }
