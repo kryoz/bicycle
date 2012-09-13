@@ -40,8 +40,6 @@ class DB
 
     function __destruct() 
     {
-        $this->commit();
-        
         unset($this->dbh);
     }
     
