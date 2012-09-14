@@ -29,7 +29,11 @@ class DB
 
         try 
         {
-            $this->dbh = new PDO($scheme . ':' . $db, $user, $pass, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES '.INNERCODEPAGE));
+            if (!$this->isSQlite())
+                $this->dbh = new PDO($scheme . ':' . $db, $user, $pass, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES '.INNERCODEPAGE));
+            else
+                $this->dbh = new PDO($scheme . ':' . $db);
+            
             $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } 
         catch (PDOException $e) 
@@ -78,7 +82,13 @@ class DB
         } 
         catch (PDOException $e) 
         {
-            Debug::log('SQL error: '.$e->getMessage().(DEBUG ? '<br>QUERY: '.$sql : ''));
+            Debug::log('SQL error: '.$e->getMessage());
+            
+            if (DEBUG)
+            {
+                Debug::log('QUERY: '.$sql );
+                Debug::log('PARAMS: '.print_r($params,true) );
+            }
         }
         
         return $result;
@@ -100,7 +110,13 @@ class DB
         } 
         catch (PDOException $e) 
         {
-            Debug::log('SQL error: '.$e->getMessage().(DEBUG ? '<br>QUERY: '.$sql : ''));
+            Debug::log('SQL error: '.$e->getMessage());
+            
+            if (DEBUG)
+            {
+                Debug::log('QUERY: '.$sql );
+                Debug::log('PARAMS: '.print_r($params,true) );
+            }
         }
         
         return $result;
@@ -118,7 +134,7 @@ class DB
         } 
         catch (PDOException $e) 
         {
-            Debug::log('SQL error: '.$e->getMessage().(DEBUG ? '<br>QUERY: '.$sql : ''));
+            Debug::log('SQL error: '.$e->getMessage());
         }
 
     }
@@ -135,7 +151,13 @@ class DB
             $this->dbh->prepare($sql)->execute( $params );
         } 
         catch (PDOException $e) {
-            Debug::log('SQL error: '.$e->getMessage().(DEBUG ? '<br>QUERY: '.$sql : '') );
+            Debug::log('SQL error: '.$e->getMessage());
+            
+            if (DEBUG)
+            {
+                Debug::log('QUERY: '.$sql );
+                Debug::log('PARAMS: '.print_r($params,true) );
+            }
         }
         
         return $this->dbh->lastInsertId();
