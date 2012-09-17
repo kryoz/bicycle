@@ -12,8 +12,7 @@ class View {
     
     /**
      * 
-     * @param string $tmpl Имя глобального шаблона
-     * @param array $vars Массив переменных для передачи в шаблон
+     * @param string $tmpl the name of global template
      */
     function __construct($tmpl = null) 
     {
@@ -25,7 +24,7 @@ class View {
     }
 
     /**
-     * Переопределяет глобальное представление шаблона
+     * Sets new global template
      * @param string $path
      */
     function setGlobalTemplate($tmpl)
@@ -34,7 +33,7 @@ class View {
     }
     
     /**
-     * Задает путь к компоненту. Обычно получает этот путь из конструктора контроллера
+     * Sets component path
      * @param string $path
      */
     function setPath($path)
@@ -43,7 +42,7 @@ class View {
     }
     
     /**
-     * Загрузка переменных для шаблона
+     * Sets template vars
      * @param array $vars
      * @return \View
      */
@@ -54,7 +53,7 @@ class View {
     }
     
     /**
-     * Указание имени шаблона
+     * Sets template name
      * @param string $tmpl
      * @return \View
      */
@@ -66,7 +65,7 @@ class View {
     }
     
     /**
-     * Генерация представления. Если указан параметр $is_ajax, то пропускается глобальный шаблон
+     * Render the view. If $is_ajax = true then render goes without global template
      * @param bool $is_ajax 
      * @throws Exception
      */
@@ -75,22 +74,21 @@ class View {
         try {
             
             $template = $this->component_path.'view_'.$this->template.'.php';
-            
+
             if ( !file_exists($template) )
             {
                 throw new Exception('"'.$template.'" not found!');
             }
             
-            $debug = DEBUG::getlog();
-            
+            extract($this->vars);
+
             if (DEBUG) {
-                $debug .= '<br>'.DEBUG::getmem();
+                DEBUG::log(DEBUG::getmem());
             }
             
-            extract($this->vars);
+            $debug = DEBUG::getlog();
             
             ob_start();
-            
             require $template;
             
             $content = ob_get_contents();
@@ -98,7 +96,7 @@ class View {
         }
         catch (Exception $e)
         {
-            Debug::log('VIEW CLASS error!<br>Message: '.$e->getMessage().'<br>');
+            Debug::log('VIEW CLASS error!<br>Line:'.$e->getLine().'<br>Message: '.$e->getMessage().'<br>');
         }
         
         header('Content-Type: text/html; charset='.CODEPAGE);
