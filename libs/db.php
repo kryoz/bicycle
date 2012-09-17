@@ -21,16 +21,22 @@ class DB
     function __construct($scheme = SCHEME, $db = DBADRESS, $user = DBUSER, $pass = DBPASS) 
     {
         $this->scheme = $scheme;
-        
-        if ( $this->isSQlite() && !file_exists($db)) 
-        {
-            throw new Exception("Database {$db} is not accessible!");
-        }
 
         try 
         {
             if (!$this->isSQlite())
-                $this->dbh = new PDO($scheme . ':' . $db, $user, $pass, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES '.INNERCODEPAGE));
+            {
+                $this->dbh = new PDO($scheme . ':' . $db, $user, $pass);
+
+                /* http://stackoverflow.com/questions/10113562/pdo-mysql-use-pdoattr-emulate-prepares-or-not */
+                
+                if ( version_compare(PHP_VERSION, '5.3.6', '<') )
+                    $this->dbh->exec('SET NAMES '.INNERCODEPAGE);
+
+                $serverversion = $this->dbh->getAttribute(PDO::ATTR_SERVER_VERSION);
+                $emulate_prepares = version_compare($serverversion, '5.1.17', '<');
+                $this->dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, $emulate_prepares);
+            }
             else
                 $this->dbh = new PDO($scheme . ':' . $db);
             
