@@ -4,4 +4,5 @@ if ( isset($title) )
 ?>
 Success!<br>
 This page shows the ability to use controller methods as part of URL parameters<br>
-There is an option to put controller logic into Run() method of your controller class for flexibility
+There is an option to put controller logic into Run() method of your controller class for flexibility.<br>
+$args = <?=$args?>

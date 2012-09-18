@@ -22,7 +22,7 @@ class Controller_index extends Controller_Base
         $view = $this->view;
         
         $vars['title'] = 'You called parameterized action';
-        $vars['data'] = print_r($args,1);
+        $vars['args'] = print_r($args,1);
 
         $view->loadTemplate("second")->loadVars($vars)->render();
     }
