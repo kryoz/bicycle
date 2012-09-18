@@ -52,5 +52,5 @@ abstract class Controller_Base
      * Entry point to controller
      * @param mixed $args string or array from 
      */
-    abstract function Run($args); 
+    abstract function index($args); 
 }

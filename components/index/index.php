@@ -3,7 +3,7 @@
 class Controller_index extends Controller_Base 
 {
             
-    function Run($args) 
+    function index($args) 
     {
         $model = $this->model;
         $view = $this->view;

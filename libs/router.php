@@ -48,7 +48,7 @@ Class Router {
             $mainpage = array('index.php', 'index', 'index/');
             
             if ( in_array($route, $mainpage) )
-                self::$redirect();
+                self::redirect();
             
             if (empty($route)) 
                 $route = 'index';
@@ -106,7 +106,7 @@ Class Router {
             $action = array_shift(self::$args);
             $controller->$action(self::$args);
         } else
-            $controller->Run(self::$args);
+            $controller->index(self::$args);
     }
 
     public static function redirect($url = '', $raw = false)

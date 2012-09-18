@@ -10,21 +10,21 @@ class Cache implements ICache{
         
     final static function getInstance($cachetype = false)
     {
-        if ( !$cachetype )
-        {
-            if ( !function_exists('apc_cache_info'))
-                $cachetype = 'file';
-            else
-                $cachetype = 'apc';
-        }
-        
-        $Cache_class = 'Cache_'.$cachetype;
-        
         if ( empty( self::$instance) )
         {
+            if ( !$cachetype )
+            {
+                if ( function_exists('apc_cache_info'))
+                    $cachetype = 'apc';
+                else
+                    $cachetype = 'file';
+            }
+            
+            $Cache_class = 'Cache_'.$cachetype;
             require_once 'cache'.DS.strtolower($Cache_class).'.php';
-        }
+        
             self::$instance = new $Cache_class;
+        }
         
         return self::$instance;
     }

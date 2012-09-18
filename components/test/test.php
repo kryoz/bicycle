@@ -6,7 +6,7 @@
  */
 class Controller_test extends Controller_Base
 {
-    function Run($args)
+    function index($args)
     {
         $view = $this->view;
         $model = $this->model;
