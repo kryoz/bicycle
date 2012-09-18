@@ -109,10 +109,11 @@ Class Router {
             $controller->Run(self::$args);
     }
 
-    public static function redirect($url = '')
+    public static function redirect($url = '', $raw = false)
     {
+        $address = $raw ? $url : 'http://'.$_SERVER['HTTP_HOST'].URLROOT.$url;
         header("HTTP/1.1 301 Moved Permanently");
-        header('Location: http://'.$_SERVER['HTTP_HOST'].URLROOT.$url );
+        header('Location: '.$address);
         exit();
     }
 }

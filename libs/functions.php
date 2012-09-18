@@ -99,3 +99,8 @@ function rus_date() {
         return strtr(date(func_get_arg(0)), $translate);
     }
 }
+
+function getreferer($override)
+{
+    return getenv("HTTP_REFERER") ? getenv("HTTP_REFERER") : 'http://'.$_SERVER['HTTP_HOST'].URLROOT.$override;
+}
