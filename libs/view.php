@@ -65,11 +65,10 @@ class View {
     }
     
     /**
-     * Render the view. If $is_ajax = true then render goes without global template
-     * @param bool $is_ajax 
-     * @throws Exception
+     * Render without displaying (for emailing for ex.)
+     * @return string
      */
-    function render($is_ajax = false)
+    function prepare()
     {
         try {
             
@@ -93,11 +92,22 @@ class View {
             
             $content = ob_get_contents();
             ob_end_clean();
+            
+            return $content;
         }
         catch (Exception $e)
         {
             Debug::log('VIEW CLASS error!<br>Line:'.$e->getLine().'<br>Message: '.$e->getMessage().'<br>');
         }
+    }
+    /**
+     * Render the view. If $is_ajax = true then render goes without global template
+     * @param bool $is_ajax 
+     * @throws Exception
+     */
+    function render($is_ajax = false)
+    {
+        $content = $this->prepare();
         
         header('Content-Type: text/html; charset='.CODEPAGE);
         header('P3P: CP="CAO PSA OUR"');
