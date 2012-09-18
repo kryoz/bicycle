@@ -96,22 +96,24 @@ class View {
     }
     /**
      * Render the view. If $is_ajax = true then render goes without global template
-     * @param bool $is_ajax 
+     * @param bool $raw
      * @throws Exception
      */
-    function render($is_ajax = false)
+    function render($raw = false)
     {
         $content = $this->prepare();
         if (DEBUG) {
                 DEBUG::log(DEBUG::getmem());
-            }
+        }
             
         $debug = DEBUG::getlog();
         
         header('Content-Type: text/html; charset='.CODEPAGE);
         header('P3P: CP="CAO PSA OUR"');
         
-        if (!$is_ajax)
+        extract($this->vars);
+        
+        if (!$raw)
             require_once GLOBALVIEWS.$this->global_template;
         else
             echo $content;

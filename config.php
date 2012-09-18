@@ -13,6 +13,7 @@ define ('CACHETTL', 86400*7); // cache time to live. '0' to disable
 define ('CODEPAGE', 'utf-8'); // HTML codepage
 define ('INNERCODEPAGE', 'utf-8'); // inner codepage
 define ('URLROOT', '/bicycle/'); // URL path to framework
+define ('VIRT_EXT', '.html');
 
 /* DB connection settings */
 define ('SCHEME', 'mysql'); 

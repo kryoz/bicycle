@@ -15,7 +15,7 @@ abstract class Controller_Base
      * Tries to load default model class and view
      * @param string $name 
      */
-    final function __construct($name) 
+    function __construct($name) 
     {
         $this->name = $name;
         $this->controller_path = COMPONENTS.$name.DS;
