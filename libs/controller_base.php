@@ -9,6 +9,7 @@ abstract class Controller_Base
     protected $controller_path;
     protected $model;
     protected $view;
+    protected $name;
     
     /**
      * Tries to load default model class and view
@@ -16,6 +17,7 @@ abstract class Controller_Base
      */
     final function __construct($name) 
     {
+        $this->name = $name;
         $this->controller_path = COMPONENTS.$name.DS;
         
         $model_name = strtolower("model_$name");

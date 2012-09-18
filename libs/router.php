@@ -48,7 +48,7 @@ Class Router {
             $mainpage = array('index.php', 'index', 'index/');
             
             if ( in_array($route, $mainpage) )
-                $this->redirect();
+                self::$redirect();
             
             if (empty($route)) 
                 $route = 'index';
@@ -94,7 +94,7 @@ Class Router {
             if (DEBUG)
                 throw new Exception('Controller "'.$controller_file.'" not found');
             else
-                $this->redirect();
+                self::$redirect();
         }
 
         require_once ($controller_file);
@@ -109,7 +109,7 @@ Class Router {
             $controller->Run(self::$args);
     }
 
-    function redirect($url = '')
+    public static function redirect($url = '')
     {
         header("HTTP/1.1 301 Moved Permanently");
         header('Location: http://'.$_SERVER['HTTP_HOST'].URLROOT.$url );
