@@ -101,9 +101,9 @@ Class Router {
         
         // Delegating control
         $controller = new $class(self::$controller);
-        $action = self::$args[0];
 
-        if (is_callable(array($class, $action)) ) {
+        if (is_callable(array($class, self::$args[0])) ) {
+            $action = array_shift(self::$args);
             $controller->$action(self::$args);
         } else
             $controller->Run(self::$args);
