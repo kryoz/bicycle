@@ -100,7 +100,48 @@ function rus_date() {
     }
 }
 
+/**
+ * Gets referer url from HTTP headers or generates URL specified component in $override var
+ * @param string $override
+ * @return type
+ */
 function getreferer($override)
 {
     return getenv("HTTP_REFERER") ? getenv("HTTP_REFERER") : 'http://'.$_SERVER['HTTP_HOST'].URLROOT.$override;
+}
+
+/**
+ * Function filters comlex array from empty values
+ * @param array $array
+ * @return array
+ */
+function truncArray($array)
+{
+    if (is_array($array))
+    {
+        foreach ($array as $i=>&$item)
+        {
+            if (is_array($item[0]))
+                $item = truncArray($item);
+            else
+            {
+                if (!empty($item))
+                {
+                    $empty_elements = array_keys($item,"");
+
+                    foreach ($empty_elements as $e)
+                        unset($item[$e]);
+                    
+                    if (empty($item))
+                        unset($array[$i]);
+                }
+                else
+                {
+                    unset($array[$i]);
+                }
+            }
+        }
+    }
+
+    return $array;
 }
