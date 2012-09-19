@@ -5,6 +5,7 @@ Class Router {
         private $path;
         private static $controller;
         private static $args;
+        private static $parameters;
 
         function __construct() {
             $this->setPath(COMPONENTS);
@@ -16,7 +17,7 @@ Class Router {
         }
         
         /**
-         * Устанавливает каталог компонентов
+         * Sets component path
          * @param string $path
          * @throws Exception
          */
@@ -32,19 +33,18 @@ Class Router {
         }
         
         /**
-         * Метод обработки URL для маршрутизации
-         * Возвращает имя контроллера и переданные ему параметры
+         * Method to parse URL string
+         * Returns controller name, path and parameters if has any
          */
         private function getController() 
         {
-            // Считывание запроса URL
             $route = (empty($_SERVER["REQUEST_URI"])) ? '' : $_SERVER["REQUEST_URI"];
             
-            // Вычленяем префикс URL (корневую папку приложения)
+            // Cutting root url from url string
             if ( $route )
                 $route = substr( $route, strlen(URLROOT) );
             
-            // Предотвращение дублирования главной страницы: редирект с index.php на /
+            // Avoiding duplicates
             $mainpage = array('index.php', 'index', 'index/', 'index.html');
             
             if ( in_array($route, $mainpage) )
@@ -53,15 +53,27 @@ Class Router {
             if (empty($route)) 
                 $route = 'index';
             else
-                $route = $this->deSlash($route); // Получаем раздельные части
+                $route = $this->deSlash($route); 
 
-            // Удаляем расширение файла и параметры из запроса, если кто-то додумался их передавать после "?"
-            $route = preg_replace("#(\?.*)?$#", '', $route);
+            // Getting part from url after '?' and transforming it to array
+            preg_match('#^(.*)\?(.*)$#', $route, $params);
+            
+            $params = explode('&', $params[2]);
+            foreach ($params as $i=>$part)
+            {
+                $pair = explode('=', $part);
+                unset($params[$i]);
+                
+                $params[$pair[0]] = $pair[1];
+            }
+            
+            //Filtering virtual file extension
+            $pattern = '#(\\'.VIRT_EXT.'\??.*)$#';
+            $route = preg_replace($pattern, '', $route);
             
             
-            /* Основная логика маршрутизатора 
-             * Например отфильтрованный URL = 'index/ru/mow', 
-             * тогда index - контроллер, ru и mow - параметры для контроллера
+            
+            /* Main router logic
              */
             $parts = explode('/', $route);
 
@@ -77,10 +89,11 @@ Class Router {
             
             self::$controller = $controller;
             self::$args = is_array($args) ? $args : array($args);
+            self::$params = $params;
     }
    
     /*
-     * Нахождение контроллера и передача управления ему
+     * Method to find controller and delegate the control to it
      */
     function delegate() 
     {
@@ -88,7 +101,7 @@ Class Router {
 
         $class = 'Controller_' . self::$controller;
         
-        $controller_file = $this->path.DS.self::$controller.DS.self::$controller.'.php';
+        $controller_file = $this->path.self::$controller.DS.self::$controller.'.php';
 
         if (is_readable($controller_file) == false) {
             if (DEBUG)
@@ -104,9 +117,9 @@ Class Router {
 
         if (is_callable(array($class, self::$args[0])) ) {
             $action = array_shift(self::$args);
-            $controller->$action(self::$args);
+            $controller->$action(self::$args, self::$params);
         } else
-            $controller->index(self::$args);
+            $controller->index(self::$args, self::$params);
     }
 
     public static function redirect($url = '', $raw = false)

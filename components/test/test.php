@@ -6,16 +6,14 @@
  */
 class Controller_test extends Controller_Base
 {
-    function index($args)
+    function index($args, $params)
     {
-        $view = $this->view;
         $model = $this->model;
+        $view = $this->view;
         
-        $vars['data'] = $model->anothertest();
-        
-        $view->loadTemplate('test');
-        $view->loadVars($vars)->render();
+        $vars['title'] = 'You called another component - TEST';
+        $vars['args'] = print_r($args,1);
+
+        $view->loadTemplate("test")->loadVars($vars)->render();
     }
 }
-
-?>

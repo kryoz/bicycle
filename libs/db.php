@@ -78,7 +78,9 @@ class DB
      */
     public function query( $sql, array $params = array(), $fetchFlags = PDO::FETCH_ASSOC ) 
     {
-       
+        if (!$this->checkConnection())
+            return false;
+        
         try {
             $sth = $this->dbh->prepare($sql);
             $sth->execute( $params );
@@ -109,7 +111,8 @@ class DB
      */
     public function get( $sql, array $params = array() ) 
     {
-       
+        if (!$this->checkConnection())
+            return false;
         try {
             $this->result = $this->dbh->prepare($sql);
             $this->result->execute( $params );
@@ -135,6 +138,9 @@ class DB
      */
     public function fetchRow( $fetchFlags = PDO::FETCH_ASSOC ) 
     {
+        if (!$this->checkConnection() || empty($this->result))
+            return false;
+        
         try {
             return $this->result->fetch($fetchFlags);
         } 
@@ -153,6 +159,9 @@ class DB
      */
     public function exec( $sql, array $params = array() ) 
     {
+        if (!$this->checkConnection())
+            return false;
+        
         try {
             $this->dbh->prepare($sql)->execute( $params );
         } 
@@ -171,11 +180,17 @@ class DB
     
     public function begin()
     {
+        if (!$this->checkConnection())
+            return false;
+        
         $this->dbh->beginTransaction();
     }
     
     public function commit()
     {
+        if (!$this->checkConnection())
+            return false;
+        
         $this->dbh->commit();
     }
     
@@ -209,8 +224,21 @@ class DB
         return $html;
     }
     
+    public function checkConnection()
+    {
+        if (empty($this->dbh))
+        {
+            Debug::log('DB CLASS: Failed to connect to database!');
+            return false;
+        }   else
+            return true;
+    }
+    
     public function o()
     {
-        return $this->dbh;
+        if (!$this->checkConnection())
+            return false;
+        else
+            return $this->dbh;
     }
 }

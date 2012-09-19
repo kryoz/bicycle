@@ -3,7 +3,7 @@
 class Controller_index extends Controller_Base 
 {
             
-    function index($args) 
+    function index($args, $params) 
     {
         $model = $this->model;
         $view = $this->view;
@@ -12,11 +12,11 @@ class Controller_index extends Controller_Base
         $vars['prev'] = $model->getCache();
         $vars['data'] = $model->generate();
 
-        $view->loadTemplate("cache")->loadVars($vars)->render();
+        $view->loadTemplate("index")->loadVars($vars)->render();
 
     }
     
-    function second($args)
+    function second($args, $params)
     {
         $model = $this->model;
         $view = $this->view;
