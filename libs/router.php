@@ -5,7 +5,7 @@ Class Router {
         private $path;
         private static $controller;
         private static $args;
-        private static $parameters;
+        private static $params;
 
         function __construct() {
             $this->setPath(COMPONENTS);
