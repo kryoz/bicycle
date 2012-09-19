@@ -45,13 +45,13 @@ Class Router {
                 $route = substr( $route, strlen(URLROOT) );
             
             // Avoiding duplicates
-            $mainpage = array('index.php', 'index', 'index/', 'index.html');
+            $mainpage = array('index.php', INDEX, INDEX.'/', 'index.html');
             
             if ( in_array($route, $mainpage) )
                 self::redirect();
             
             if (empty($route)) 
-                $route = 'index';
+                $route = INDEX;
             else
                 $route = $this->deSlash($route); 
 
@@ -72,15 +72,20 @@ Class Router {
             $route = preg_replace($pattern, '', $route);
             
             
-            
             /* Main router logic
              */
             $parts = explode('/', $route);
 
             
-            // 'index/ru/mow'
             if ( is_array($parts) )
             {
+                if ($parts[0] == INDEX)
+                {
+                    array_shift($parts);
+                    if (!empty($parts))
+                        self::redirect( implode('/', $parts) );
+                }
+                
                 $controller = array_shift($parts);
                 $args = $parts;
             }
@@ -99,16 +104,16 @@ Class Router {
     {
         $this->getController();
 
-        $class = 'Controller_' . self::$controller;
-        
         $controller_file = $this->path.self::$controller.DS.self::$controller.'.php';
 
-        if (is_readable($controller_file) == false) {
-            if (DEBUG)
-                throw new Exception('Controller "'.$controller_file.'" not found');
-            else
-                self::$redirect();
+        if ( !is_readable($controller_file) ) 
+        {
+            $controller_file = $this->path.INDEX.DS.INDEX.'.php';
+            array_unshift(self::$args, self::$controller);
+            self::$controller = INDEX;
         }
+        
+        $class = 'Controller_' . self::$controller;
 
         require_once ($controller_file);
         

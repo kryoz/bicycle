@@ -95,7 +95,7 @@ class View {
         }
     }
     /**
-     * Render the view. If $is_ajax = true then render goes without global template
+     * Render the view. If $raw = true then render goes without global template
      * @param bool $raw
      * @throws Exception
      */

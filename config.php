@@ -14,6 +14,7 @@ define ('CODEPAGE', 'utf-8'); // HTML codepage
 define ('INNERCODEPAGE', 'utf-8'); // inner codepage
 define ('URLROOT', '/bicycle/'); // URL path to framework
 define ('VIRT_EXT', '.html');
+define ('INDEX', 'index');
 
 /* DB connection settings */
 define ('SCHEME', 'mysql'); 
