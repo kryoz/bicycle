@@ -75,23 +75,23 @@ Class Router {
             /* Main router logic
              */
             $parts = explode('/', $route);
-
             
             if ( is_array($parts) )
             {
+
                 if ($parts[0] == INDEX)
                 {
-                    array_shift($parts);
+                    $controller = array_shift($parts);
                     if (!empty($parts))
                         self::redirect( implode('/', $parts) );
                 }
-                
+
                 $controller = array_shift($parts);
                 $args = $parts;
             }
             else
                 $controller = $route;
-            
+
             self::$controller = $controller;
             self::$args = is_array($args) ? $args : array($args);
             self::$params = $params;
@@ -103,14 +103,16 @@ Class Router {
     function delegate() 
     {
         $this->getController();
-
+        
         $controller_file = $this->path.self::$controller.DS.self::$controller.'.php';
 
         if ( !is_readable($controller_file) ) 
         {
             $controller_file = $this->path.INDEX.DS.INDEX.'.php';
-            array_unshift(self::$args, self::$controller);
+            if (self::$controller)
+                array_unshift(self::$args, self::$controller);
             self::$controller = INDEX;
+            Debug::dprint(self::$args);
         }
         
         $class = 'Controller_' . self::$controller;
