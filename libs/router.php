@@ -112,7 +112,6 @@ Class Router {
             if (self::$controller)
                 array_unshift(self::$args, self::$controller);
             self::$controller = INDEX;
-            Debug::dprint(self::$args);
         }
         
         $class = 'Controller_' . self::$controller;
