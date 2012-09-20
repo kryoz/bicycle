@@ -81,6 +81,12 @@ class View {
             
             extract($this->vars);
             
+            if (DEBUG) {
+                DEBUG::log(DEBUG::getmem());
+            }
+
+            $debug = DEBUG::getlog();
+            
             ob_start();
             require $template;
             
@@ -102,14 +108,15 @@ class View {
     function render($raw = false)
     {
         $content = $this->prepare();
-        if (DEBUG) {
-                DEBUG::log(DEBUG::getmem());
-        }
-            
-        $debug = DEBUG::getlog();
         
         header('Content-Type: text/html; charset='.CODEPAGE);
         header('P3P: CP="CAO PSA OUR"');
+        
+        if (DEBUG) {
+            DEBUG::log(DEBUG::getmem());
+        }
+            
+        $debug = DEBUG::getlog();
         
         extract($this->vars);
         

@@ -68,7 +68,7 @@ Class Router {
             }
             
             //Filtering virtual file extension
-            $pattern = '#(\\'.VIRT_EXT.'\??.*)$#';
+            $pattern = '#(\\'.VIRT_EXT.')?(\?.*)?$#';
             $route = preg_replace($pattern, '', $route);
             
             
