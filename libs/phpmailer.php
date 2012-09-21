@@ -160,7 +160,7 @@ class PHPMailer {
    * is in a different directory than the PHP include path.
    * @var string
    */
-  public $PluginDir         = '';
+  public $PluginDir         = 'phpmailer/';
 
   /**
    * Sets the email address that a reading confirmation will be sent.
@@ -791,7 +791,7 @@ class PHPMailer {
    * @return bool
    */
   protected function SmtpSend($header, $body) {
-    //require_once $this->PluginDir . 'class.smtp.php';
+    require_once $this->PluginDir . 'class.smtp.php';
     $bad_rcpt = array();
 
     if(!$this->SmtpConnect()) {
