@@ -96,6 +96,11 @@ Class Router {
             self::$args = is_array($args) ? $args : array($args);
             self::$params = $params;
     }
+    
+    private function getControllerPath()
+    {
+        return $this->path.self::$controller.DS.self::$controller.'.php';
+    }
    
     /*
      * Method to find controller and delegate the control to it
@@ -104,7 +109,7 @@ Class Router {
     {
         $this->getController();
         
-        $controller_file = $this->path.self::$controller.DS.self::$controller.'.php';
+        $controller_file = $this->getControllerPath();
 
         if ( !is_readable($controller_file) ) 
         {
@@ -125,14 +130,29 @@ Class Router {
             $action = array_shift(self::$args);
             $controller->$action(self::$args, self::$params);
         } else
-            $controller->index(self::$args, self::$params);
+            self::NoPage();
     }
 
     public static function redirect($url = '', $raw = false)
     {
         $address = $raw ? $url : 'http://'.$_SERVER['HTTP_HOST'].URLROOT.$url;
-        header("HTTP/1.1 301 Moved Permanently");
+        header($_SERVER["SERVER_PROTOCOL"]." 301 Moved Permanently");
         header('Location: '.$address);
+        exit();
+    }
+    
+    public function NoPage()
+    {
+        header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found"); 
+        
+        self::$controller = 'error404';
+        
+        require_once ($this->getControllerPath());
+        
+        $class = 'Controller_' . self::$controller;
+        
+        $controller = new $class(self::$controller);
+        $controller->index(self::$args, self::$params);
         exit();
     }
 }
