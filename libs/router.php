@@ -126,10 +126,13 @@ Class Router {
         // Delegating control
         $controller = new $class(self::$controller);
 
-        if (is_callable(array($class, self::$args[0])) ) {
+        if ( is_callable(array($class, self::$args[0])) ) {
             $action = array_shift(self::$args);
             $controller->$action(self::$args, self::$params);
-        } else
+        } 
+        elseif ( self::$controller == INDEX )
+            $controller->index(self::$args, self::$params);
+        else
             self::NoPage();
     }
 
