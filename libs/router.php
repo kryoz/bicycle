@@ -119,13 +119,14 @@ Class Router {
             self::$controller = INDEX;
         }
         
-        $class = 'Controller_' . self::$controller;
-
         require_once ($controller_file);
         
         // Delegating control
+        $class = 'Controller_' . self::$controller;
         $controller = new $class(self::$controller);
-
+        
+        self::$args = !empty(self::$args) ? self::$args : array(INDEX);
+        
         if ( is_callable(array($class, self::$args[0])) ) {
             $action = array_shift(self::$args);
             $controller->$action(self::$args, self::$params);

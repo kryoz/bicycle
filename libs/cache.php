@@ -5,25 +5,38 @@
  * @author kubintsev
  */
 
-class Cache implements ICache{
+class Cache implements ICache
+{
+    private $cache;
     protected static $instance;
         
-    final static function getInstance($cachetype = false)
+    function __construct( $cachetype ) 
+    {
+        if ( !$cachetype )
+        {
+            if ( function_exists('apc_cache_info'))
+                $cachetype = 'apc';
+            else
+                $cachetype = 'file';
+        }
+
+        $Cache_class = 'Cache_'.$cachetype;
+        $class_file = LIBS.'cache'.DS.strtolower($Cache_class).'.php';
+        
+        if (file_exists($class_file)) {
+            require_once $class_file;
+        }
+        else
+            throw new Exception("Cache type '$cachetype' not defined! Haven't found $class_file");
+        
+        $this->cache = new $Cache_class();
+    }
+    
+    final static function getInstance($cachetype = null)
     {
         if ( empty( self::$instance) )
-        {
-            if ( !$cachetype )
-            {
-                if ( function_exists('apc_cache_info'))
-                    $cachetype = 'apc';
-                else
-                    $cachetype = 'file';
-            }
-            
-            $Cache_class = 'Cache_'.$cachetype;
-            require_once 'cache'.DS.strtolower($Cache_class).'.php';
-        
-            self::$instance = new $Cache_class;
+        {        
+            self::$instance = new Cache($cachetype);
         }
         
         return self::$instance;
@@ -36,7 +49,7 @@ class Cache implements ICache{
      */
     function get($scope)
     {
-        return self::$instance->get($scope);
+        return $this->cache->get($scope);
     }
    
     
@@ -48,7 +61,7 @@ class Cache implements ICache{
      */
     function set($scope, $data = null)
     {
-        self::$instance->set($scope, $data);
+        $this->cache->set($scope, $data);
     }
     
     
@@ -58,7 +71,7 @@ class Cache implements ICache{
      */
     function flush($scope)
     {
-        self::$instance->flush($scope);
+        $this->cache->flush($scope);
     }
     
 }
