@@ -79,7 +79,8 @@ class View {
                 throw new Exception('"'.$template.'" not found!');
             }
             
-            extract($this->vars);
+            if (is_array($this->vars))
+                extract($this->vars);
             
             if (DEBUG) {
                 DEBUG::log(DEBUG::getmem());
@@ -118,7 +119,8 @@ class View {
             
         $debug = DEBUG::getlog();
         
-        extract($this->vars);
+        if (is_array($this->vars))
+                extract($this->vars);
         
         if (!$raw)
             require_once GLOBALVIEWS.$this->global_template;

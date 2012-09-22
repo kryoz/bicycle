@@ -131,8 +131,8 @@ Class Router {
             $action = array_shift(self::$args);
             $controller->$action(self::$args, self::$params);
         } 
-        elseif ( self::$controller == INDEX )
-            $controller->index(self::$args, self::$params);
+        /*elseif ( self::$controller == INDEX )
+            $controller->index(self::$args, self::$params);*/
         else
             self::NoPage();
     }
