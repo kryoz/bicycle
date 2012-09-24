@@ -2,7 +2,7 @@
 
 Class Router {
 
-        private $path;
+        private static $path;
         private static $controller;
         private static $args;
         private static $params;
@@ -23,13 +23,13 @@ Class Router {
          */
         private function setPath($path) 
         {
-            $this->path = $path;
+            self::$path = $path;
 
             if (is_dir($path) == false) {
                     throw new Exception ('Invalid controller path: `' . $path . '`');
             }
             
-            $this->path = $path;
+            self::$path = $path;
         }
         
         /**
@@ -45,7 +45,7 @@ Class Router {
                 $route = substr( $route, strlen(URLROOT) );
             
             // Avoiding duplicates
-            $mainpage = array('index.php', INDEX, INDEX.'/', 'index.html');
+            $mainpage = array(INDEX.'.php', INDEX, INDEX.'/', INDEX.VIRT_EXT);
             
             if ( in_array($route, $mainpage) )
                 self::redirect();
@@ -67,13 +67,16 @@ Class Router {
                 $params[$pair[0]] = $pair[1];
             }
             
-            //Filtering virtual file extension
+            //Cutting virtual file extension
             $pattern = '#(\\'.VIRT_EXT.')?(\?.*)?$#';
             $route = preg_replace($pattern, '', $route);
             
+            //Filtering "-" by transforming it to "_"
+            $route = preg_replace('#(\-)#', '_', $route);
             
-            /* Main router logic
-             */
+            
+            /* Main router logic */
+             
             $parts = explode('/', $route);
             
             if ( is_array($parts) )
@@ -97,9 +100,9 @@ Class Router {
             self::$params = $params;
     }
     
-    private function getControllerPath()
+    private static function getControllerPath()
     {
-        return $this->path.self::$controller.DS.self::$controller.'.php';
+        return self::$path.self::$controller.DS.self::$controller.'.php';
     }
    
     /*
@@ -113,7 +116,7 @@ Class Router {
 
         if ( !is_readable($controller_file) ) 
         {
-            $controller_file = $this->path.INDEX.DS.INDEX.'.php';
+            $controller_file = self::$path.INDEX.DS.INDEX.'.php';
             if (self::$controller)
                 array_unshift(self::$args, self::$controller);
             self::$controller = INDEX;
@@ -131,10 +134,8 @@ Class Router {
             $action = array_shift(self::$args);
             $controller->$action(self::$args, self::$params);
         } 
-        /*elseif ( self::$controller == INDEX )
-            $controller->index(self::$args, self::$params);*/
         else
-            self::NoPage();
+            $controller->index(self::$args, self::$params); // this case is required for complex controllers
     }
 
     public static function redirect($url = '', $raw = false)
@@ -145,13 +146,13 @@ Class Router {
         exit();
     }
     
-    public function NoPage()
+    public static function NoPage()
     {
         header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found"); 
         
         self::$controller = 'error404';
         
-        require_once ($this->getControllerPath());
+        require_once (self::getControllerPath());
         
         $class = 'Controller_' . self::$controller;
         
