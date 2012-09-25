@@ -28,14 +28,35 @@ function mb_ucfirst($str)
  */
 function caseIn($name)
 {
-    $len = strlen($name)-1;
-    switch ( substr($name, -1, 1) )
+    $parts = explode(' ',$name);
+    
+    foreach ($parts as &$part)
     {
-        case 'а' : $name[$len] = 'у'; break;
-        case 'я' : $name[$len] = 'ю'; break;
+        if (in_array(strtolower($part), array('о-в', 'о-ва')))
+            return $name;
+        
+        $len = strlen($part)-1;
+        $ending = substr($part, -1, 1);
+        $preending = substr($part, -2, 1);
+        
+        if ( $ending == 'а' && $preending != 'у')
+            $part[$len] = 'у';
+        elseif ( $ending == 'я')
+        {
+            if ( $preending == 'а' )
+            {
+                $part[$len-1] = 'у';
+                $part[$len] = 'ю';
+            }
+            else if ( $preending == 'и' )
+            {
+                $part[$len] = 'ю';
+            }
+        }
+           
     }
     
-    return $name;
+    return implode(' ', $parts);
 }
 
 /**
