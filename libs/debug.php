@@ -64,6 +64,7 @@ class Debug
     
     public static function getmem()
     {
+        $str = '';
         if (!empty(self::$mem))
         {
             $str = 'Memory usage:<br>';

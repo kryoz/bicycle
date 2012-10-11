@@ -4,26 +4,23 @@
  * 
  * @author kryoz
  */
-class FormToken
+class FormToken extends Session
 {
     const FIELDNAME = 'formtoken';
     const TTL = '7200';
     
     private function getSessionToken($prop)
     {
-        session_start();
-        return isset($_SESSION[self::FIELDNAME][$prop]) ? $_SESSION[self::FIELDNAME][$prop] : false;
+        return $this->get($prop, self::FIELDNAME);
     }
     
     private function setSessionToken($prop, $val)
     {
-        session_start();
-        $_SESSION[self::FIELDNAME][$prop] = $val;
+        $this->set($prop, $val, self::FIELDNAME);
     }
     
     public static function getToken()
     {
-        session_start();
         $time = time();
         $token = sha1(mt_rand(0, 1000000));
         
@@ -34,7 +31,6 @@ class FormToken
     
     public static function validateToken($clear = true)
     {
-        session_start();
         $valid = false;
         $posted = isset($_REQUEST[self::FIELDNAME]) ? $_REQUEST[self::FIELDNAME] : '';
 
@@ -43,7 +39,8 @@ class FormToken
                  if ( self::getSessionToken($posted) >= time() - self::TTL) {
                     $valid = true;
                  }
-                 if ($clear) unset($_SESSION[self::FIELDNAME][$posted]);
+                 if ($clear) 
+                     $this->remove($posted, self::FIELDNAME);
             }
         }
 
