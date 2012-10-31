@@ -58,15 +58,17 @@ Class Router {
             // Getting part from url after '?' and transforming it to array
             preg_match('#^(.*)\?(.*)$#', $route, $params);
             
-            $params = explode('&', $params[2]);
-            foreach ($params as $i=>$part)
+            if (isset($params[2]))
             {
-                $pair = explode('=', $part);
-                unset($params[$i]);
-                
-                $params[$pair[0]] = $pair[1];
+                $params = explode('&', $params[2]);
+                foreach ($params as $i=>$part)
+                {
+                    $pair = explode('=', $part);
+                    unset($params[$i]);
+
+                    $params[$pair[0]] = $pair[1];
+                }
             }
-            
             //Cutting virtual file extension
             $pattern = '#(\\'.VIRT_EXT.')?(\?.*)?$#';
             $route = preg_replace($pattern, '', $route);

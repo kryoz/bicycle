@@ -1,6 +1,6 @@
 <?php
 /**
- * Базовый класс контроллера
+ * Controller base class
  *
  * @author kubintsev
  */
@@ -9,7 +9,10 @@ abstract class Controller_Base
     protected $controller_path;
     protected $model;
     protected $view;
-    protected $name;
+    protected $name; //controller name
+    
+    protected $vars;
+    protected static $args;
     
     /**
      * Tries to load default model class and view
@@ -19,8 +22,6 @@ abstract class Controller_Base
     {
         $this->name = $name;
         $this->controller_path = COMPONENTS.$name.DS;
-        
-        $model_name = strtolower("model_$name");
         
         $this->model = $this->loadModel($name, $name);
         
@@ -42,7 +43,12 @@ abstract class Controller_Base
         if (file_exists($model_fn))
         {
             require_once $model_fn;
-            return new $model_name();
+            $model = new $model_name();
+            
+            if (is_callable($model_name, 'setComponentName'))
+                $model->setComponentName($this->name);
+            
+            return $model;
         }
         else
             return false;
@@ -53,4 +59,22 @@ abstract class Controller_Base
      * @param mixed $args string or array from 
      */
     abstract function index($args, $params); 
+    
+    /**
+     * Генератор навигационной строки
+     * @param type $level
+     * @return type
+     */
+    protected function buildNav($level)
+    {
+        $vars = $this->vars;
+        $titles = array();
+        
+        for ($i = 0; $i < $level; $i++)
+            $titles[] = '<a href="'.Catalogue::makeURL(self::$args, $i).'">'.$vars[$i]['navtitle'].'</a>';
+        
+        $titles[] = $vars[$i]['navtitle'];
+        
+        return implode(' - ', $titles);
+    }
 }

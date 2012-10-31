@@ -57,9 +57,12 @@ class View {
      * @param string $tmpl
      * @return \View
      */
-    function loadTemplate($tmpl)
+    function loadTemplate($tmpl, $component = null)
     {
         $this->template = strtolower($tmpl);
+        
+        if ($component)
+            $this->setPath(COMPONENTS.$component.DS);
         
         return $this;
     }
