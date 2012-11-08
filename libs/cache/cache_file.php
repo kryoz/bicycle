@@ -48,6 +48,8 @@ class Cache_file implements ICache{
         if ( $data !== null )
         {
             $fh = fopen($filename, 'w');
+            if ($fh === false)
+                throw new Exception('CACHE FILE class error: cache directory is not write enabled!');
             fwrite($fh, serialize($data));
             fclose($fh);
         }

@@ -4,7 +4,7 @@
  *
  * @author kubintsev
  */
-class Model_Index 
+class Model_Index extends Model_Base
 {
     function generate()
     {
