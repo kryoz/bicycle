@@ -1,5 +1,5 @@
 <?php
-class Model_test
+class Model_test extends Model_Base
 {
 	function anothertest()
 	{

@@ -46,7 +46,7 @@ Class Router {
             
             // Avoiding duplicates
             $mainpage = array(INDEX.'.php', INDEX, INDEX.'/', INDEX.VIRT_EXT);
-            
+
             if ( in_array($route, $mainpage) )
                 self::redirect();
             
@@ -56,9 +56,8 @@ Class Router {
                 $route = $this->deSlash($route); 
 
             // Getting part from url after '?' and transforming it to array
-            preg_match('#^(.*)\?(.*)$#', $route, $params);
-            
-            if (isset($params[2]))
+            $params = explode('?', $route);
+            if (isset($params[1]))
             {
                 $params = explode('&', $params[2]);
                 foreach ($params as $i=>$part)
@@ -69,21 +68,19 @@ Class Router {
                     $params[$pair[0]] = $pair[1];
                 }
             }
+            
             //Cutting virtual file extension
-            $pattern = '#(\\'.VIRT_EXT.')?(\?.*)?$#';
-            $route = preg_replace($pattern, '', $route);
+            $pattern = '#(\\'.VIRT_EXT.')$#';
+            $route = preg_replace($pattern, '', $params[0]);
             
             //Filtering "-" by transforming it to "_"
             $route = preg_replace('#(\-)#', '_', $route);
             
-            
             /* Main router logic */
-             
             $parts = explode('/', $route);
             
             if ( is_array($parts) )
             {
-
                 if ($parts[0] == INDEX)
                 {
                     $controller = array_shift($parts);
@@ -96,7 +93,7 @@ Class Router {
             }
             else
                 $controller = $route;
-
+             
             self::$controller = $controller;
             self::$args = is_array($args) ? $args : array($args);
             self::$params = $params;

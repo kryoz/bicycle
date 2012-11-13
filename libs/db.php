@@ -1,7 +1,6 @@
 <?php
 /**
- * Database class 
- * Initialization via dbDBO::getInstance()
+ * PDO wrapper class 
  * @author kubintsev
  */
 
@@ -18,7 +17,7 @@ class DB
      * @param string $db address string for connection
      * @throws Exception
      */
-    function __construct($scheme = SCHEME, $db = DBADRESS, $user = DBUSER, $pass = DBPASS) 
+    function __construct($scheme = SCHEME, $db = DBADDRESS, $user = DBUSER, $pass = DBPASS) 
     {
         $this->scheme = $scheme;
 
@@ -194,9 +193,19 @@ class DB
         $this->dbh->commit();
     }
     
+    /**
+     * Make explain for query
+     * @param type $sql
+     * @param array $params
+     * @return string
+     */
     public function explain( $sql, array $params = array())
     {
         $res = $this->query($sql, $params);
+        
+        if (empty($res))
+            return;
+        
         $html = '<table width="100%" border="1">';
         
         foreach ($res as $i=>$row)
@@ -234,6 +243,10 @@ class DB
             return true;
     }
     
+    /**
+     * Get DB PDO object
+     * @return mixed
+     */
     public function o()
     {
         if (!$this->checkConnection())

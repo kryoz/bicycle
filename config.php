@@ -19,7 +19,7 @@ define ('INDEX', 'index');
 
 /* DB connection settings */
 define ('SCHEME', 'mysql'); 
-define ('DBADRESS', 'dbname=test;host=localhost');
+define ('DBADDRESS', 'dbname=test;host=localhost');
 define ('DBUSER', 'admin');
 define ('DBPASS', 'pass');
 

@@ -3,7 +3,7 @@
 class Controller_index extends Controller_Base 
 {
             
-    function index($args, $params) 
+    public function index($args, $params) 
     {
         $model = $this->model;
         $view = $this->view;
@@ -16,7 +16,7 @@ class Controller_index extends Controller_Base
 
     }
     
-    function second($args, $params)
+    public function second($args, $params)
     {
         $model = $this->model;
         $view = $this->view;
