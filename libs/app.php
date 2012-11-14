@@ -13,7 +13,8 @@ class App
         $file = LIBS . $filename;
 
         if (file_exists($file) == false) {
-                throw new Exception('CLASSLOADER: Failed to get '.$file);
+                throw new Exception("App CLASS AutoLoader: Tried to call <b>$class_name</b>, but none was found.
+                    Also there's no <b>$file</b>");
                 return false;
         }
         require_once ($file);

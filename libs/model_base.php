@@ -5,11 +5,11 @@
  * @author kubintsev
  */
 abstract class Model_Base {
-    protected static $name; // name of the component
-    
-    function setComponentName($name)
-    {
-        self::$name = $name;
+    public $name;
+            
+    public function __construct() {
+        $name = explode('_', get_class($this));
+        $this->name = $name[1];
     }
 }
 

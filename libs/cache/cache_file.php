@@ -10,7 +10,7 @@ class Cache_file implements ICache{
     function __construct() 
     {
         if ( !is_dir( CACHEDIR ) )
-            throw new Exception('CACHE_FILE class error: cache directory "'.CACHEDIR.'" does not exist!');
+            throw new Exception(__CLASS__.'::'.__FUNCTION__.': cache directory "'.CACHEDIR.'" does not exist!');
     }
         
     /**
@@ -45,13 +45,18 @@ class Cache_file implements ICache{
     {
         $filename = CACHEDIR.$scope.'.txt';
         
-        if ( $data !== null )
-        {
-            $fh = fopen($filename, 'w');
-            if ($fh === false)
-                throw new Exception('CACHE FILE class error: cache directory is not write enabled!');
-            fwrite($fh, serialize($data));
-            fclose($fh);
+        try {
+            if ( $data !== null )
+            {
+                $fh = @fopen($filename, 'w');
+                if ($fh === false)
+                    throw new Exception('Cache directory is not write enabled!');
+                fwrite($fh, serialize($data));
+                fclose($fh);
+            }
+        }
+        catch (Exception $e) {
+             Debug::log(__CLASS__.'::'.__FUNCTION__.': '.$e->getMessage());
         }
     }
     

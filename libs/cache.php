@@ -27,7 +27,7 @@ class Cache implements ICache
             require_once $class_file;
         }
         else
-            throw new Exception("Cache type '$cachetype' not defined! Haven't found $class_file");
+            throw new Exception(__CLASS__.'::'.__FUNCTION__.": Cache type '$cachetype' not defined! Haven't found $class_file");
         
         $this->cache = new $Cache_class();
     }

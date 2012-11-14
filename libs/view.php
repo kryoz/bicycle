@@ -85,23 +85,22 @@ class View {
             if (is_array($this->vars))
                 extract($this->vars);
             
-            if (DEBUG) {
-                DEBUG::log(DEBUG::getmem());
-            }
-
-            $debug = DEBUG::getlog();
-            
             ob_start();
             require $template;
             
             $content = ob_get_contents();
             ob_end_clean();
             
+            if (DEBUG) {
+                DEBUG::log(DEBUG::getmem());
+                $content .= DEBUG::getlog();
+            }
+            
             return $content;
         }
         catch (Exception $e)
         {
-            Debug::log('VIEW CLASS error!<br>Line:'.$e->getLine().'<br>Message: '.$e->getMessage().'<br>');
+            Debug::log(__CLASS__.'::'.__FUNCTION__.':<br>Line:'.$e->getLine().'<br>Message: '.$e->getMessage().'<br>');
         }
     }
     /**
@@ -115,12 +114,6 @@ class View {
         
         header('Content-Type: text/html; charset='.CODEPAGE);
         header('P3P: CP="CAO PSA OUR"');
-        
-        if (DEBUG) {
-            DEBUG::log(DEBUG::getmem());
-        }
-            
-        $debug = DEBUG::getlog();
         
         if (is_array($this->vars))
                 extract($this->vars);

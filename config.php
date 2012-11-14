@@ -5,6 +5,7 @@ define ('DOCROOT', $_SERVER['DOCUMENT_ROOT']); // root directory of the site
 define ('DS', DIRECTORY_SEPARATOR);
 define ('ROOT', dirname(__FILE__).DS); // filesystem root of framework
 define ('URLROOT', substr(ROOT, strlen(rtrim(DOCROOT, '/'))) ); // URL root of framework
+define ('PROTOCOL', $_SERVER['SERVER_PROTOCOL']);
 
 define ('COMPONENTS', ROOT.'components'.DS);  // path to your applications
 define ('LIBS', ROOT.'libs'.DS); // path to shared libraries

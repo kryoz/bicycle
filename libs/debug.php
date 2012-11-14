@@ -59,7 +59,8 @@ class Debug
         $str = '';
         if ( !empty(self::$log) )
             $str = implode('<br />', self::$log);
-        return $str;
+        self::dprint($str);
+        return end(self::$log);
     }
     
     public static function getmem()

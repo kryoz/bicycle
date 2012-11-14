@@ -4,26 +4,25 @@
  *
  * @author kubintsev
  */
-abstract class Controller_Base 
+abstract class Controller_Base extends Model_Base
 {
     protected $controller_path;
     protected $model;
     protected $view;
-    protected $name; //controller name
-    
     protected $vars;
     protected static $args;
+    public $name;
     
     /**
      * Tries to load default model class and view
      * @param string $name 
      */
-    function __construct($name) 
+    public function __construct() 
     {
-        $this->name = $name;
-        $this->controller_path = COMPONENTS.$name.DS;
+        parent::__construct();
+        $this->controller_path = COMPONENTS.$this->name.DS;
         
-        $this->model = $this->loadModel($name, $name);
+        $this->model = $this->loadModel($this->name, $this->name);
         
         $this->view = new View();
         $this->view->setPath($this->controller_path);
@@ -40,18 +39,20 @@ abstract class Controller_Base
         $component = COMPONENTS.strtolower($component).DS;
         $model_name = strtolower("model_$name");
         $model_fn = $component.$model_name.'.php';
-        if (file_exists($model_fn))
-        {
-            require_once $model_fn;
-            $model = new $model_name();
-            
-            if (is_callable($model_name, 'setComponentName'))
-                $model->setComponentName($this->name);
-            
-            return $model;
+        
+        try {
+            if (file_exists($model_fn))
+            {
+                require_once $model_fn;
+                $model = new $model_name();
+
+                return $model;
+            }
+            else
+                throw new Exception("<b>$model_fn</b> was not found");
+        } catch (Exception $e) {
+            Debug::log(__CLASS__.'::'.__FUNCTION__.': '.$e->getMessage());
         }
-        else
-            return false;
     }
 
     /**

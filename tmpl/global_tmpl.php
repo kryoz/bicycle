@@ -9,9 +9,7 @@
 </head>
 
 <body>
-<?=$debug?>
 <?=$content?>
-
 
 </body>
 </html>
