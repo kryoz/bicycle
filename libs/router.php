@@ -53,19 +53,22 @@ Class Router {
 
         // Getting part from url after '?' and transforming it to array
         $params = explode('?', $route);
-        if (isset($params[1])) {
-            $params = explode('&', $params[2]);
-            foreach ($params as $i => $part) {
-                $pair = explode('=', $part);
-                unset($params[$i]);
+        if (is_array($params)) {
+            $route = $params[0];
+            $params = explode('&', $params[1]);
+            if (is_array($params))
+                foreach ($params as $i => $part) {
+                    $pair = explode('=', $part);
+                    unset($params[$i]);
 
-                $params[$pair[0]] = $pair[1];
-            }
+                    $params[$pair[0]] = $pair[1];
+                }
         }
+        
 
         //Cutting virtual file extension
         $pattern = '#(\\' . VIRT_EXT . ')$#';
-        $route = preg_replace($pattern, '', $params[0]);
+        $route = preg_replace($pattern, '', $route);
 
         //Filtering "-" by transforming it to "_"
         $route = preg_replace('#(\-)#', '_', $route);
