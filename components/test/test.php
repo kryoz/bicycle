@@ -6,6 +6,8 @@
  */
 class Controller_test extends Controller_Base
 {
+	public $complex = true;
+	
     function index($args, $params)
     {
         $model = $this->model;

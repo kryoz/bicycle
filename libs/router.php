@@ -102,7 +102,7 @@ Class Router {
      * Method to find controller and delegate the control to it
      */
 
-    function delegate() {
+    public function delegate() {
         try {
             $this->getController();
 
@@ -127,8 +127,11 @@ Class Router {
                 $action = array_shift(self::$args);
                 $controller->$action(self::$args, self::$params);
             }
-            else
+            elseif (isset($controller->complex))
                 $controller->index(self::$args, self::$params); // this case is required for complex controllers
+            else
+                self::NoPage();
+            
         } catch (Exception $e) {
             Debug::log(__CLASS__.'::'.__FUNCTION__.': ', $e->getMessage());
         }
@@ -136,13 +139,13 @@ Class Router {
 
     public static function redirect($url = '', $raw = false) {
         $address = $raw ? $url : PROTOCOL.'://' . $_SERVER['HTTP_HOST'] . URLROOT . $url;
-        header(PROTOCOL . " 301 Moved Permanently");
+        header("HTTP/1.0 301 Moved Permanently");
         header('Location: ' . $address);
         exit();
     }
 
     public static function NoPage() {
-        header( PROTOCOL . " 404 Not Found");
+        header("HTTP/1.0 404 Not Found");
 
         self::$controller = 'error404';
 

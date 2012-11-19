@@ -2,7 +2,6 @@
 
 class Controller_index extends Controller_Base 
 {
-            
     public function index($args, $params) 
     {
         $model = $this->model;
@@ -13,7 +12,6 @@ class Controller_index extends Controller_Base
         $vars['data'] = $model->generate();
 
         $view->loadTemplate("index")->loadVars($vars)->render();
-
     }
     
     public function second($args, $params)

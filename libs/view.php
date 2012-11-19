@@ -30,6 +30,7 @@ class View {
     function setGlobalTemplate($tmpl)
     {
         $this->global_template = strtolower($tmpl);
+        return $this;
     }
     
     /**
@@ -39,6 +40,7 @@ class View {
     function setPath($path)
     {
         $this->component_path = $path;
+        return $this;
     }
     
     /**

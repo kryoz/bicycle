@@ -11,6 +11,6 @@ class Controller_error404 extends Controller_Base {
         $model = $this->model;
         $view = $this->view;
 
-        $view->loadTemplate("error404")->render();
+        $view->setGlobalTemplate('404.php')->loadTemplate("error404")->render();
     }
 }

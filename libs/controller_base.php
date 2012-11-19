@@ -58,9 +58,18 @@ abstract class Controller_Base extends Model_Base
     /**
      * Entry point to controller
      * @param mixed $args string or array from 
+     * @param array $params array of key=value pairs from url
      */
     abstract function index($args, $params); 
     
+    /**
+     * If params got unhandled then it means URL is wrong
+     * @param mixed $args string or array from 
+     */
+    protected function checkArgs($args) {
+        if (!empty($args))
+            Router::NoPage();
+    }
     /**
      * Генератор навигационной строки
      * @param type $level
