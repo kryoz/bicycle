@@ -70,21 +70,4 @@ abstract class Controller_Base extends Model_Base
         if (!empty($args))
             Router::NoPage();
     }
-    /**
-     * Генератор навигационной строки
-     * @param type $level
-     * @return type
-     */
-    protected function buildNav($level)
-    {
-        $vars = $this->vars;
-        $titles = array();
-        
-        for ($i = 0; $i < $level; $i++)
-            $titles[] = '<a href="'.Catalogue::makeURL(self::$args, $i).'">'.$vars[$i]['navtitle'].'</a>';
-        
-        $titles[] = $vars[$i]['navtitle'];
-        
-        return implode(' - ', $titles);
-    }
 }
