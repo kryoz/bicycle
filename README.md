@@ -1,11 +1,10 @@
 This is very simple MVC framework which should satisfy for purposes of:
 <ul>
 <li>creation of pages with SEF URL hierarhy</li>
-<li>simple page structure (no support for modules or plugins yet)</li>
+<li>simple page structure (no dedicated entities for modules or plugins yet)</li>
 <li>AJAX capability</li>
 <li>various databases support via PDO</li>
-<li>caching capability</li>
-<li>XML parsing functionality</li>
+<li>caching capability (file or APC)</li>
 <li>Email handling</li>
 <li>Basic debugging</li>
 </ul>
@@ -17,7 +16,6 @@ Framework structure:<br>
 <pre>
 ROOT
 |
-|-- cache       - directory for file cache storage (should have 777 access rights)
 |-- components  - your application 
 |-- libs        - shared libraries
 |-- tmpl        - global templates for views
