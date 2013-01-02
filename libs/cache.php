@@ -59,9 +59,10 @@ class Cache implements ICache
      * @param mixed $data Data to save
      * @return boolean Success?
      */
-    function set($scope, $data = null)
+    function set($scope, $data = null, $ttl = null)
     {
-        $this->cache->set($scope, $data);
+        $ttl = $ttl ? $ttl : CACHETTL;
+        $this->cache->set($scope, $data, $ttl);
     }
     
     
@@ -69,9 +70,9 @@ class Cache implements ICache
      * Erases cache cell
      * @param string $scope cache cell name
      */
-    function flush($scope)
+    function flush($scope, $regular = false)
     {
-        $this->cache->flush($scope);
+        $this->cache->flush($scope, $regular);
     }
     
 }

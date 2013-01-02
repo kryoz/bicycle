@@ -41,7 +41,7 @@ class Cache_file implements ICache{
      * @param mixed $data 
      * @return boolean
      */
-    function set($scope, $data = null )
+    function set($scope, $data = null, $ttl = null )
     {
         $filename = CACHEDIR.$scope.'.txt';
         
@@ -64,7 +64,7 @@ class Cache_file implements ICache{
      * 
      * @param string $scope
      */
-    function flush($scope)
+    function flush($scope, $regular = false)
     {
         if (file_exists(CACHEDIR.$scope.'.txt'))
         {

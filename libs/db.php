@@ -29,8 +29,7 @@ class DB
 
                 /* http://stackoverflow.com/questions/10113562/pdo-mysql-use-pdoattr-emulate-prepares-or-not */
                 
-                if ( version_compare(PHP_VERSION, '5.3.6', '<') )
-                    $this->dbh->exec('SET NAMES '.INNERCODEPAGE);
+                $this->dbh->exec('SET NAMES '.INNERCODEPAGE);
 
                 $serverversion = $this->dbh->getAttribute(PDO::ATTR_SERVER_VERSION);
                 $emulate_prepares = version_compare($serverversion, '5.1.17', '<');

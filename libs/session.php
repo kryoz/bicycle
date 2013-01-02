@@ -40,40 +40,23 @@ class Session {
     }
 
 
-    public function get($key, $namespace = null) {
-        if ($namespace)
-            $session = $_SESSION[$namespace];
-        else 
-            $session = $_SESSION;
-
-            return isset($session[$key]) ? $session[$key] : false;
+    public function get($key) {
+        return isset($_SESSION[$key]) ? $_SESSION[$key] : false;
     }
 
-    public function set($key, $value, $namespace = null) {
-        if ($namespace)
-            $session = $_SESSION[$namespace];
-        else 
-            $session = $_SESSION;
-        
+    public function set($key, $value) {
         $session[$key] = $value;
-       
     }
 
     /**
      * Removes a session variable.
      * @param mixed $key the name of the session variable to be removed
-     * @param string namespace
      * @return mixed the removed value, null if no such session variable.
      */
-    public function remove($key, $namespace = null) {
-        if ($namespace)
-            $session = $_SESSION[$namespace];
-        else 
-            $session = $_SESSION;
-        
-        if (isset($session[$key])) {
-            $value = $session[$key];
-            unset($session[$key]);
+    public function remove($key) {
+        if (isset($_SESSION[$key])) {
+            $value = $_SESSION[$key];
+            unset($_SESSION[$key]);
             return $value;
         }
         else
@@ -86,12 +69,7 @@ class Session {
      * @return boolean whether there is the named session variable
      */
     public function exists($key, $namespace = null) {
-        if ($namespace)
-            $session = $_SESSION[$namespace];
-        else 
-            $session = $_SESSION;
-        
-        return isset($session[$key]);
+        return isset($_SESSION[$key]);
     }
 
     /**

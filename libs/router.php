@@ -139,13 +139,13 @@ Class Router {
 
     public static function redirect($url = '', $raw = false) {
         $address = $raw ? $url : PROTOCOL.'://' . $_SERVER['HTTP_HOST'] . URLROOT . $url;
-        header("HTTP/1.0 301 Moved Permanently");
+        header("HTTP/1.1 301 Moved Permanently");
         header('Location: ' . $address);
         exit();
     }
 
     public static function NoPage() {
-        header("HTTP/1.0 404 Not Found");
+        header("HTTP/1.1 404 Not Found");
 
         self::$controller = 'error404';
 

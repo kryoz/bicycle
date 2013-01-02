@@ -1,20 +1,23 @@
 <?php
-define ('DEBUG', true);
+define ('DEBUG', true); //dev mode on
 
 define ('DOCROOT', $_SERVER['DOCUMENT_ROOT']); // root directory of the site
 define ('DS', DIRECTORY_SEPARATOR);
 define ('ROOT', dirname(__FILE__).DS); // filesystem root of framework
 define ('URLROOT', substr(ROOT, strlen(rtrim(DOCROOT, '/'))) ); // URL root of framework
-define ('PROTOCOL', 'http');
+define ('PROTOCOL', 'http'); // HTTP or HTTPS
 
 define ('COMPONENTS', ROOT.'components'.DS);  // path to your applications
 define ('LIBS', ROOT.'libs'.DS); // path to shared libraries
 define ('GLOBALVIEWS', ROOT.'tmpl'.DS); // path to global templates
 
-define ('CACHEDIR', ROOT.'cache'.DS); 
-define ('CACHETTL', 86400*7); // cache time to live. '0' to disable 
+define ('CACHEDIR', DS.'tmp'.DS); 
+define ('CACHETTL', 3600); // cache time to live. '0' to disable 
+define ('CP', 'tst_');
+
 define ('CODEPAGE', 'utf-8'); // HTML codepage
 define ('INNERCODEPAGE', 'utf-8'); // inner codepage
+
 define ('VIRT_EXT', '.html');
 define ('INDEX', 'index');
 
@@ -31,6 +34,6 @@ if (DEBUG)
 }
 
 ini_set('max_execution_time', 120);
-setlocale( LC_ALL, 'ru_RU.'.INNERCODEPAGE);
+setlocale(LC_ALL, 'ru_RU.'.INNERCODEPAGE);
 mb_internal_encoding( INNERCODEPAGE );
 date_default_timezone_set( 'Europe/Moscow' );

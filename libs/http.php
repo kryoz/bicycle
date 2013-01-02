@@ -1,8 +1,10 @@
 <?php
-class HTTP extends Model_Base {
+class Http extends Model_Base 
+{
 	public static function isAjax()
     {
-        return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
+        return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+        $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
     }
 
     public function sendJSON($json)
@@ -13,20 +15,35 @@ class HTTP extends Model_Base {
             
             $response = '';
 
-            // смотрим признак нашего jsonp-запроса по названию callback-функции
-            if (isset($_GET['callback'])) 
-            {
-                // если таки оно, то оборачиваем данные в функцию
+            if (isset($_GET['callback'])) {
                 header("content-type: text/javascript");
                 $response = $_GET['callback'].'('.$json.')';
-            }
-            else
-            {
+            } else {
                 header("content-type: text/json");
                 $response = $json;
             }
-            // строка получена - отдадим ее
+
             echo $response;
         } 
+    }
+
+    public function getGet()
+    {
+        return $_GET;
+    }
+
+    public function getPost()
+    {
+        return $_POST;
+    }
+
+    public function getGetVar($key)
+    {
+        return $_GET[$key];
+    }
+
+    public function getPostVar($key)
+    {
+        return $_POST[$key];
     }
 }

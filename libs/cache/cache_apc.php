@@ -28,18 +28,25 @@ class cache_apc implements ICache
      * @param mixed $data 
      * @return boolean
      */
-    function set($scope, $data = null )
+    function set($scope, $data = null, $ttl = null)
     {
-        return apc_store($scope, $data, CACHETTL);
+        return apc_store($scope, $data, $ttl);
     }
     
     /**
      * 
      * @param string $scope
      */
-    function flush($scope)
+    function flush($scope, $regular = false)
     {
-        return apc_delete($scope);
+        if ($regular)
+        {
+            foreach (new APCIterator('user', $scope) as $counter) {
+                apc_delete($counter['key']);
+            }
+        } 
+        else
+            return apc_delete($scope);
     }
 }
 

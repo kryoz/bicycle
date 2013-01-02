@@ -7,10 +7,8 @@
 
 require_once 'config.php';
 require_once LIBS.'functions.php'; // simple global functions
-require_once LIBS.'app.php'; // application class
+require_once LIBS.'autoloader.php'; // application class
 
-App::Run();
-
-
-
-
+Autoloader::Register();
+$router = new Router();
+$router->delegate();
