@@ -1,3 +1,4 @@
+<h1>What is it?</h1>
 This is very simple framework which should satisfy for purposes of:
 <ul>
 <li>creation of MVC application with SEF URL hierarhy</li>
@@ -27,3 +28,15 @@ ROOT
 
 <i>bootstrap.php</i> and <i>libs</i> can be dedicated to shared include path (for ex. to <i>/usr/share/php</i>)
 while specific libraries still can accessable by autoloader in <i>libs</i> folder at the site root.
+
+<h1>Usage</h1>
+The framework is easy to integrate with your current project as library tool.<br><br>
+First, copy <i>libs</i> and <i>bootstrap.php</i> to the root of your site or 
+to the "include_path" specified in your php.ini<br><br>
+Second, check configuration in <i>bootstrap.php</i>.<br><br>
+Then just put the call in the head of your application:
+<pre>
+require_once "bootstrap.php";
+</pre>
+<br>
+Now you can use any library of framework as you wish
