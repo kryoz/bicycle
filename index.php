@@ -1,14 +1,11 @@
 <?php
 /**
  * The entry of MVC framework
- * Please take a look in config.php before launching application
- * @author kubintsev
+ * Please take a look in bootstrap.php before launching application
+ * @author kryoz
  */
 
-require_once 'config.php';
-require_once LIBS.'functions.php'; // simple global functions
-require_once LIBS.'autoloader.php'; // application class
+require_once 'bootstrap.php';
 
-Autoloader::Register();
 $router = new Router();
 $router->delegate();

@@ -8,12 +8,12 @@ define ('URLROOT', substr(ROOT, strlen(rtrim(DOCROOT, '/'))) ); // URL root of f
 define ('PROTOCOL', 'http'); // HTTP or HTTPS
 
 define ('COMPONENTS', ROOT.'components'.DS);  // path to your applications
-define ('LIBS', ROOT.'libs'.DS); // path to shared libraries
+define ('LIBS2', DOCROOT.'libs'.DS); // site specific libs
 define ('GLOBALVIEWS', ROOT.'tmpl'.DS); // path to global templates
 
 define ('CACHEDIR', DS.'tmp'.DS); 
 define ('CACHETTL', 3600); // cache time to live. '0' to disable 
-define ('CP', 'tst_');
+define ('CP', md5(DOCROOT).'_');
 
 define ('CODEPAGE', 'utf-8'); // HTML codepage
 define ('INNERCODEPAGE', 'utf-8'); // inner codepage
@@ -27,6 +27,8 @@ define ('DBADDRESS', 'dbname=test;host=localhost');
 define ('DBUSER', 'admin');
 define ('DBPASS', 'pass');
 
+define ('_SAPE_USER', '2b6b81f35caca7b76766fa558d1eadd1'); // your SAPE id
+
 if (DEBUG)
 {
     error_reporting(E_ALL ^ E_NOTICE);
@@ -37,3 +39,6 @@ ini_set('max_execution_time', 120);
 setlocale(LC_ALL, 'ru_RU.'.INNERCODEPAGE);
 mb_internal_encoding( INNERCODEPAGE );
 date_default_timezone_set( 'Europe/Moscow' );
+
+require_once LIBS."autoloader.php";
+Autoloader::register();

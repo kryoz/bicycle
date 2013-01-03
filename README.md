@@ -1,10 +1,10 @@
-This is very simple MVC framework which should satisfy for purposes of:
+This is very simple framework which should satisfy for purposes of:
 <ul>
-<li>creation of pages with SEF URL hierarhy</li>
+<li>creation of MVC application with SEF URL hierarhy</li>
 <li>simple page structure (no dedicated entities for modules or plugins yet)</li>
 <li>AJAX capability</li>
 <li>various databases support via PDO</li>
-<li>caching capability (file or APC)</li>
+<li>flexible caching functionality (file or APC)</li>
 <li>Email handling</li>
 <li>Basic debugging</li>
 </ul>
@@ -17,10 +17,13 @@ Framework structure:<br>
 ROOT
 |
 |-- components  - your application 
-|-- libs        - shared libraries
+|-- libs        - shared/specific libraries
 |-- tmpl        - global templates for views
 |
-|- config.php   - configuration of framework
-|- index.php    - framework entry
+|- bootstrap.php   - configuration of framework
+|- index.php    - application entry
 |- .htaccess    - Apache directives for SEF support (very simple and easily can be rewritten for nginx)
 </pre>
+
+<i>bootstrap.php</i> and <i>libs</i> can be dedicated to shared include path (for ex. to <i>/usr/share/php</i>)
+while specific libraries still can accessable by autoloader in <i>libs</i> folder at the site root.
