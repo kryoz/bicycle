@@ -230,7 +230,7 @@ class SAPE_base {
             $buff = '';
             $fp = @fsockopen($host, 80, $errno, $errstr, $this->_socket_timeout);
             if ($fp) {
-                @fputs($fp, "GET {$path} HTTP/1.0\r\nHost: {$host}\r\n");
+                @fputs($fp, "GET {$path} HTTP/1.1\r\nHost: {$host}\r\n");
                 @fputs($fp, "User-Agent: {$user_agent}\r\n\r\n");
                 while (!@feof($fp)) {
                     $buff .= @fgets($fp, 128);
@@ -254,27 +254,6 @@ class SAPE_base {
 
         $cache = Cache::getInstance();
         return $cache->get(CP.$filename);
-        /*
-        $fp = @fopen($filename, 'rb');
-        @flock($fp, LOCK_SH);
-        if ($fp) {
-            clearstatcache();
-            $length = @filesize($filename);
-            //$mqr = @get_magic_quotes_runtime();
-            //@set_magic_quotes_runtime(0);
-            if ($length) {
-                $data = @fread($fp, $length);
-            } else {
-                $data = '';
-            }
-                //@set_magic_quotes_runtime($mqr);
-            @flock($fp, LOCK_UN);
-            @fclose($fp);
-
-            return $data;
-        }
-        
-        return $this->raise_error('Не могу считать данные из файла: ' . $filename);*/
     }
 
     /**
@@ -283,30 +262,7 @@ class SAPE_base {
     function _write($filename, $data) {
         $cache = Cache::getInstance();
         $cache->set(CP.$filename, $data);
-        /*
-        $fp = @fopen($filename, 'ab');
-        if ($fp) {
-            if (flock($fp, LOCK_EX | LOCK_NB)) {
-                ftruncate($fp, 0);
-                //$mqr = @get_magic_quotes_runtime();
-                //@set_magic_quotes_runtime(0);
-                @fwrite($fp, $data);
-                //@set_magic_quotes_runtime($mqr);
-                @flock($fp, LOCK_UN);
-                @fclose($fp);
-
-                if (md5($this->_read($filename)) != md5($data)) {
-                    @unlink($filename);
-                    return $this->raise_error('Нарушена целостность данных при записи в файл: ' . $filename);
-                }
-            } else {
-                return false;
-            }
-
-            return true;
-        }
-
-        return $this->raise_error('Не могу записать данные в файл: ' . $filename);*/
+        return true;
     }
 
     /**
@@ -327,42 +283,14 @@ class SAPE_base {
 	 * Загрузка данных
 	 */
     function load_data() {
-        $this->_db_file = 'sape_links';//$this->_get_db_file();
+        $this->_db_file = 'sape_links';
 
-        /*if (!is_file($this->_db_file)) {
-            // Пытаемся создать файл.
-            if (@touch($this->_db_file)) {
-                @chmod($this->_db_file, 0666); // Права доступа
-            } else {
-                return $this->raise_error('Нет файла ' . $this->_db_file . '. Создать не удалось. Выставите права 777 на папку.');
-            }
-        }
-
-        if (!is_writable($this->_db_file)) {
-            return $this->raise_error('Нет доступа на запись к файлу: ' . $this->_db_file . '! Выставите права 777 на папку.');
-        }
-
-        @clearstatcache();*/
 
         $data = $this->_read($this->_db_file);
-        /*if (
-                $this->_force_update_db
-                || (
-                        !$this->_is_our_bot
-                        &&
-                        (
-                                filemtime($this->_db_file) < (time() - $this->_cache_lifetime)
-                                ||
-                                filesize($this->_db_file) == 0
-                                ||
-                                @unserialize($data) == false
-                        )
-                )
-        )*/ 
+
         if (!$data)
         {
-            // Чтобы не повесить площадку клиента и чтобы не было одновременных запросов
-            //@touch($this->_db_file, (time() - $this->_cache_lifetime + $this->_cache_reloadtime));
+
 
             $path = $this->_get_dispenser_path();
             if (strlen($this->_charset)) {
@@ -375,23 +303,18 @@ class SAPE_base {
                         $this->raise_error($data);
                     } else {
                         // [псевдо]проверка целостности:
-                        $hash = @unserialize($data);
-                        if ($hash != false) {
+                        $data = @unserialize($data);
+                        if ($data != false) {
                             // попытаемся записать кодировку в кеш
-                            $hash['__sape_charset__'] = $this->_charset;
-                            $hash['__last_update__'] = time();
-                            $hash['__multi_site__'] = $this->_multi_site;
-                            $hash['__fetch_remote_type__'] = $this->_fetch_remote_type;
-                            $hash['__ignore_case__'] = $this->_ignore_case;
-                            $hash['__php_version__'] = phpversion();
-                            $hash['__server_software__'] = $_SERVER['SERVER_SOFTWARE'];
+                            $data['__sape_charset__'] = $this->_charset;
+                            $data['__last_update__'] = time();
+                            $data['__multi_site__'] = $this->_multi_site;
+                            $data['__fetch_remote_type__'] = $this->_fetch_remote_type;
+                            $data['__ignore_case__'] = $this->_ignore_case;
+                            $data['__php_version__'] = phpversion();
+                            $data['__server_software__'] = $_SERVER['SERVER_SOFTWARE'];
 
-                            /*$data_new = @serialize($hash);
-                            if ($data_new) {
-                                $data = $data_new;
-                            }*/
-
-                            $this->_write($this->_db_file, $hash); //$data
+                            $this->_write($this->_db_file, $data);
                             break;
                         }
                     }
@@ -405,7 +328,7 @@ class SAPE_base {
             $this->_request_uri = str_replace(array('?' . $session, '&' . $session), '', $this->_request_uri);
         }
 
-        $this->set_data($data); //@unserialize($data)
+        $this->set_data($data); 
     }
 }
 
