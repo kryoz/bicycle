@@ -5,18 +5,22 @@ define ('DOCROOT', $_SERVER['DOCUMENT_ROOT']); // root directory of the site
 define ('DS', DIRECTORY_SEPARATOR);
 define ('ROOT', dirname(__FILE__).DS); // filesystem root of framework
 define ('URLROOT', substr(ROOT, strlen(rtrim(DOCROOT, '/'))) ); // URL root of framework
+
 define ('PROTOCOL', 'http'); // HTTP or HTTPS
+define ('SEFENABLED', false); // SEF-url routes
 
 define ('COMPONENTS', ROOT.'components'.DS);  // path to your applications
+define ('LIBS', ROOT.'libs'.DS); // path to shared libraries
 define ('LIBS2', DOCROOT.'libs'.DS); // site specific libs
 define ('GLOBALVIEWS', ROOT.'tmpl'.DS); // path to global templates
+define ('LOGFILE', DOCROOT.'debug.log'); // make sure that file has write-enable rights
 
 define ('CACHEDIR', DS.'tmp'.DS); 
 define ('CACHETTL', 3600); // cache time to live. '0' to disable 
 define ('CP', md5(DOCROOT).'_');
 
 define ('CODEPAGE', 'utf-8'); // HTML codepage
-define ('INNERCODEPAGE', 'utf-8'); // inner codepage
+define ('INNERCODEPAGE', 'utf8'); // inner codepage
 
 define ('VIRT_EXT', '.html');
 define ('INDEX', 'index');

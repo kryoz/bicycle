@@ -6,6 +6,10 @@
 
 class DB
 {
+    const ERR_NO_CONNECTION = 'PDO connection fail';
+    const ERR_INIT_FAIL = 'PDO init error';
+    const ERR_SQL_ERROR = 'Query execution error';
+
     private $scheme;
     private $dbh;
     private $result;
@@ -42,7 +46,7 @@ class DB
         } 
         catch (PDOException $e) 
         {
-            Debug::log('PDO init error: '.$e->getMessage());
+            throw new PDOException(self::ERR_INIT_FAIL.': '.$e->getMessage());
         }
     }
 
@@ -77,7 +81,7 @@ class DB
     public function query( $sql, array $params = array(), $fetchFlags = PDO::FETCH_ASSOC ) 
     {
         if (!$this->checkConnection())
-            return false;
+            throw new PDOException(self::ERR_NO_CONNECTION);
         
         try {
             $sth = $this->dbh->prepare($sql);
@@ -88,13 +92,12 @@ class DB
         } 
         catch (PDOException $e) 
         {
-            Debug::log('SQL error: '.$e->getMessage());
-            
             if (DEBUG)
             {
                 Debug::log('QUERY: '.$sql );
                 Debug::log('PARAMS: '.print_r($params,true) );
             }
+            throw new PDOException(self::ERR_SQL_ERROR.': '.$e->getMessage());
         }
         
         return $result;
@@ -110,20 +113,19 @@ class DB
     public function get( $sql, array $params = array() ) 
     {
         if (!$this->checkConnection())
-            return false;
+            throw new PDOException(self::ERR_NO_CONNECTION);
         try {
             $this->result = $this->dbh->prepare($sql);
             $this->result->execute( $params );
         } 
         catch (PDOException $e) 
         {
-            Debug::log('SQL error: '.$e->getMessage());
-            
             if (DEBUG)
             {
                 Debug::log('QUERY: '.$sql );
                 Debug::log('PARAMS: '.print_r($params,true) );
             }
+            throw new PDOException(self::ERR_SQL_ERROR.': '.$e->getMessage());
         }
         
         return $result;
@@ -137,14 +139,14 @@ class DB
     public function fetchRow( $fetchFlags = PDO::FETCH_ASSOC ) 
     {
         if (!$this->checkConnection() || empty($this->result))
-            return false;
+            throw new PDOException(self::ERR_NO_CONNECTION);
         
         try {
             return $this->result->fetch($fetchFlags);
         } 
         catch (PDOException $e) 
         {
-            Debug::log('SQL error: '.$e->getMessage());
+            throw new PDOException(self::ERR_SQL_ERROR.': '.$e->getMessage());
         }
 
     }
@@ -158,19 +160,18 @@ class DB
     public function exec( $sql, array $params = array() ) 
     {
         if (!$this->checkConnection())
-            return false;
+            throw new PDOException(self::ERR_NO_CONNECTION);
         
         try {
             $this->dbh->prepare($sql)->execute( $params );
         } 
         catch (PDOException $e) {
-            Debug::log('SQL error: '.$e->getMessage());
-            
             if (DEBUG)
             {
                 Debug::log('QUERY: '.$sql );
                 Debug::log('PARAMS: '.print_r($params,true) );
             }
+            throw new PDOException(self::ERR_SQL_ERROR.': '.$e->getMessage());
         }
         
         return $this->dbh->lastInsertId();
@@ -179,7 +180,7 @@ class DB
     public function begin()
     {
         if (!$this->checkConnection())
-            return false;
+            throw new PDOException(self::ERR_NO_CONNECTION);
         
         $this->dbh->beginTransaction();
     }
@@ -187,7 +188,7 @@ class DB
     public function commit()
     {
         if (!$this->checkConnection())
-            return false;
+            throw new PDOException(self::ERR_NO_CONNECTION);
         
         $this->dbh->commit();
     }
@@ -234,12 +235,7 @@ class DB
     
     public function checkConnection()
     {
-        if (empty($this->dbh))
-        {
-            Debug::log('DB CLASS: Failed to connect to database!');
-            return false;
-        }   else
-            return true;
+        return !empty($this->dbh);
     }
     
     /**
@@ -249,7 +245,7 @@ class DB
     public function o()
     {
         if (!$this->checkConnection())
-            return false;
+            throw new PDOException(self::ERR_NO_CONNECTION);
         else
             return $this->dbh;
     }
