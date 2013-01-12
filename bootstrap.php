@@ -1,18 +1,18 @@
 <?php
 define ('DEBUG', true); //dev mode on
 
-define ('DOCROOT', $_SERVER['DOCUMENT_ROOT']); // root directory of the site
 define ('DS', DIRECTORY_SEPARATOR);
+define ('DOCROOT', $_SERVER['DOCUMENT_ROOT'].DS); // root directory of the site
 define ('ROOT', dirname(__FILE__).DS); // filesystem root of framework
-define ('URLROOT', substr(ROOT, strlen(rtrim(DOCROOT, '/'))) ); // URL root of framework
+define ('URLROOT', ''); // URL root of framework
 
 define ('PROTOCOL', 'http'); // HTTP or HTTPS
 define ('SEFENABLED', false); // SEF-url routes
 
-define ('COMPONENTS', ROOT.'components'.DS);  // path to your applications
+define ('COMPONENTS', DOCROOT.'components'.DS);  // path to your applications
 define ('LIBS', ROOT.'libs'.DS); // path to shared libraries
 define ('LIBS2', DOCROOT.'libs'.DS); // site specific libs
-define ('GLOBALVIEWS', ROOT.'tmpl'.DS); // path to global templates
+define ('GLOBALVIEWS', DOCROOT.'tmpl'.DS); // path to global templates
 define ('LOGFILE', DOCROOT.'debug.log'); // make sure that file has write-enable rights
 
 define ('CACHEDIR', DS.'tmp'.DS); 

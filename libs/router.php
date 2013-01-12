@@ -105,6 +105,7 @@ class Router
             
             self::$controller = $controller;
             self::$args = is_array($args) ? $args : [$args];
+            self::$page = isset(self::$args[0]) ? array_shift(self::$args) : INDEX;
             self::$params = $params;
 
             // Case of hidden controller and assuming INDEX
@@ -167,10 +168,11 @@ class Router
                 $controller->{self::$page}(self::$args, self::$params);
             }
             //this case is required for complex controllers
-            elseif (isset($controller->complex))
+            elseif (isset($controller->complex)) {
                 $controller->index(self::$args, self::$params);
-            else
+            } else {
                 self::NoPage();
+            }
             
         } catch (Exception $e) {
             Debug::log(__CLASS__.'::'.__FUNCTION__.': '.$this->getControllerPath(), $e->getMessage());

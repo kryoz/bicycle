@@ -22,12 +22,13 @@ class Debug
     public function __destruct()
     {
         if (defined('LOGFILE')) {
-            $f = fopen(LOGFILE, 'a+');
-            fputs($f, "\n*****************************[ {$this->timestamp} ]*******************************\n");
-            foreach ($this->log as $line) {
-                fputs($f, $line);
+                if ($f = @fopen(LOGFILE, 'a+')) {
+                fputs($f, "\n*****************************[ {$this->timestamp} ]*******************************\n");
+                foreach ($this->log as $line) {
+                    fputs($f, $line);
+                }
+                fclose($f);
             }
-            fclose($f);
         }
 
         foreach ($this as $key => $value) { 
