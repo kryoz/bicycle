@@ -2,7 +2,7 @@
 /**
  * Base cache handler
  *
- * @author kubintsev
+ * @author kryoz
  */
 
 class Cache implements ICache
@@ -69,6 +69,7 @@ class Cache implements ICache
     /**
      * Erases cache cell
      * @param string $scope cache cell name
+     * @param is regexp?
      */
     function flush($scope, $regular = false)
     {

@@ -4,7 +4,7 @@
  *
  * @author kubintsev
  */
-class Model_Index extends Model_Base
+class cacheTest extends Component
 {
     function generate()
     {

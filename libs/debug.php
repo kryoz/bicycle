@@ -89,9 +89,7 @@ class Debug
     
     public static function dprint($var, $echo = 0)
     {
-        $dump = "<pre style=\"border: 1px solid #000; padding:1em; margin: 0.5em;\">";
-        $dump .= print_r($var, true);
-        $dump .= "</pre>\n";
+        $dump = print_r($var, true);
 
         if ($echo)
             echo $dump;
@@ -105,7 +103,7 @@ class Debug
     {
         $str = '';
         $debug = self::getInstance();
-        if ( !empty($debug->log) )
+        if (!empty($debug->log) )
             $str = implode('<br />', $debug->log);
         $debug::dprint($str);
         return end($debug->log);

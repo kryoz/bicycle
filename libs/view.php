@@ -77,7 +77,7 @@ class View {
     {
         try {
             
-            $template = $this->component_path.'view_'.$this->template.'.php';
+            $template = $this->component_path.$this->template.'.php';
 
             if ( !file_exists($template) )
             {

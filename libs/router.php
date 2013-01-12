@@ -3,6 +3,7 @@ class Router
 {
     const CONTROLLER = 'c';
     const PAGE = 'p';
+    const CCLASS = 'C';
 
     private static $path;
     private static $controller;
@@ -13,11 +14,6 @@ class Router
     function __construct()
     {
         $this->setPath(COMPONENTS);
-    }
-
-    private function deSlash($str)
-    {
-        return trim($str, '/\\');
     }
 
     /**
@@ -61,7 +57,7 @@ class Router
         if (empty($route))
             $route = INDEX;
         else
-            $route = $this->deSlash($route);
+            $route = trim($route, '/\\');
 
         // Getting part from url after '?' and transforming it to array
         $params = explode('?', $route);
@@ -161,10 +157,10 @@ class Router
 
             $controller_file = $this->getControllerPath();
 
-            require_once ($controller_file);
+            require_once $controller_file;
 
             // Delegating control
-            $class = 'Controller_' . self::$controller;
+            $class = self::CCLASS . self::$controller;
             $controller = new $class();
 
             if (is_callable([$class, self::$page])) {
@@ -177,7 +173,7 @@ class Router
                 self::NoPage();
             
         } catch (Exception $e) {
-            Debug::log(__CLASS__.'::'.__FUNCTION__.': ', $e->getMessage());
+            Debug::log(__CLASS__.'::'.__FUNCTION__.': '.$this->getControllerPath(), $e->getMessage());
         }
     }
 
@@ -195,9 +191,9 @@ class Router
 
         self::$controller = 'error404';
 
-        require_once (self::getControllerPath());
+        require_once self::getControllerPath();
 
-        $class = 'Controller_' . self::$controller;
+        $class = self::CCLASS . self::$controller;
 
         $controller = new $class(self::$controller);
         $controller->index(self::$args, self::$params);

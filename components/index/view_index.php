@@ -12,7 +12,8 @@ This is <b>index</b> component which you can find in <em><?=COMPONENTS.'index'?>
 In first run random array is generated then it put into cache. Refresh page to to see cached result in second array.<br>
 Please note that <em><?=CACHEDIR?></em> must have write enabled rights (777) in case of absence <i>APC</i> cache.
 <br><br>
-You can also see <a href="<?=URLROOT?>index/second">alternate action</a> for <b>index</b> component<br><br>
+You can also try <a href="<?=URLROOT?>index?c=index&p=second">alternate action</a> for <b>index</b> component<br><br>
+or <a href="<?=URLROOT?>index?c=test">Test component</a>
 This is new randomly generated array:<br>
 <?php show($data); ?>
 <br><br>

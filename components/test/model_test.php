@@ -5,7 +5,10 @@ class Model_test extends Model_Base
 	{
 		$db = DB::getInstance();
 
-		$params = array("param1"=>"asd", "param2" => "qwerty");
+		$params = [
+			"param1"=>"asd", 
+			"param2" => "qwerty"
+		];
 
 		$res = $db->query("SELECT * FROM table WHERE column1 = :param1 AND column2 = :param2", $params); 
 

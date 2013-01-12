@@ -2,12 +2,11 @@
 /**
  * Controller base class
  *
- * @author kubintsev
+ * @author kryoz
  */
-abstract class Controller_Base extends Model_Base
+abstract class BaseController extends Component
 {
     protected $controller_path;
-    protected $model;
     protected $view;
     protected $vars;
     protected static $args;
@@ -15,15 +14,11 @@ abstract class Controller_Base extends Model_Base
     
     /**
      * Tries to load default model class and view
-     * @param string $name 
      */
     public function __construct() 
     {
         parent::__construct();
-        $this->controller_path = COMPONENTS.$this->name.DS;
-        
-        $this->model = $this->loadModel($this->name, $this->name);
-        
+        $this->controller_path = COMPONENTS.strtolower(substr($this->name, 1, strlen($this->name))).DS;
         $this->view = new View();
         $this->view->setPath($this->controller_path);
     }
@@ -34,10 +29,10 @@ abstract class Controller_Base extends Model_Base
      * @param string $name
      * @return object|boolean
      */
-    final function loadModel($component, $name)
+    final function loadModel($name, $component = null)
     {
-        $component = COMPONENTS.strtolower($component).DS;
-        $model_name = strtolower("model_$name");
+        $component = $component ? $component : $this->controller_path;
+        $model_name = strtolower($name);
         $model_fn = $component.$model_name.'.php';
         
         try {
@@ -61,13 +56,4 @@ abstract class Controller_Base extends Model_Base
      * @param array $params array of key=value pairs from url
      */
     abstract function index($args, $params); 
-    
-    /**
-     * If params got unhandled then it means URL is wrong
-     * @param mixed $args string or array from 
-     */
-    protected function checkArgs($args) {
-        if (!empty($args))
-            Router::NoPage();
-    }
 }
