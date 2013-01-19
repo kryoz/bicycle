@@ -1,5 +1,7 @@
 <?php
-class Http extends Model_Base 
+namespace Core;
+
+class Http
 {
 	public static function isAjax()
     {

@@ -42,6 +42,7 @@
  * to an SMTP server.
  * original author: Chris Ryan
  */
+namespace Core\PHPMailer;
 
 class SMTP {
   /**

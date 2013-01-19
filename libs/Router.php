@@ -7,7 +7,6 @@ class Router
 
 	const CONTROLLER = 'c';
 	const PAGE = 'p';
-	const CCLASS = 'C';
 
 	private static $path;
 	private static $controller;
@@ -161,7 +160,7 @@ class Router
 			require_once $controller_file;
 
 			// Delegating control
-			$class = 'Components\\' . self::CCLASS . self::$controller;
+			$class = 'Components\\' . self::$controller;
 			$controller = new $class(self::$path . self::$controller . DS);
 
 			if (is_callable([$class, self::$page])) {
@@ -194,7 +193,7 @@ class Router
 
 		require_once self::getControllerPath();
 
-		$class = self::CCLASS . self::$controller;
+		$class = self::$controller;
 
 		$controller = new $class(self::$controller);
 		$controller->index(self::$args, self::$params);

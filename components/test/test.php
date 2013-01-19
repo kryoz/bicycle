@@ -1,7 +1,7 @@
 <?php
 namespace Components;
 
-class CTest extends \Core\BaseController
+class Test extends \Core\BaseController
 {
 	public $complex = true;
 	

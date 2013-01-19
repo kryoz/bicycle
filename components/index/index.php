@@ -1,7 +1,7 @@
 <?php
 namespace Components;
 
-class CIndex extends \Core\BaseController
+class Index extends \Core\BaseController
 {
     public function index($args, $params) 
     {

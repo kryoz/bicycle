@@ -6,7 +6,6 @@ namespace Core;
 
 class Autoloader 
 {
-	const CP = 'AUTOLOADER_';
 	private static $instance;
 	
 	private static function getInstance()

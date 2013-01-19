@@ -16,7 +16,7 @@ class View {
      * 
      * @param string $tmpl the name of global template
      */
-    function __construct($tmpl = null) 
+    public function __construct($tmpl = null) 
     {
         if ( $tmpl === null)
             $this->global_template = 'global_tmpl.php';
@@ -29,7 +29,7 @@ class View {
      * Sets new global template
      * @param string $path
      */
-    function setGlobalTemplate($tmpl)
+    public function setGlobalTemplate($tmpl)
     {
         $this->global_template = strtolower($tmpl);
         return $this;
@@ -39,7 +39,7 @@ class View {
      * Sets component path
      * @param string $path
      */
-    function setPath($path)
+    public function setPath($path)
     {
         $this->component_path = $path;
         return $this;
@@ -50,7 +50,7 @@ class View {
      * @param array $vars
      * @return \View
      */
-    function loadVars(array $vars)
+    public function loadVars(array $vars)
     {
         $this->vars = $vars;
         return $this;
@@ -61,7 +61,7 @@ class View {
      * @param string $tmpl
      * @return \View
      */
-    function loadTemplate($tmpl, $component = null)
+    public function loadTemplate($tmpl, $component = null)
     {
         $this->template = strtolower($tmpl);
         
@@ -75,7 +75,7 @@ class View {
      * Render without displaying (for emailing for ex.)
      * @return string
      */
-    function prepare()
+    public function prepare()
     {
         try {
             $template = $this->component_path.$this->template.'.php';
@@ -111,7 +111,7 @@ class View {
      * @param bool $raw
      * @throws Exception
      */
-    function render($raw = false)
+    public function render($raw = false)
     {
         $content = $this->prepare();
         

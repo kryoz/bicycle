@@ -10,8 +10,8 @@ define ('PROTOCOL', 'http'); // HTTP or HTTPS
 define ('SEFENABLED', false); // SEF-url routes
 
 define ('COMPONENTS', DOCROOT.'components'.DS);  // path to your applications
-define ('LIBS', ROOT.'libs'.DS); // path to shared libraries
-define ('LIBS2', DOCROOT.'libs'.DS); // site specific libs
+define ('LIBS', ROOT.'libs'); // path to shared libraries
+define ('LIBS2', DOCROOT.'libs'); // site specific libs
 define ('GLOBALVIEWS', DOCROOT.'tmpl'.DS); // path to global templates
 define ('LOGFILE', DOCROOT.'debug.log'); // make sure that file has write-enable rights
 
@@ -45,6 +45,6 @@ mb_internal_encoding( INNERCODEPAGE );
 date_default_timezone_set( 'Europe/Moscow' );
 
 
-require_once LIBS.'Cache'.DS.'Cache.php';
-require_once LIBS."autoloader.php";
+require_once LIBS.DS.'Cache'.DS.'Cache.php';
+require_once LIBS.DS."Autoloader.php";
 \Core\Autoloader::register();
