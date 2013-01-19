@@ -55,7 +55,6 @@ require_once LIBS.DS."Autoloader.php";
 Autoloader::register();
 
 $serviceLocator = Locator::getInstance();
-/* @var $serviceLocator Locator */
 $serviceLocator->add(Cache::getInstance());
 $serviceLocator->add(DB::getInstance());
 $serviceLocator->add(Sape_Client::getInstance());

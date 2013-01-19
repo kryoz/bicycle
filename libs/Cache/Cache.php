@@ -23,10 +23,15 @@ class Cache implements \Core\Cache\ICache, \Core\ServiceLocator\IService
 		$this->cache = CacheFactory::get($cachetype);
 	}
 
+	/**
+	 * 
+	 * @param type $cachetype
+	 * @return Cache
+	 */
 	final static function getInstance($cachetype = null)
 	{
 		if (empty(self::$instance)) {
-			self::$instance = new Cache($cachetype);
+			self::$instance = new static($cachetype);
 		}
 		
 		return self::$instance;

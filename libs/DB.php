@@ -63,10 +63,14 @@ class DB implements ServiceLocator\IService
 		return ($this->scheme == 'sqlite');
 	}
 
+	/**
+	 * 
+	 * @return DB
+	 */
 	public static function getInstance()
 	{
 		if (empty(self::$instance)) {
-			self::$instance = new DB();
+			self::$instance = new static();
 		}
 
 		return self::$instance;

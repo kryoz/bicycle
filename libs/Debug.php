@@ -36,7 +36,7 @@ class Debug
     {
         if ( empty( self::$instance))
         {
-            self::$instance = new Debug();
+            self::$instance = new static();
         } 
         
         return self::$instance;

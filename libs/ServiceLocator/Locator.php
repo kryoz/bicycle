@@ -25,6 +25,8 @@ class Locator
 			throw new ServiceAlreadyExistsException();
 		}
 		$this->registry[$service->getServiceName()] = $service;
+		
+		return $this;
 	}
 	
 	public function get($serviceName)

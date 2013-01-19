@@ -304,10 +304,14 @@ class Sape_Client extends Sape_base implements ServiceLocator\IService
 	private $_user_agent = 'SAPE_Client PHP';
 	private static $instance;
 
+	/**
+	 * 
+	 * @return Sape_Client
+	 */
 	public static function getInstance()
 	{
 		if (empty(self::$instance)) {
-			self::$instance = new Sape_Client();
+			self::$instance = new static();
 		}
 
 		return self::$instance;
