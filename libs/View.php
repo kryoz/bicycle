@@ -4,6 +4,8 @@
  *
  * @author kubintsev
  */
+namespace Core;
+
 class View {
     private $component_path;
     private $global_template;
@@ -76,12 +78,11 @@ class View {
     function prepare()
     {
         try {
-            
             $template = $this->component_path.$this->template.'.php';
 
             if ( !file_exists($template) )
             {
-                throw new Exception('"'.$template.'" not found!');
+                throw new \Exception('"'.$template.'" not found!');
             }
             
             if (is_array($this->vars))
@@ -94,8 +95,8 @@ class View {
             ob_end_clean();
             
             if (DEBUG) {
-                DEBUG::log(DEBUG::getmem());
-                $content .= DEBUG::getlog();
+                Debug::log(Debug::getmem());
+                $content .= Debug::getlog();
             }
             
             return $content;

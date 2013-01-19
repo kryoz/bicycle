@@ -44,5 +44,7 @@ setlocale(LC_ALL, 'ru_RU.'.INNERCODEPAGE);
 mb_internal_encoding( INNERCODEPAGE );
 date_default_timezone_set( 'Europe/Moscow' );
 
+
+require_once LIBS.'Cache'.DS.'Cache.php';
 require_once LIBS."autoloader.php";
-Autoloader::register();
+\Core\Autoloader::register();

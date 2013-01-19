@@ -1,10 +1,9 @@
 <?php
-/**
- * Description of Model_Index
- *
- * @author kubintsev
- */
-class cacheTest extends Component
+namespace Components\index;
+
+use Core\Cache\Cache;
+
+class cachetest
 {
     function generate()
     {

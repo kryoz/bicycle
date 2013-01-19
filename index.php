@@ -5,6 +5,7 @@
  * @author kryoz
  */
 
+namespace Core;
 require_once 'bootstrap.php';
 
 $router = new Router();

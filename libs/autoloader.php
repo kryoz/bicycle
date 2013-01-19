@@ -1,22 +1,67 @@
 <?php
+/**
+ * Autoloader for shared classes
+ */
+namespace Core;
 
 class Autoloader 
 {
-    /**
-     * Autoloader for shared classes
-     * @param string $class_name
-     * @return boolean
-     */
-    public static function ClassLoader($class_name) 
+	const CP = 'AUTOLOADER_';
+	private static $instance;
+	
+	private static function getInstance()
+	{
+		if (empty(self::$instance)) {
+			self::$instance = new Autoloader();
+		}
+
+		return self::$instance;
+	}
+	
+	private function getClassPath($className)
+	{
+		/* @var $cache \Core\Cache\Cache */
+		$cache = \Core\Cache\Cache::getInstance();
+		
+		$filenames = $cache->get(CP.$className);
+		
+		if (!$filename) {
+			$tree = explode('\\', $className);
+			
+			if (is_array($tree)) {
+				$tree2 = $tree;
+
+				if ($tree[0] == 'Core') {
+					$tree[0] = LIBS;
+					$tree2[0] = LIBS2;
+				} elseif ($tree[0] == 'Components') {
+					$tree[0] = COMPONENTS;
+					$tree2[0] = COMPONENTS;
+				}
+				$filename = implode('/', $tree).'.php';
+				$filename2 = implode('/', $tree2).'.php';
+			} else {
+				$filename = LIBS.$className.'.php';
+				$filename2 = LIBS2.$className.'.php';
+			}
+			
+			$filenames = [$filename, $filename2];
+			$cache->set(CP.$className, $filenames);
+		}
+		
+		return $filenames;
+	}
+
+
+	public static function classLoader($className) 
     {
-        $filename = strtolower($class_name).'.php';
-        $file = LIBS . $filename;
-        $file2 = LIBS2 . $filename;
+        $autoLoader = self::getInstance();
+		
+		list($file, $file2) = $autoLoader->getClassPath($className);
 
         if (!file_exists($file) && !file_exists($file2)) {
-                throw new Exception(__CLASS__.": Tried to call <b>$class_name</b>, but none was found.
+                throw new \Exception(__CLASS__.": Tried to call <b>$className</b>, but none was found.
                     Also there's no <b>$file</b> or <b>$file2</b>");
-                return false;
         }
 
         if (file_exists($file2)) {
@@ -32,8 +77,8 @@ class Autoloader
     /**
      * Entry point of whole application
      */
-    public static function Register()
+    public static function register()
     {
-        spl_autoload_register( ['Autoloader', 'ClassLoader'] );
+        spl_autoload_register( ['Core\Autoloader', 'classLoader'] );
     }
 }

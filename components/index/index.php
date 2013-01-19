@@ -1,10 +1,11 @@
 <?php
+namespace Components;
 
-class CIndex extends BaseController
+class CIndex extends \Core\BaseController
 {
     public function index($args, $params) 
     {
-        $model = $this->loadModel('cachetest');
+        $model = $this->loadModel('Components\index\cachetest');
         $view = $this->view;
         
         $vars['title'] = 'Example to show work of caching';

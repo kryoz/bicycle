@@ -1,10 +1,7 @@
 <?php
-/**
- * Description of sqlite
- *
- * @author kubintsev
- */
-class CTest extends BaseController
+namespace Components;
+
+class CTest extends \Core\BaseController
 {
 	public $complex = true;
 	

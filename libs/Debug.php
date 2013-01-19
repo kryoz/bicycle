@@ -1,9 +1,5 @@
 <?php
-/**
- * Description of Debug
- *
- * @author kubintsev
- */
+namespace Core;
 
 class Debug 
 {
