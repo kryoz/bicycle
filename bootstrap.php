@@ -1,4 +1,11 @@
 <?php
+
+use Core\Autoloader;
+use Core\Cache\Cache;
+use Core\DB;
+use Core\Sape_Client;
+use Core\ServiceLocator\Locator;
+
 define ('DEBUG', true); //dev mode on
 
 define ('DS', DIRECTORY_SEPARATOR);
@@ -26,9 +33,9 @@ define ('VIRT_EXT', '.html');
 define ('INDEX', 'index');
 
 /* DB connection settings */
-define ('SCHEME', 'mysql'); 
+define ('SCHEME', 'pgsql'); 
 define ('DBADDRESS', 'dbname=test;host=localhost');
-define ('DBUSER', 'admin');
+define ('DBUSER', 'test');
 define ('DBPASS', 'pass');
 
 define ('_SAPE_USER', '2b6b81f35caca7b76766fa558d1eadd1'); // your SAPE id
@@ -44,7 +51,12 @@ setlocale(LC_ALL, 'ru_RU.'.INNERCODEPAGE);
 mb_internal_encoding( INNERCODEPAGE );
 date_default_timezone_set( 'Europe/Moscow' );
 
-
-require_once LIBS.DS.'Cache'.DS.'Cache.php';
 require_once LIBS.DS."Autoloader.php";
-\Core\Autoloader::register();
+Autoloader::register();
+
+$serviceLocator = Locator::getInstance();
+/* @var $serviceLocator Locator */
+$serviceLocator->add(Cache::getInstance());
+$serviceLocator->add(DB::getInstance());
+$serviceLocator->add(Sape_Client::getInstance());
+

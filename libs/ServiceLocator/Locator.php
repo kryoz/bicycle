@@ -1,11 +1,15 @@
 <?php
-namespace \Core\ServiceLocator;
+namespace Core\ServiceLocator;
 
 class Locator
 {
 	private $registry;
 	private static $instance;
 	
+	/**
+	 * 
+	 * @return Locator
+	 */
 	final static function getInstance()
 	{
 		if (empty(self::$instance)) {
@@ -17,7 +21,10 @@ class Locator
 	
 	public function add(IService $service)
 	{
-		$this->registry[$service->getServiceName()] = $service->getInstance();
+		if (isset($this->registry[$service->getServiceName()])) {
+			throw new ServiceAlreadyExistsException();
+		}
+		$this->registry[$service->getServiceName()] = $service;
 	}
 	
 	public function get($serviceName)

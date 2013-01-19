@@ -1,9 +1,11 @@
 <?php
-class Model_test extends Model_Base
+
+use Core\ServiceLocator\Locator;
+class Model_test
 {
 	function anothertest()
 	{
-		$db = DB::getInstance();
+		$db = Locator::getInstance()->get('DB');
 
 		$params = [
 			"param1"=>"asd", 

@@ -295,18 +295,27 @@ class SAPE_base
 /**
  * Класс для работы с обычными ссылками
  */
-class Sape_Client extends Sape_base
+class Sape_Client extends Sape_base implements ServiceLocator\IService
 {
 
 	private $_links_delimiter = '';
 	private $_links = array();
 	private $_links_page = array();
 	private $_user_agent = 'SAPE_Client PHP';
+	private static $instance;
 
-	function SAPE_client($options = null)
+	public static function getInstance()
 	{
-		parent::SAPE_base($options);
-		$this->load_data();
+		if (empty(self::$instance)) {
+			self::$instance = new Sape_Client();
+		}
+
+		return self::$instance;
+	}
+	
+	public function getServiceName()
+	{
+		return 'SAPE';
 	}
 
 	/**

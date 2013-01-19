@@ -1,4 +1,5 @@
 <?php
+namespace Core;
 
 /**
  * This class helps to protect forms from CSRF vulnarability

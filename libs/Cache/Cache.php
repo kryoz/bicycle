@@ -7,15 +7,17 @@
  */
 namespace Core\Cache;
 
-require_once 'CacheFactory.php';
-require_once 'ICache.php';
-
-class Cache implements ICache
+class Cache implements \Core\Cache\ICache, \Core\ServiceLocator\IService
 {
 
 	private $cache;
 	protected static $instance;
 
+	public function getServiceName()
+	{
+		return 'CACHE';
+	}
+	
 	final function __construct($cachetype)
 	{
 		$this->cache = CacheFactory::get($cachetype);

@@ -13,19 +13,8 @@ abstract class CacheFactory
 			else
 				$cachetype = 'File';
 		}
-
-		$cacheFile = dirname(__FILE__).DS.'Cache' . $cachetype . '.php';
-		$cacheClass = 'Core\Cache\Cache' . $cachetype;
-
-		if (file_exists($cacheFile)) {
-			require_once $cacheFile;
-			$cache = new $cacheClass();
-		} else {
-			throw new \Exception(
-			__CLASS__ . '::' . __FUNCTION__ .
-			": Cache type '$cachetype' not defined! Haven't found $cacheFile"
-			);
-		}
+		$cacheClass = 'Core\Cache\Cache'.$cachetype;
+		$cache = new $cacheClass();
 
 		if (!($cache instanceof ICache)) {
 			throw new \Exception(
