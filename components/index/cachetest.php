@@ -1,13 +1,11 @@
 <?php
 namespace Components\index;
 
-use Core\ServiceLocator\Locator;
-
 class cachetest
 {
     public function generate()
     {
-        $cache = Locator::get('CACHE');
+        $cache = \Core\ServiceLocator\Locator::get('CACHE');
         for ($i=0; $i < 20; $i++)
             $data[] = rand(1, 1000);
         

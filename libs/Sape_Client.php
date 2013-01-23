@@ -2,40 +2,35 @@
 
 namespace Core;
 
-use Core\Cache\Cache;
-
-class SAPE_base
+class Sape_base
 {
 
-	private $_version = '1.1.5';
-	private $_verbose = false;
-	private $_charset = 'utf-8';
-	private $_sape_charset = '';
-	private $_server_list = array('dispenser-01.sape.ru', 'dispenser-02.sape.ru');
-	private $_cache_lifetime = 3600; // Пожалейте наш сервер :о)
+	protected $_version = '1.1.7';
+	protected $_verbose = false;
+	protected $_charset = 'utf-8';
+	protected $_sape_charset = '';
+	protected $_server_list = array('dispenser-01.sape.ru', 'dispenser-02.sape.ru');
+	protected $_cache_lifetime = 3600; // Пожалейте наш сервер :о)
 	// Если скачать базу ссылок не удалось, то следующая попытка будет через столько секунд
-	private $_cache_reloadtime = 300;
-	private $_error = '';
-	private $_host = URLROOT;
-	private $_request_uri = '';
-	private $_multi_site = false;
-	private $_fetch_remote_type = ''; // Способ подключения к удалённому серверу [file_get_contents|curl|socket]
-	private $_socket_timeout = 6; // Сколько ждать ответа
-	private $_force_show_code = false;
-	private $_is_our_bot = false; // Если наш робот
-	private $_debug = false;
-	private $_ignore_case = false; // Регистронезависимый режим работы, использовать только на свой страх и риск
-	private $_db_file = ''; // Путь к файлу с данными
-	private $_use_server_array = false; // Откуда будем брать uri страницы: $_SERVER['REQUEST_URI'] или getenv('REQUEST_URI')
-	private $_force_update_db = false;
-	private $_is_block_css_showed = false; // Флаг для отрисовки css в блочных ссылках
-	private $_is_block_ins_beforeall_showed = false;
+	protected $_cache_reloadtime = 300;
+	protected $_error = '';
+	protected $_host = '';
+	protected $_request_uri = '';
+	protected $_multi_site = false;
+	protected $_fetch_remote_type = ''; // Способ подключения к удалённому серверу [file_get_contents|curl|socket]
+	protected $_socket_timeout = 6; // Сколько ждать ответа
+	protected $_force_show_code = false;
+	protected $_is_our_bot = false; // Если наш робот
+	protected $_debug = false;
+	protected $_ignore_case = false; // Регистронезависимый режим работы, использовать только на свой страх и риск
+	protected $_db_file = ''; // Путь к файлу с данными
+	protected $_use_server_array = false; // Откуда будем брать uri страницы: $_SERVER['REQUEST_URI'] или getenv('REQUEST_URI')
+	protected $_force_update_db = false;
+	protected $_is_block_css_showed = false; // Флаг для отрисовки css в блочных ссылках
+	protected $_is_block_ins_beforeall_showed = false;
 
-	function Sape_base($options = null)
+	protected function __construct($options = null)
 	{
-
-		// Поехали :o)
-
 		$host = '';
 
 		if (is_array($options)) {
@@ -209,7 +204,7 @@ class SAPE_base
 	function _read($filename)
 	{
 
-		$cache = Cache::getInstance();
+		$cache = \Core\ServiceLocator\Locator::get('CACHE');
 		return $cache->get(CP . $filename);
 	}
 
@@ -218,7 +213,7 @@ class SAPE_base
 	 */
 	function _write($filename, $data)
 	{
-		$cache = Cache::getInstance();
+		$cache = \Core\ServiceLocator\Locator::get('CACHE');
 
 		return $cache->set(CP . $filename, $data);
 	}
@@ -295,13 +290,13 @@ class SAPE_base
 /**
  * Класс для работы с обычными ссылками
  */
-class Sape_Client extends Sape_base implements ServiceLocator\IService
+class Sape_Client extends Sape_Base implements ServiceLocator\IService
 {
 
-	private $_links_delimiter = '';
-	private $_links = array();
-	private $_links_page = array();
-	private $_user_agent = 'SAPE_Client PHP';
+	protected $_links_delimiter = '';
+	protected $_links = array();
+	protected $_links_page = array();
+	protected $_user_agent = 'SAPE_Client PHP';
 	private static $instance;
 
 	/**
@@ -322,13 +317,18 @@ class Sape_Client extends Sape_base implements ServiceLocator\IService
 		return 'SAPE';
 	}
 
+	protected function __construct($options = null) {
+        parent::__construct($options);
+        $this->load_data();
+    }
+
 	/**
 	 * Обработка html для массива ссылок
 	 *
 	 * @param string $html
 	 * @return string
 	 */
-	private function _return_array_links_html($html, $options = null)
+	protected function _return_array_links_html($html, $options = null)
 	{
 
 		if (empty($options)) {
@@ -385,7 +385,7 @@ class Sape_Client extends Sape_base implements ServiceLocator\IService
 	 * @param string $html
 	 * @return string
 	 */
-	private function _return_html($html)
+	protected function _return_html($html)
 	{
 
 		if ($this->_debug) {
@@ -711,7 +711,7 @@ class Sape_Client extends Sape_base implements ServiceLocator\IService
 		return $html;
 	}
 
-	private function _get_db_file()
+	protected function _get_db_file()
 	{
 		if ($this->_multi_site) {
 			return dirname(__FILE__) . '/' . $this->_host . '.links.db';
@@ -720,12 +720,12 @@ class Sape_Client extends Sape_base implements ServiceLocator\IService
 		}
 	}
 
-	private function _get_dispenser_path()
+	protected function _get_dispenser_path()
 	{
 		return '/code.php?user=' . _SAPE_USER . '&host=' . $this->_host;
 	}
 
-	private function set_data($data)
+	protected function set_data($data)
 	{
 		if ($this->_ignore_case) {
 			$this->_links = array_change_key_case($data);
@@ -792,760 +792,6 @@ class Sape_Client extends Sape_base implements ServiceLocator\IService
 				$this->$prop_name = $this->_links[$private_name];
 			}
 		}
-	}
-
-}
-
-/**
- * Класс для работы с контекстными ссылками
- */
-class SAPE_context extends SAPE_base
-{
-
-	private $_words = array();
-	private $_words_page = array();
-	private $_user_agent = 'SAPE_Context PHP';
-	private $_filter_tags = array('a', 'textarea', 'select', 'script', 'style', 'label', 'noscript', 'noindex', 'button');
-
-	function SAPE_context($options = null)
-	{
-		parent::SAPE_base($options);
-		$this->load_data();
-	}
-
-	/**
-	 * Замена слов в куске текста и обрамляет его тегами sape_index
-	 */
-	function replace_in_text_segment($text)
-	{
-		$debug = '';
-		if ($this->_debug) {
-			$debug .= "<!-- argument for replace_in_text_segment: \r\n" . base64_encode($text) . "\r\n -->";
-		}
-		if (count($this->_words_page) > 0) {
-
-			$source_sentence = array();
-			if ($this->_debug) {
-				$debug .= '<!-- sentences for replace: ';
-			}
-			//Создаем массив исходных текстов для замены
-			foreach ($this->_words_page as $n => $sentence) {
-				//Заменяем все сущности на символы
-				$special_chars = array(
-					'&amp;' => '&',
-					'&quot;' => '"',
-					'&#039;' => '\'',
-					'&lt;' => '<',
-					'&gt;' => '>'
-				);
-				$sentence = strip_tags($sentence);
-				foreach ($special_chars as $from => $to) {
-					str_replace($from, $to, $sentence);
-				}
-				//Преобразуем все спец символы в сущности
-				$sentence = htmlspecialchars($sentence);
-				//Квотируем
-				$sentence = preg_quote($sentence, '/');
-				$replace_array = array();
-				if (preg_match_all('/(&[#a-zA-Z0-9]{2,6};)/isU', $sentence, $out)) {
-					for ($i = 0; $i < count($out[1]); $i++) {
-						$unspec = $special_chars[$out[1][$i]];
-						$real = $out[1][$i];
-						$replace_array[$unspec] = $real;
-					}
-				}
-				//Заменяем сущности на ИЛИ (сущность|символ)
-				foreach ($replace_array as $unspec => $real) {
-					$sentence = str_replace($real, '((' . $real . ')|(' . $unspec . '))', $sentence);
-				}
-				//Заменяем пробелы на переносы или сущности пробелов
-				$source_sentences[$n] = str_replace(' ', '((\s)|(&nbsp;))+', $sentence);
-
-				if ($this->_debug) {
-					$debug .= $source_sentences[$n] . "\r\n\r\n";
-				}
-			}
-
-			if ($this->_debug) {
-				$debug .= '-->';
-			}
-
-			//если это первый кусок, то не будем добавлять <
-			$first_part = true;
-			//пустая переменная для записи
-
-			if (count($source_sentences) > 0) {
-
-				$content = '';
-				$open_tags = array(); //Открытые забаненые тэги
-				$close_tag = ''; //Название текущего закрывающего тэга
-				//Разбиваем по символу начала тега
-				$part = strtok(' ' . $text, '<');
-
-				while ($part !== false) {
-					//Определяем название тэга
-					if (preg_match('/(?si)^(\/?[a-z0-9]+)/', $part, $matches)) {
-						//Определяем название тега
-						$tag_name = strtolower($matches[1]);
-						//Определяем закрывающий ли тэг
-						if (substr($tag_name, 0, 1) == '/') {
-							$close_tag = substr($tag_name, 1);
-							if ($this->_debug) {
-								$debug .= '<!-- close_tag: ' . $close_tag . ' -->';
-							}
-						} else {
-							$close_tag = '';
-							if ($this->_debug) {
-								$debug .= '<!-- open_tag: ' . $tag_name . ' -->';
-							}
-						}
-						$cnt_tags = count($open_tags);
-						//Если закрывающий тег совпадает с тегом в стеке открытых запрещенных тегов
-						if (($cnt_tags > 0) && ($open_tags[$cnt_tags - 1] == $close_tag)) {
-							array_pop($open_tags);
-							if ($this->_debug) {
-								$debug .= '<!-- ' . $tag_name . ' - deleted from open_tags -->';
-							}
-							if ($cnt_tags - 1 == 0) {
-								if ($this->_debug) {
-									$debug .= '<!-- start replacement -->';
-								}
-							}
-						}
-
-						//Если нет открытых плохих тегов, то обрабатываем
-						if (count($open_tags) == 0) {
-							//если не запрещенный тэг, то начинаем обработку
-							if (!in_array($tag_name, $this->_filter_tags)) {
-								$split_parts = explode('>', $part, 2);
-								//Перестраховываемся
-								if (count($split_parts) == 2) {
-									//Начинаем перебор фраз для замены
-									foreach ($source_sentences as $n => $sentence) {
-										if (preg_match('/' . $sentence . '/', $split_parts[1]) == 1) {
-											$split_parts[1] = preg_replace('/' . $sentence . '/', str_replace('$', '\$', $this->_words_page[$n]), $split_parts[1], 1);
-											if ($this->_debug) {
-												$debug .= '<!-- ' . $sentence . ' --- ' . $this->_words_page[$n] . ' replaced -->';
-											}
-
-											//Если заменили, то удаляем строчку из списка замены
-											unset($source_sentences[$n]);
-											unset($this->_words_page[$n]);
-										}
-									}
-									$part = $split_parts[0] . '>' . $split_parts[1];
-									unset($split_parts);
-								}
-							} else {
-								//Если у нас запрещеный тэг, то помещаем его в стек открытых
-								$open_tags[] = $tag_name;
-								if ($this->_debug) {
-									$debug .= '<!-- ' . $tag_name . ' - added to open_tags, stop replacement -->';
-								}
-							}
-						}
-					} else {
-						//Если нет названия тега, то считаем, что перед нами текст
-						foreach ($source_sentences as $n => $sentence) {
-							if (preg_match('/' . $sentence . '/', $part) == 1) {
-								$part = preg_replace('/' . $sentence . '/', str_replace('$', '\$', $this->_words_page[$n]), $part, 1);
-
-								if ($this->_debug) {
-									$debug .= '<!-- ' . $sentence . ' --- ' . $this->_words_page[$n] . ' replaced -->';
-								}
-
-								//Если заменили, то удаляем строчку из списка замены,
-								//чтобы было можно делать множественный вызов
-								unset($source_sentences[$n]);
-								unset($this->_words_page[$n]);
-							}
-						}
-					}
-
-					//Если у нас режим дебагинга, то выводим
-					if ($this->_debug) {
-						$content .= $debug;
-						$debug = '';
-					}
-					//Если это первая часть, то не выводим <
-					if ($first_part) {
-						$content .= $part;
-						$first_part = false;
-					} else {
-						$content .= $debug . '<' . $part;
-					}
-					//Получаем следующу часть
-					unset($part);
-					$part = strtok('<');
-				}
-				$text = ltrim($content);
-				unset($content);
-			}
-		} else {
-			if ($this->_debug) {
-				$debug .= '<!-- No word`s for page -->';
-			}
-		}
-
-		if ($this->_debug) {
-			$debug .= '<!-- END: work of replace_in_text_segment() -->';
-		}
-
-		if ($this->_is_our_bot || $this->_force_show_code || $this->_debug) {
-			$text = '<sape_index>' . $text . '</sape_index>';
-			if (isset($this->_words['__sape_new_url__']) && strlen($this->_words['__sape_new_url__'])) {
-				$text .= $this->_words['__sape_new_url__'];
-			}
-		}
-
-		if ($this->_debug) {
-			if (count($this->_words_page) > 0) {
-				$text .= '<!-- Not replaced: ' . "\r\n";
-				foreach ($this->_words_page as $n => $value) {
-					$text .= $value . "\r\n\r\n";
-				}
-				$text .= '-->';
-			}
-
-			$text .= $debug;
-		}
-		return $text;
-	}
-
-	/**
-	 * Замена слов
-	 */
-	function replace_in_page(&$buffer)
-	{
-
-		if (count($this->_words_page) > 0) {
-			//разбиваем строку по sape_index
-			//Проверяем есть ли теги sape_index
-			$split_content = preg_split('/(?smi)(<\/?sape_index>)/', $buffer, -1);
-			$cnt_parts = count($split_content);
-			if ($cnt_parts > 1) {
-				//Если есть хоть одна пара sape_index, то начинаем работу
-				if ($cnt_parts >= 3) {
-					for ($i = 1; $i < $cnt_parts; $i = $i + 2) {
-						$split_content[$i] = $this->replace_in_text_segment($split_content[$i]);
-					}
-				}
-				$buffer = implode('', $split_content);
-				if ($this->_debug) {
-					$buffer .= '<!-- Split by Sape_index cnt_parts=' . $cnt_parts . '-->';
-				}
-			} else {
-				//Если не нашли sape_index, то пробуем разбить по BODY
-				$split_content = preg_split('/(?smi)(<\/?body[^>]*>)/', $buffer, -1, PREG_SPLIT_DELIM_CAPTURE);
-				//Если нашли содержимое между body
-				if (count($split_content) == 5) {
-					$split_content[0] = $split_content[0] . $split_content[1];
-					$split_content[1] = $this->replace_in_text_segment($split_content[2]);
-					$split_content[2] = $split_content[3] . $split_content[4];
-					unset($split_content[3]);
-					unset($split_content[4]);
-					$buffer = $split_content[0] . $split_content[1] . $split_content[2];
-					if ($this->_debug) {
-						$buffer .= '<!-- Split by BODY -->';
-					}
-				} else {
-					//Если не нашли sape_index и не смогли разбить по body
-					if ($this->_debug) {
-						$buffer .= '<!-- Can`t split by BODY -->';
-					}
-				}
-			}
-		} else {
-			if (!$this->_is_our_bot && !$this->_force_show_code && !$this->_debug) {
-				$buffer = preg_replace('/(?smi)(<\/?sape_index>)/', '', $buffer);
-			} else {
-				if (isset($this->_words['__sape_new_url__']) && strlen($this->_words['__sape_new_url__'])) {
-					$buffer .= $this->_words['__sape_new_url__'];
-				}
-			}
-			if ($this->_debug) {
-				$buffer .= '<!-- No word`s for page -->';
-			}
-		}
-		return $buffer;
-	}
-
-	function _get_db_file()
-	{
-		if ($this->_multi_site) {
-			return dirname(__FILE__) . '/' . $this->_host . '.words.db';
-		} else {
-			return dirname(__FILE__) . '/words.db';
-		}
-	}
-
-	function _get_dispenser_path()
-	{
-		return '/code_context.php?user=' . _SAPE_USER . '&host=' . $this->_host;
-	}
-
-	function set_data($data)
-	{
-		$this->_words = $data;
-		if (@array_key_exists($this->_request_uri, $this->_words) && is_array($this->_words[$this->_request_uri])) {
-			$this->_words_page = $this->_words[$this->_request_uri];
-		}
-	}
-
-}
-
-/**
- * Класс для работы со статьями articles.sape.ru показывает анонсы и статьи
- */
-class SAPE_articles extends SAPE_base
-{
-
-	private $_request_mode;
-	private $_server_list = array('dispenser.articles.sape.ru');
-	private $_data = array();
-	private $_article_id;
-	private $_save_file_name;
-	private $_announcements_delimiter = '';
-	private $_images_path;
-	private $_template_error = false;
-	private $_noindex_code = '<!--sape_noindex-->';
-	private $_headers_enabled = false;
-	private $_mask_code;
-	private $_real_host;
-	private $_user_agent = 'SAPE_Articles_Client PHP';
-
-	function SAPE_articles($options = null)
-	{
-		parent::SAPE_base($options);
-		if (is_array($options) && isset($options['headers_enabled'])) {
-			$this->_headers_enabled = $options['headers_enabled'];
-		}
-		// Кодировка
-		if (isset($options['charset']) && strlen($options['charset'])) {
-			$this->_charset = $options['charset'];
-		} else {
-			$this->_charset = '';
-		}
-		$this->_get_index();
-		if (!empty($this->_data['index']['announcements_delimiter'])) {
-			$this->_announcements_delimiter = $this->_data['index']['announcements_delimiter'];
-		}
-		if (!empty($this->_data['index']['charset']) and !(isset($options['charset']) && strlen($options['charset']))) {
-			$this->_charset = $this->_data['index']['charset'];
-		}
-		if (is_array($options)) {
-			if (isset($options['host'])) {
-				$host = $options['host'];
-			}
-		} elseif (strlen($options)) {
-			$host = $options;
-			$options = array();
-		}
-		if (isset($host) && strlen($host)) {
-			$this->_real_host = $host;
-		} else {
-			$this->_real_host = $_SERVER['HTTP_HOST'];
-		}
-		if (!isset($this->_data['index']['announcements'][$this->_request_uri])) {
-			$this->_correct_uri();
-		}
-	}
-
-	function _correct_uri()
-	{
-		if (substr($this->_request_uri, -1) == '/') {
-			$new_uri = substr($this->_request_uri, 0, -1);
-		} else {
-			$new_uri = $this->_request_uri . '/';
-		}
-		if (isset($this->_data['index']['announcements'][$new_uri])) {
-			$this->_request_uri = $new_uri;
-		}
-	}
-
-	/**
-	 * Возвращает анонсы для вывода
-	 * @param int $n      Сколько анонсов вывести, либо не задано - вывести все
-	 * @param int $offset C какого анонса начинаем вывод(нумерация с 0), либо не задано - с нулевого
-	 * @return string
-	 */
-	function return_announcements($n = null, $offset = 0)
-	{
-		$output = '';
-		if ($this->_force_show_code || $this->_is_our_bot) {
-			if (isset($this->_data['index']['checkCode'])) {
-				$output .= $this->_data['index']['checkCode'];
-			}
-		}
-
-		if (isset($this->_data['index']['announcements'][$this->_request_uri])) {
-
-			$total_page_links = count($this->_data['index']['announcements'][$this->_request_uri]);
-
-			if (!is_numeric($n) || $n > $total_page_links) {
-				$n = $total_page_links;
-			}
-
-			$links = array();
-
-			for ($i = 1; $i <= $n; $i++) {
-				if ($offset > 0 && $i <= $offset) {
-					array_shift($this->_data['index']['announcements'][$this->_request_uri]);
-				} else {
-					$links[] = array_shift($this->_data['index']['announcements'][$this->_request_uri]);
-				}
-			}
-
-			$html = join($this->_announcements_delimiter, $links);
-
-			if ($this->_is_our_bot) {
-				$html = '<sape_noindex>' . $html . '</sape_noindex>';
-			}
-
-			$output .= $html;
-		}
-
-		return $output;
-	}
-
-	function _get_index()
-	{
-		$this->_set_request_mode('index');
-		$this->_save_file_name = 'articles.db';
-		$this->load_data();
-	}
-
-	/**
-	 * Возвращает полный HTML код страницы статьи
-	 * @return string
-	 */
-	function process_request()
-	{
-
-		if (!empty($this->_data['index']) and isset($this->_data['index']['articles'][$this->_request_uri])) {
-			return $this->_return_article();
-		} elseif (!empty($this->_data['index']) and isset($this->_data['index']['images'][$this->_request_uri])) {
-			return $this->_return_image();
-		} else {
-			if ($this->_is_our_bot) {
-				return $this->_return_html($this->_data['index']['checkCode'] . $this->_noindex_code);
-			} else {
-				return $this->_return_not_found();
-			}
-		}
-	}
-
-	function _return_article()
-	{
-		$this->_set_request_mode('article');
-		//Загружаем статью
-		$article_meta = $this->_data['index']['articles'][$this->_request_uri];
-		$this->_save_file_name = $article_meta['id'] . '.article.db';
-		$this->_article_id = $article_meta['id'];
-		$this->load_data();
-
-		//Обновим если устарела
-		if (!isset($this->_data['article']['date_updated']) OR $this->_data['article']['date_updated'] < $article_meta['date_updated']) {
-			unlink($this->_get_db_file());
-			$this->load_data();
-		}
-
-		//Получим шаблон
-		$template = $this->_get_template($this->_data['index']['templates'][$article_meta['template_id']]['url'], $article_meta['template_id']);
-
-		//Выведем статью
-		$article_html = $this->_fetch_article($template);
-
-		if ($this->_is_our_bot) {
-			$article_html .= $this->_noindex_code;
-		}
-
-		return $this->_return_html($article_html);
-	}
-
-	function _prepare_path_to_images()
-	{
-		$this->_images_path = dirname(__FILE__) . '/images/';
-		if (!is_dir($this->_images_path)) {
-			// Пытаемся создать папку.
-			if (@mkdir($this->_images_path)) {
-				@chmod($this->_images_path, 0777);	// Права доступа
-			} else {
-				return $this->raise_error('Нет папки ' . $this->_images_path . '. Создать не удалось. Выставите права 777 на папку.');
-			}
-		}
-		if ($this->_multi_site) {
-			$this->_images_path .= $this->_host . '.';
-		}
-	}
-
-	function _return_image()
-	{
-		$this->_set_request_mode('image');
-		$this->_prepare_path_to_images();
-
-		//Проверим загружена ли картинка
-		$image_meta = $this->_data['index']['images'][$this->_request_uri];
-		$image_path = $this->_images_path . $image_meta['id'] . '.' . $image_meta['ext'];
-
-		if (!is_file($image_path) or filemtime($image_path) > $image_meta['date_updated']) {
-			// Чтобы не повесить площадку клиента и чтобы не было одновременных запросов
-			@touch($image_path, $image_meta['date_updated']);
-
-			$path = $image_meta['dispenser_path'];
-
-			foreach ($this->_server_list as $i => $server) {
-				if ($data = $this->fetch_remote_file($server, $path)) {
-					if (substr($data, 0, 12) == 'FATAL ERROR:') {
-						$this->raise_error($data);
-					} else {
-						// [псевдо]проверка целостности:
-						if (strlen($data) > 0) {
-							$this->_write($image_path, $data);
-							break;
-						}
-					}
-				}
-			}
-		}
-
-		unset($data);
-		if (!is_file($image_path)) {
-			return $this->_return_not_found();
-		}
-		$image_file_meta = @getimagesize($image_path);
-		$content_type = isset($image_file_meta['mime']) ? $image_file_meta['mime'] : 'image';
-		if ($this->_headers_enabled) {
-			header('Content-Type: ' . $content_type);
-		}
-		return $this->_read($image_path);
-	}
-
-	function _fetch_article($template)
-	{
-		if (strlen($this->_charset)) {
-			$template = str_replace('{meta_charset}', $this->_charset, $template);
-		}
-		foreach ($this->_data['index']['template_fields'] as $field) {
-			if (isset($this->_data['article'][$field])) {
-				$template = str_replace('{' . $field . '}', $this->_data['article'][$field], $template);
-			} else {
-				$template = str_replace('{' . $field . '}', '', $template);
-			}
-		}
-		return ($template);
-	}
-
-	function _get_template($template_url, $templateId)
-	{
-		//Загрузим индекс если есть
-		$this->_save_file_name = 'tpl.articles.db';
-		$index_file = $this->_get_db_file();
-
-		if (file_exists($index_file)) {
-			$this->_data['templates'] = unserialize($this->_read($index_file));
-		}
-
-
-		//Если шаблон не найден или устарел в индексе, обновим его
-		if (!isset($this->_data['templates'][$template_url]) or (time() - $this->_data['templates'][$template_url]['date_updated']) > $this->_data['index']['templates'][$templateId]['lifetime']) {
-			$this->_refresh_template($template_url, $index_file);
-		}
-		//Если шаблон не обнаружен - ошибка
-		if (!isset($this->_data['templates'][$template_url])) {
-			if ($this->_template_error) {
-				return $this->raise_error($this->_template_error);
-			}
-			return $this->raise_error('Не найден шаблон для статьи');
-		}
-
-		return $this->_data['templates'][$template_url]['body'];
-	}
-
-	function _refresh_template($template_url, $index_file)
-	{
-		$parseUrl = parse_url($template_url);
-
-		$download_url = '';
-		if ($parseUrl['path']) {
-			$download_url .= $parseUrl['path'];
-		}
-		if (isset($parseUrl['query'])) {
-			$download_url .= '?' . $parseUrl['query'];
-		}
-
-		$template_body = $this->fetch_remote_file($this->_real_host, $download_url);
-
-		//проверим его на корректность
-		if (!$this->_is_valid_template($template_body)) {
-			return false;
-		}
-
-		$template_body = $this->_cut_template_links($template_body);
-
-		//Запишем его вместе с другими в кэш
-		$this->_data['templates'][$template_url] = array('body' => $template_body, 'date_updated' => time());
-		//И сохраним кэш
-		$this->_write($index_file, serialize($this->_data['templates']));
-	}
-
-	function _fill_mask($data)
-	{
-		global $unnecessary;
-		$len = strlen($data[0]);
-		$mask = str_repeat($this->_mask_code, $len);
-		$unnecessary[$this->_mask_code][] = array(
-			'mask' => $mask,
-			'code' => $data[0],
-			'len' => $len
-		);
-
-		return $mask;
-	}
-
-	function _cut_unnecessary(&$contents, $code, $mask)
-	{
-		global $unnecessary;
-		$this->_mask_code = $code;
-		$_unnecessary[$this->_mask_code] = array();
-		$contents = preg_replace_callback($mask, array($this, '_fill_mask'), $contents);
-	}
-
-	function _restore_unnecessary(&$contents, $code)
-	{
-		global $unnecessary;
-		$offset = 0;
-		if (!empty($unnecessary[$code])) {
-			foreach ($unnecessary[$code] as $meta) {
-				$offset = strpos($contents, $meta['mask'], $offset);
-				$contents = substr($contents, 0, $offset)
-						. $meta['code'] . substr($contents, $offset + $meta['len']);
-			}
-		}
-	}
-
-	function _cut_template_links($template_body)
-	{
-		$link_pattern = '~(\<a [^\>]*?href[^\>]*?\=["\']{0,1}http[^\>]*?\>.*?\</a[^\>]*?\>|\<a [^\>]*?href[^\>]*?\=["\']{0,1}http[^\>]*?\>|\<area [^\>]*?href[^\>]*?\=["\']{0,1}http[^\>]*?\>)~si';
-		$link_subpattern = '~\<a |\<area ~si';
-		$rel_pattern = '~[\s]{1}rel\=["\']{1}[^ "\'\>]*?["\']{1}| rel\=[^ "\'\>]*?[\s]{1}~si';
-		$href_pattern = '~[\s]{1}href\=["\']{0,1}(http[^ "\'\>]*)?["\']{0,1} {0,1}~si';
-
-		$allowed_domains = $this->_data['index']['ext_links_allowed'];
-		$allowed_domains[] = $this->_host;
-		$allowed_domains[] = 'www.' . $this->_host;
-		$this->_cut_unnecessary($template_body, 'C', '|<!--(.*?)-->|smi');
-		$this->_cut_unnecessary($template_body, 'S', '|<script[^>]*>.*?</script>|si');
-		$this->_cut_unnecessary($template_body, 'N', '|<noindex[^>]*>.*?</noindex>|si');
-
-		$slices = preg_split($link_pattern, $template_body, -1, PREG_SPLIT_DELIM_CAPTURE);
-		//Обрамляем все видимые ссылки в noindex
-		if (is_array($slices)) {
-			foreach ($slices as $id => $link) {
-				if ($id % 2 == 0) {
-					continue;
-				}
-				if (preg_match($href_pattern, $link, $urls)) {
-					$parsed_url = @parse_url($urls[1]);
-					$host = isset($parsed_url['host']) ? $parsed_url['host'] : false;
-					if (!in_array($host, $allowed_domains) || !$host) {
-						//Обрамляем в тэги noindex
-						$slices[$id] = '<noindex>' . $slices[$id] . '</noindex>';
-					}
-				}
-			}
-			$template_body = implode('', $slices);
-		}
-		//Вновь отображаем содержимое внутри noindex
-		$this->_restore_unnecessary($template_body, 'N');
-
-		//Прописываем всем ссылкам nofollow
-		$slices = preg_split($link_pattern, $template_body, -1, PREG_SPLIT_DELIM_CAPTURE);
-		if (is_array($slices)) {
-			foreach ($slices as $id => $link) {
-				if ($id % 2 == 0) {
-					continue;
-				}
-				if (preg_match($href_pattern, $link, $urls)) {
-					$parsed_url = @parse_url($urls[1]);
-					$host = isset($parsed_url['host']) ? $parsed_url['host'] : false;
-					if (!in_array($host, $allowed_domains) || !$host) {
-						//вырезаем REL
-						$slices[$id] = preg_replace($rel_pattern, '', $link);
-						//Добавляем rel=nofollow
-						$slices[$id] = preg_replace($link_subpattern, '$0rel="nofollow" ', $slices[$id]);
-					}
-				}
-			}
-			$template_body = implode('', $slices);
-		}
-
-		$this->_restore_unnecessary($template_body, 'S');
-		$this->_restore_unnecessary($template_body, 'C');
-		return $template_body;
-	}
-
-	function _is_valid_template($template_body)
-	{
-		foreach ($this->_data['index']['template_required_fields'] as $field) {
-			if (strpos($template_body, '{' . $field . '}') === false) {
-				$this->_template_error = 'В шаблоне не хватает поля ' . $field . '.';
-				return false;
-			}
-		}
-		return true;
-	}
-
-	function _return_html($html)
-	{
-		if ($this->_headers_enabled) {
-			header('HTTP/1.x 200 OK');
-			if (!empty($this->_charset)) {
-				header('Content-Type: text/html; charset=' . $this->_charset);
-			}
-		}
-		return $html;
-	}
-
-	function _return_not_found()
-	{
-		header('HTTP/1.x 404 Not Found');
-	}
-
-	function _get_dispenser_path()
-	{
-		switch ($this->_request_mode) {
-			case 'index':
-				return '/?user=' . _SAPE_USER . '&host=' .
-						$this->_host . '&rtype=' . $this->_request_mode;
-				break;
-			case 'article':
-				return '/?user=' . _SAPE_USER . '&host=' .
-						$this->_host . '&rtype=' . $this->_request_mode . '&artid=' . $this->_article_id;
-				break;
-			case 'image':
-				return $this->image_url;
-				break;
-		}
-	}
-
-	function _set_request_mode($mode)
-	{
-		$this->_request_mode = $mode;
-	}
-
-	function _get_db_file()
-	{
-		if ($this->_multi_site) {
-			return dirname(__FILE__) . '/' . $this->_host . '.' . $this->_save_file_name;
-		} else {
-			return dirname(__FILE__) . '/' . $this->_save_file_name;
-		}
-	}
-
-	function set_data($data)
-	{
-		$this->_data[$this->_request_mode] = $data;
 	}
 
 }

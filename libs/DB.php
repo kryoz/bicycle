@@ -83,7 +83,7 @@ class DB implements ServiceLocator\IService
 	 * @param int $fetchFlags
 	 * @return array
 	 */
-	public function query($sql, array $params = array(), $fetchFlags = PDO::FETCH_ASSOC)
+	public function query($sql, array $params = array(), $fetchFlags = \PDO::FETCH_ASSOC)
 	{
 		if (!$this->checkConnection())
 			throw new \PDOException(self::ERR_NO_CONNECTION);
