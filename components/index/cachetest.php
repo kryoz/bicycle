@@ -5,9 +5,9 @@ use Core\ServiceLocator\Locator;
 
 class cachetest
 {
-    function generate()
+    public function generate()
     {
-        $cache = Locator::getInstance()->get('CACHE');
+        $cache = Locator::get('CACHE');
         for ($i=0; $i < 20; $i++)
             $data[] = rand(1, 1000);
         
@@ -16,9 +16,9 @@ class cachetest
         return $data;
     }
     
-    function getCache()
+    public function getCache()
     {
-        $cache = Locator::getInstance()->get('CACHE');
+        $cache = Locator::get('CACHE');
         return $cache->get('index2');
     }
 }

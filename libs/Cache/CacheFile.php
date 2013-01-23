@@ -4,10 +4,11 @@
  * File cache handler
  */
 
-namespace \Core\Cache;
+namespace Core\Cache;
 
 class CacheFile implements ICache
 {
+	const EXT = '.cache';
 
 	public function __construct()
 	{
@@ -17,9 +18,7 @@ class CacheFile implements ICache
 
 	public function has($scope)
 	{
-		$filename = CACHEDIR . $scope . '.txt';
-
-		return file_exists($filename);
+		return file_exists($this->getCacheFile($scope));
 	}
 
 	/**
@@ -32,7 +31,7 @@ class CacheFile implements ICache
 		if (!$this->has($scope))
 			return false;
 		
-		$filename = CACHEDIR . $scope . '.txt';
+		$filename = $this->getCacheFile($scope);
 		$age = time() - @filemtime($filename);
 		
 		if (CACHETTL == 0 || (file_exists($filename) && $age >= CACHETTL)) {
@@ -58,11 +57,7 @@ class CacheFile implements ICache
 	 */
 	public function set($scope, $data = null, $ttl = null)
 	{
-		$filename = CACHEDIR . $scope . $ttl . '.txt';
-		
-		if ($ttl !== null) {
-			$ttl = CACHETTL;
-		}
+		$filename = $this->getCacheFile($scope);
 		
 		try {
 			if ($data !== null) {
@@ -75,9 +70,12 @@ class CacheFile implements ICache
 				
 				fwrite($fh, serialize($data));
 				fclose($fh);
+				return true;
 			}
 		} catch (Exception $e) {
 			Debug::log(__CLASS__ . '::' . __FUNCTION__ . ': ' . $e->getMessage());
+			
+			return false;
 		}
 	}
 
@@ -87,9 +85,15 @@ class CacheFile implements ICache
 	 */
 	public function flush($scope, $regular = false)
 	{
-		if (file_exists(CACHEDIR . $scope . '.txt')) {
-			unlink(CACHEDIR . $scope . '.txt');
+		// @TODO regexp search
+		if (file_exists($this->getCacheFile($scope))) {
+			unlink($this->getCacheFile($scope));
 		}
+	}
+	
+	private function getCacheFile($name)
+	{
+		return CACHEDIR . $name . self::EXT;
 	}
 
 }

@@ -31,7 +31,7 @@ class Cache implements \Core\Cache\ICache, \Core\ServiceLocator\IService
 	final static function getInstance($cachetype = null)
 	{
 		if (empty(self::$instance)) {
-			self::$instance = new static($cachetype);
+			self::$instance = new Cache($cachetype);
 		}
 		
 		return self::$instance;
@@ -66,7 +66,7 @@ class Cache implements \Core\Cache\ICache, \Core\ServiceLocator\IService
 	public function set($scope, $data = null, $ttl = null)
 	{
 		$ttl = $ttl ? $ttl : CACHETTL;
-		$this->cache->set($scope, $data, $ttl);
+		return $this->cache->set($scope, $data, $ttl);
 	}
 
 	/**

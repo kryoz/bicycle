@@ -14,7 +14,7 @@ class Autoloader
 	private static function getInstance()
 	{
 		if (empty(self::$instance)) {
-			self::$instance = new Autoloader();
+			self::$instance = new static();
 		}
 
 		return self::$instance;
@@ -48,13 +48,14 @@ class Autoloader
 
 	public static function classLoader($className)
 	{
+		
 		$autoLoader = self::getInstance();
 
 		list($file, $file2) = $autoLoader->getClassPath($className);
 
 		if (!file_exists($file) && !file_exists($file2)) {
 			throw new \Exception(__CLASS__ . ": Tried to call <b>$className</b>, but none was found.
-                    Also there's no <b>$file</b> or <b>$file2</b>");
+					Also there's no <b>$file</b> or <b>$file2</b>");
 		}
 
 		if (file_exists($file2)) {
@@ -62,7 +63,7 @@ class Autoloader
 		} else {
 			require_once $file;
 		}
-
+		
 		return true;
 	}
 

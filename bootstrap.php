@@ -42,7 +42,7 @@ define ('_SAPE_USER', '2b6b81f35caca7b76766fa558d1eadd1'); // your SAPE id
 
 if (DEBUG)
 {
-    error_reporting(E_ALL ^ E_NOTICE);
+    //error_reporting(E_ALL ^ E_NOTICE);
     ini_set('display_errors', true);
 }
 
@@ -54,8 +54,7 @@ date_default_timezone_set( 'Europe/Moscow' );
 require_once LIBS.DS."Autoloader.php";
 Autoloader::register();
 
-$serviceLocator = Locator::getInstance();
-$serviceLocator->add(Cache::getInstance());
-$serviceLocator->add(DB::getInstance());
-$serviceLocator->add(Sape_Client::getInstance());
+Locator::add(Cache::getInstance());
+Locator::add(DB::getInstance());
+Locator::add(Sape_Client::getInstance());
 

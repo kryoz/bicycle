@@ -10,29 +10,31 @@ class Locator
 	 * 
 	 * @return Locator
 	 */
-	final static function getInstance()
+	private static function getInstance()
 	{
 		if (empty(self::$instance)) {
-			self::$instance = new Locator();
+			self::$instance = new static();
 		}
 
 		return self::$instance;
 	}
 	
-	public function add(IService $service)
+	public static function add(IService $service)
 	{
-		if (isset($this->registry[$service->getServiceName()])) {
+		$locator = self::getInstance();
+		if (isset($locator->registry[$service->getServiceName()])) {
 			throw new ServiceAlreadyExistsException();
 		}
-		$this->registry[$service->getServiceName()] = $service;
+		$locator->registry[$service->getServiceName()] = $service;
 		
-		return $this;
+		return $locator;
 	}
 	
-	public function get($serviceName)
+	public static function get($serviceName)
 	{
-		if (isset($this->registry[$serviceName])) {
-			return $this->registry[$serviceName];
+		$locator = self::getInstance();
+		if (isset($locator->registry[$serviceName])) {
+			return $locator->registry[$serviceName];
 		} else {
 			throw new ServiceNotFoundException();
 		}

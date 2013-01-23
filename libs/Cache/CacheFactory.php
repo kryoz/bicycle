@@ -13,6 +13,7 @@ abstract class CacheFactory
 			else
 				$cachetype = 'File';
 		}
+
 		$cacheClass = 'Core\Cache\Cache'.$cachetype;
 		$cache = new $cacheClass();
 
