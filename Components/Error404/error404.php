@@ -4,9 +4,11 @@
  *
  * @author kubintsev
  */
-class CError404 extends BaseController {
-    
-    function index($args, $params) 
+namespace Components\Error404;
+
+class CError404 extends \Site\BaseController {
+
+    function index($args, $params)
     {
         $view = $this->view;
 

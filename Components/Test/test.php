@@ -1,14 +1,14 @@
 <?php
-namespace Components;
+namespace Components\Test;
 
-class Test extends \Core\BaseController
+class Test extends \Site\BaseController
 {
 	public $complex = true;
-	
+
     function index($args, $params)
     {
         $view = $this->view;
-        
+
         $vars['title'] = 'You called another component - TEST';
         $vars['args'] = print_r($args,1);
         $vars['params'] = print_r($params,1);

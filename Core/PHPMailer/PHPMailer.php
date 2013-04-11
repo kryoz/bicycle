@@ -790,7 +790,6 @@ class PHPMailer {
    * @return bool
    */
   protected function SmtpSend($header, $body) {
-    require_once $this->PluginDir . 'class.smtp.php';
     $bad_rcpt = array();
 
     if(!$this->SmtpConnect()) {
@@ -2522,7 +2521,7 @@ class PHPMailer {
   }
 }
 
-class phpmailerException extends Exception {
+class phpmailerException extends \Exception {
   public function errorMessage() {
     $errorMsg = '<strong>' . $this->getMessage() . "</strong><br />\n";
     return $errorMsg;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Core;
+namespace Site;
 
 class Sape_base
 {
@@ -300,7 +300,7 @@ class Sape_Client extends Sape_Base implements ServiceLocator\IService
 	private static $instance;
 
 	/**
-	 * 
+	 *
 	 * @return Sape_Client
 	 */
 	public static function getInstance()
@@ -311,7 +311,7 @@ class Sape_Client extends Sape_Base implements ServiceLocator\IService
 
 		return self::$instance;
 	}
-	
+
 	public function getServiceName()
 	{
 		return 'SAPE';

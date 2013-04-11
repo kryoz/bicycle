@@ -1,9 +1,9 @@
 <?php
-namespace Core;
+namespace Site;
 
 /**
  * This class helps to protect forms from CSRF vulnarability
- * 
+ *
  * @author kryoz
  */
 class FormToken extends Session
