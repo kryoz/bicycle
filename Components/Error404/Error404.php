@@ -6,7 +6,8 @@
  */
 namespace Components\Error404;
 
-class CError404 extends \Site\BaseController {
+class Error404 extends \Site\BaseController
+{
 
     function index($args, $params)
     {
