@@ -4,7 +4,7 @@ use Core\Autoloader;
 use Core\Cache\Cache;
 use Core\DB;
 use Core\ServiceLocator\Locator;
-use Site\Sape_Client;
+use Site\SapeClient;
 
 define ('DEBUG', true); //dev mode on
 
@@ -55,5 +55,5 @@ Autoloader::register();
 
 Locator::add(Cache::getInstance());
 Locator::add(DB::getInstance());
-Locator::add(Sape_Client::getInstance());
+Locator::add(SapeClient::getInstance());
 
