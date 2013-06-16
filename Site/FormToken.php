@@ -6,44 +6,71 @@ namespace Site;
  *
  * @author kryoz
  */
-class FormToken extends Session
+class FormToken
 {
-
 	const FIELDNAME = 'formtoken';
 	const TTL = '7200';
 
+    private static $instance;
+
 	private function getSessionToken($prop)
 	{
-		return $this->get($prop, self::FIELDNAME);
+		return isset($this->getSession()[self::FIELDNAME][$prop]) ? $this->getSession()[self::FIELDNAME][$prop] : false;
 	}
 
 	private function setSessionToken($prop, $val)
 	{
-		$this->set($prop, $val, self::FIELDNAME);
+        $_SESSION[self::FIELDNAME][$prop] = $val;
 	}
 
-	public static function getToken()
+    private function getSession()
+    {
+        return $_SESSION;
+    }
+
+    private function getRequest()
+    {
+        return $_REQUEST;
+    }
+
+    public function __construct()
+    {
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            throw new \Exception('Session has not been initialized');
+        }
+    }
+
+    public static function create()
+    {
+        if (!self::$instance) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
+    }
+
+	public function getToken()
 	{
 		$time = time();
 		$token = sha1(mt_rand(0, 1000000));
 
-		self::setSessionToken($token, $time);
+		$this->setSessionToken($token, $time);
 
 		return "<input name='" . self::FIELDNAME . "' value='{$token}' type='hidden' />";
 	}
 
-	public static function validateToken($clear = true)
+	public function validateToken($clear = true)
 	{
 		$valid = false;
-		$posted = isset($_REQUEST[self::FIELDNAME]) ? $_REQUEST[self::FIELDNAME] : '';
+		$posted = isset($this->getRequest()[self::FIELDNAME]) ? $this->getRequest()[self::FIELDNAME] : '';
 
 		if (!empty($posted)) {
-			if (self::getSessionToken($posted)) {
-				if (self::getSessionToken($posted) >= time() - self::TTL) {
+			if ($this->getSessionToken($posted)) {
+				if ($this->getSessionToken($posted) >= time() - self::TTL) {
 					$valid = true;
 				}
 				if ($clear)
-					$this->remove($posted, self::FIELDNAME);
+					unset($_SESSION[self::FIELDNAME]);
 			}
 		}
 

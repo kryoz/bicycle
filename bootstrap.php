@@ -4,6 +4,7 @@ use Core\Autoloader;
 use Core\Cache\Cache;
 use Core\DB;
 use Core\ServiceLocator\Locator;
+use Core\SessionAPC;
 use Site\SapeClient;
 
 define ('DEBUG', true); //dev mode on
@@ -57,3 +58,4 @@ Locator::add(Cache::getInstance());
 Locator::add(DB::getInstance());
 Locator::add(SapeClient::getInstance());
 
+$sessionHandler = new SessionAPC(['ttl' => 3600]);

@@ -6,13 +6,15 @@
  */
 namespace Components\Error404;
 
-class Error404 extends \Site\BaseController
+use Site\BaseController;
+
+class Error404 extends BaseController
 {
-
-    function index($args, $params)
+    public function index($args, $params)
     {
-        $view = $this->view;
-
-        $view->setGlobalTemplate('404.php')->loadTemplate("view_error404")->render();
+        $this->view
+            ->setGlobalTemplate('404.php')
+            ->loadTemplate("view_error404")
+            ->render();
     }
 }

@@ -10,18 +10,23 @@ abstract class DAOBase extends FixedArrayAccess
     const ID = 'id';
 
     /**
-     *
      * @var DB
      */
     protected $db;
 
+    /**
+     * свойства объекта БД, которые непосредственно в нём не присутствуют
+     */
     protected $fictiveProperties = array();
 
+    /**
+     * название таблицы БД
+     */
     protected $table;
 
     public function __construct($propertyNames = null)
     {
-        $properties = array(self::ID);
+        $properties = [self::ID];
         $properties = array_merge($properties, $propertyNames);
         $this->db = Locator::get('DB');
 
@@ -30,7 +35,7 @@ abstract class DAOBase extends FixedArrayAccess
 
     /**
      *
-     * @return \Shop\DAO\DAOBase
+     * @return DAOBase
      */
     public static function create()
     {
@@ -64,14 +69,14 @@ abstract class DAOBase extends FixedArrayAccess
 
     /**
      *
-     * @param type $query
-     * @param type $params
-     * @param type null|string
-     * @return type
+     * @param string $query
+     * @param array $params
+     * @param string null|string
+     * @return array
      */
     protected function getListByQuery($query, $params, $type = null)
     {
-        $result = array();
+        $result = [];
 
         foreach ($this->db->query($query, $params) as $item) {
             if ($type) {
@@ -100,6 +105,9 @@ abstract class DAOBase extends FixedArrayAccess
         return $this[self::ID];
     }
 
+    /**
+     * сохраняет объект БД или создает новый
+     */
     public function save()
     {
         $params = array_diff_key($this->properties, $this->fictiveProperties);
@@ -117,7 +125,7 @@ abstract class DAOBase extends FixedArrayAccess
             $this[self::ID] = $this->db->exec($query, array_values($params));
         } else {
             $query = "UPDATE {$this->table} SET ";
-            $queryParts = array();
+            $queryParts = [];
 
             foreach ($params as $key => $val) {
                 $queryParts[] = "$key = ?";

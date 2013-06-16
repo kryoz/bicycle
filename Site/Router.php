@@ -17,7 +17,7 @@ class Router
     private static $args;
     private static $params;
 
-    function __construct()
+    public function __construct()
     {
         $this->setPath(COMPONENTS);
     }
@@ -153,23 +153,19 @@ class Router
 
     public function delegate()
     {
-        try {
-            $this->getController();
+        $this->getController();
 
-            // Delegating control
-            $class = $this->getControllerPath();
-            $controller = new $class();
+        // Delegating control
+        $class = $this->getControllerPath();
+        $controller = new $class();
 
-            if (is_callable([$class, self::$page])) {
-                $controller->{self::$page}(self::$args, self::$params);
-            } //this case is required for complex controllers
-            elseif (isset($controller->complex)) {
-                $controller->index(self::$args, self::$params);
-            } else {
-                self::NoPage();
-            }
-        } catch (\Exception $e) {
-            Debug::log(__CLASS__ . '::' . __FUNCTION__ . ': ' . $this->getControllerPath(), $e->getMessage());
+        if (is_callable([$class, self::$page])) {
+            $controller->{self::$page}(self::$args, self::$params);
+        } //this case is required for complex controllers
+        elseif (isset($controller->complex)) {
+            $controller->index(self::$args, self::$params);
+        } else {
+            self::NoPage();
         }
     }
 

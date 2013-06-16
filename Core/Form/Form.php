@@ -1,5 +1,7 @@
 <?php
-namespace Core;
+namespace Core\Form;
+
+use Core\FixedArrayAccess;
 
 class Form extends FixedArrayAccess
 {
@@ -29,7 +31,7 @@ class Form extends FixedArrayAccess
             $this->rules[$property] = $rule;
             $this->rulesMessages[$property] = $message;
         } else {
-            throw new \Exception('Incorrect property name '.$property);
+            throw new WrongRuleNameException('Incorrect property name '.$property);
         }
         
         return $this;

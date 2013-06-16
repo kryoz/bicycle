@@ -6,15 +6,8 @@ use Core\View;
 class Test extends \Site\BaseController
 {
     public $complex = true;
-    private $view;
 
-    public function __construct()
-    {
-        $this->view = new View();
-        $this->view->setPath(__DIR__ . DS);
-    }
-
-    function index($args, $params)
+    public function index($args, $params)
     {
         $view = $this->view;
 
