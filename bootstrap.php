@@ -42,7 +42,7 @@ define ('DBPASS', '123');
 define ('_SAPE_USER', '2b6b81f35caca7b76766fa558d1eadd1'); // your SAPE id
 
 if (DEBUG) {
-    //error_reporting(E_ALL ^ E_NOTICE);
+    error_reporting(E_ALL ^ E_NOTICE);
     ini_set('display_errors', true);
 }
 
@@ -55,7 +55,7 @@ require_once LIBS . DS . "Autoloader.php";
 Autoloader::register();
 
 Locator::add(Cache::getInstance());
-Locator::add(DB::getInstance());
-Locator::add(SapeClient::getInstance());
+//Locator::add(DB::getInstance());
+//Locator::add(SapeClient::getInstance());
 
 $sessionHandler = new SessionAPC(['ttl' => 3600]);

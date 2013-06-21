@@ -4,14 +4,17 @@
  *
  * @author kubintsev
  */
-namespace Core;
+namespace Core\View;
+
+use Core\Debug;
+use Core\View\TemplateNotFoundException;
 
 class View
 {
-    private $component_path;
-    private $global_template;
-    private $template;
-    private $vars;
+    protected $component_path;
+	protected $globalTemplate;
+	protected $template;
+	protected $vars;
 
     /**
      *
@@ -20,9 +23,9 @@ class View
     public function __construct($tmpl = null)
     {
         if ($tmpl === null) {
-            $this->global_template = 'global_tmpl.php';
+            $this->globalTemplate = 'global_tmpl.php';
         } else {
-            $this->global_template = $tmpl;
+            $this->globalTemplate = $tmpl;
         }
         $this->setPath(COMPONENTS);
     }
@@ -30,18 +33,18 @@ class View
     /**
      * Sets new global template
      * @param string $path
-     * @return \Core\View
+     * @return \Core\View\View
      */
     public function setGlobalTemplate($tmpl)
     {
-        $this->global_template = strtolower($tmpl);
+        $this->globalTemplate = strtolower($tmpl);
         return $this;
     }
 
     /**
      * Sets component path
      * @param string $path
-     * @return \Core\View
+     * @return \Core\View\View
      */
     public function setPath($path)
     {
@@ -52,7 +55,7 @@ class View
     /**
      * Sets template vars
      * @param array $vars
-     * @return \Core\View
+     * @return \Core\View\View
      */
     public function loadVars(array $vars)
     {
@@ -63,7 +66,8 @@ class View
     /**
      * Sets template name
      * @param string $tmpl
-     * @return \Core\View
+     * @param string $component
+     * @return \Core\View\View
      */
     public function loadTemplate($tmpl, $component = null)
     {
@@ -78,6 +82,7 @@ class View
     /**
      * Render without displaying (for emailing for ex.)
      * @return string
+     * @throws TemplateNotFoundException|\Exception
      */
     public function prepare()
     {
@@ -85,14 +90,14 @@ class View
             $template = $this->component_path . $this->template . '.php';
 
             if (!file_exists($template)) {
-                throw new \Exception('"' . $template . '" not found!');
+                throw new TemplateNotFoundException('"' . $template . '" not found!');
             }
 
             if (is_array($this->vars))
                 extract($this->vars);
 
             ob_start();
-            require $template;
+            include $template;
 
             $content = ob_get_contents();
             ob_end_clean();
@@ -103,16 +108,16 @@ class View
             }
 
             return $content;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             ob_end_clean();
-            Debug::log(__CLASS__ . '::' . __FUNCTION__ . ':<br>Line:' . $e->getLine() . '<br>Message: ' . $e->getMessage() . '<br>');
+            throw $e;
         }
     }
 
     /**
      * Render the view. If $raw = true then render goes without global template
      * @param bool $raw
-     * @throws Exception
+     * @throws TemplateNotFoundException
      */
     public function render($raw = false)
     {
@@ -124,9 +129,14 @@ class View
         if (is_array($this->vars))
             extract($this->vars);
 
-        if (!$raw)
-            require_once GLOBALVIEWS . $this->global_template;
-        else
+        if (!$raw) {
+	       	if (!file_exists(GLOBALVIEWS . $this->globalTemplate)) {
+		        throw new TemplateNotFoundException;
+	        }
+            include_once GLOBALVIEWS . $this->globalTemplate;
+        }
+        else {
             echo $content;
+	    }
     }
 }

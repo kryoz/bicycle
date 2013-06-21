@@ -6,7 +6,7 @@
  */
 namespace Site;
 
-use Core\View;
+use Core\View\View;
 
 abstract class BaseController
 {
