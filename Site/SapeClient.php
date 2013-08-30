@@ -1,6 +1,6 @@
 <?php
 
-namespace Site;
+namespace Core;
 
 use Core\ServiceLocator\IService;
 
@@ -21,7 +21,7 @@ abstract class SapeBase
     protected $_request_uri = '';
     protected $_multi_site = false;
     protected $_fetch_remote_type = ''; // Способ подключения к удалённому серверу [file_get_contents|curl|socket]
-    protected $_socket_timeout = 6; // Сколько ждать ответа
+    protected $_socket_timeout = 5; // Сколько ждать ответа
     protected $_force_show_code = false;
     protected $_is_our_bot = false; // Если наш робот
     protected $_debug = false;
@@ -55,7 +55,7 @@ abstract class SapeBase
         if (strlen($host)) {
             $this->_host = $host;
         } else {
-            $this->_host = isset($_SERVER['HTTP_HOST']) ? : 'phpunit';
+            $this->_host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'phpunit';
         }
 
         $this->_host = preg_replace('/^http:\/\//', '', $this->_host);
@@ -243,16 +243,16 @@ abstract class SapeBase
             )
         ) {
             $this->_fetch_remote_type = 'curl';
-            if ($ch = @curl_init()) {
+            if ($ch = curl_init()) {
 
-                @curl_setopt($ch, CURLOPT_URL, 'http://' . $host . $path);
-                @curl_setopt($ch, CURLOPT_HEADER, false);
-                @curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                @curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->_socket_timeout);
-                @curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
+                curl_setopt($ch, CURLOPT_URL, 'http://' . $host . $path);
+                curl_setopt($ch, CURLOPT_HEADER, false);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->_socket_timeout);
+                curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
 
                 $data = @curl_exec($ch);
-                @curl_close($ch);
+                curl_close($ch);
 
                 if ($data) {
                     return $data;
@@ -325,6 +325,11 @@ class SapeClient extends SapeBase implements IService
     public function getServiceName()
     {
         return 'SAPE';
+    }
+
+    public function return_links($n = null, $offset = 0, $options = null)
+    {
+        return $this->returnLinks($n, $offset, $options);
     }
 
     /**
