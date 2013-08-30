@@ -14,14 +14,18 @@ class DB implements ServiceLocator\IService
 	const ERR_INIT_FAIL = 'PDO init error';
 	const ERR_SQL_ERROR = 'Query execution error';
 
-	private $scheme;
+	protected $scheme;
+	protected $db;
+	protected $user;
+	protected $pass;
+
 	/**
 	 *
 	 * @var \PDO
 	 */
-	private $dbh;
-	private $result;
-	private static $instance;
+	protected $dbh;
+	protected $result;
+	protected static $instance;
 
 	/**
 	 *
@@ -32,25 +36,9 @@ class DB implements ServiceLocator\IService
 	public function __construct($scheme = SCHEME, $db = DBADDRESS, $user = DBUSER, $pass = DBPASS)
 	{
 		$this->scheme = $scheme;
-
-		try {
-			if (!$this->isSQlite()) {
-				$this->dbh = new \PDO($scheme . ':' . $db, $user, $pass);
-
-				$this->dbh->exec('SET NAMES ' . INNERCODEPAGE);
-
-				$serverversion = $this->dbh->getAttribute(\PDO::ATTR_SERVER_VERSION);
-				$emulate_prepares = version_compare($serverversion, '5.1.17', '<');
-
-				$this->dbh->setAttribute(\PDO::ATTR_EMULATE_PREPARES, $emulate_prepares);
-			}
-			else
-				$this->dbh = new \PDO($scheme . ':' . $db);
-
-			$this->dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-		} catch (\PDOException $e) {
-			throw new \PDOException(self::ERR_INIT_FAIL . ': ' . $e->getMessage());
-		}
+		$this->db = $db;
+		$this->user = $user;
+		$this->pass = $pass;
 	}
 
 	public function __destruct()
@@ -90,8 +78,7 @@ class DB implements ServiceLocator\IService
 	 */
 	public function query($sql, array $params = array(), $fetchFlags = \PDO::FETCH_ASSOC)
 	{
-		if (!$this->checkConnection())
-			throw new \PDOException(self::ERR_NO_CONNECTION);
+		$this->checkConnection();
 
 		try {
 			$sth = $this->dbh->prepare($sql);
@@ -121,8 +108,8 @@ class DB implements ServiceLocator\IService
 	 */
 	public function get($sql, array $params = array())
 	{
-		if (!$this->checkConnection())
-			throw new \PDOException(self::ERR_NO_CONNECTION);
+		$this->checkConnection();
+
 		try {
 			$this->result = $this->dbh->prepare($sql);
 			$this->result->execute($params);
@@ -144,8 +131,11 @@ class DB implements ServiceLocator\IService
 	 */
 	public function fetchRow($fetchFlags = PDO::FETCH_ASSOC)
 	{
-		if (!$this->checkConnection() || empty($this->result))
-			throw new \PDOException(self::ERR_NO_CONNECTION);
+		$this->checkConnection();
+
+		if (empty($this->result)) {
+			return;
+		}
 
 		try {
 			return $this->result->fetch($fetchFlags);
@@ -162,8 +152,7 @@ class DB implements ServiceLocator\IService
 	 */
 	public function exec($sql, array $params = array())
 	{
-		if (!$this->checkConnection())
-			throw new PDOException(self::ERR_NO_CONNECTION);
+		$this->checkConnection();
 
 		try {
 			$sth = $this->dbh->prepare($sql);
@@ -183,16 +172,14 @@ class DB implements ServiceLocator\IService
 
 	public function begin()
 	{
-		if (!$this->checkConnection())
-			throw new \PDOException(self::ERR_NO_CONNECTION);
+		$this->checkConnection();
 
 		$this->dbh->beginTransaction();
 	}
 
 	public function commit()
 	{
-		if (!$this->checkConnection())
-			throw new \PDOException(self::ERR_NO_CONNECTION);
+		$this->checkConnection();
 
 		$this->dbh->commit();
 	}
@@ -233,21 +220,43 @@ class DB implements ServiceLocator\IService
 		return $html;
 	}
 
-	public function checkConnection()
-	{
-		return !empty($this->dbh);
-	}
-
 	/**
 	 * Get DB PDO object
 	 * @return mixed
 	 */
 	public function o()
 	{
-		if (!$this->checkConnection())
-			throw new \PDOException(self::ERR_NO_CONNECTION);
-		else
-			return $this->dbh;
+		$this->checkConnection();
+
+		return $this->dbh;
 	}
 
+	protected function checkConnection()
+	{
+		if(empty($this->dbh)) {
+			$this->init();
+		}
+	}
+
+	protected function init()
+	{
+		try {
+			if (!$this->isSQlite()) {
+				$this->dbh = new \PDO($this->scheme . ':' . $this->db, $this->user, $this->pass);
+
+				$this->dbh->exec('SET NAMES ' . INNERCODEPAGE);
+
+				$serverversion = $this->dbh->getAttribute(\PDO::ATTR_SERVER_VERSION);
+				$emulate_prepares = version_compare($serverversion, '5.1.17', '<');
+
+				$this->dbh->setAttribute(\PDO::ATTR_EMULATE_PREPARES, $emulate_prepares);
+			}
+			else
+				$this->dbh = new \PDO($this->scheme . ':' . $this->db);
+
+			$this->dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+		} catch (\PDOException $e) {
+			throw new \PDOException(self::ERR_INIT_FAIL . ': ' . $e->getMessage());
+		}
+	}
 }
