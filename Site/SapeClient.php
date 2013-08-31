@@ -3,25 +3,25 @@
 namespace Core;
 
 use Core\ServiceLocator\IService;
+use Core\ServiceLocator\Locator;
 
 abstract class SapeBase
 {
 
-    protected $_version = '1.1.7';
+    protected $_version = '1.1.8';
     protected $_user_agent = 'SAPE_Client PHP';
     protected $_verbose = false;
     protected $_charset = 'utf-8';
     protected $_sape_charset = '';
     protected $_server_list = array('dispenser-01.sape.ru', 'dispenser-02.sape.ru');
-    protected $_cache_lifetime = 3600; // Пожалейте наш сервер :о)
-    // Если скачать базу ссылок не удалось, то следующая попытка будет через столько секунд
-    protected $_cache_reloadtime = 300;
+    protected $_cache_lifetime = 3600; // Кеширование данных на стороне сайта
+    protected $_cache_reloadtime = 300; // Если скачать базу ссылок не удалось, то следующая попытка будет через столько секунд
     protected $_error = '';
     protected $_host = '';
     protected $_request_uri = '';
     protected $_multi_site = false;
-    protected $_fetch_remote_type = ''; // Способ подключения к удалённому серверу [file_get_contents|curl|socket]
-    protected $_socket_timeout = 5; // Сколько ждать ответа
+    protected $_fetch_remote_type = 'curl'; // Способ подключения к удалённому серверу [file_get_contents|curl|socket]
+    protected $_socket_timeout = 1; // Сколько ждать ответа
     protected $_force_show_code = false;
     protected $_is_our_bot = false; // Если наш робот
     protected $_debug = false;
@@ -69,7 +69,7 @@ abstract class SapeBase
         }
 
         if (strlen($this->_request_uri) == 0) {
-            $this->_request_uri = isset($_SERVER['REQUEST_URI']) ? : '';
+            $this->_request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
         }
 
         // На случай, если хочется много сайтов в одной папке
@@ -161,7 +161,6 @@ abstract class SapeBase
 
         if (!$data) {
 
-
             $path = $this->getDispenserPath();
             if (strlen($this->_charset)) {
                 $path .= '&charset=' . $this->_charset;
@@ -172,24 +171,25 @@ abstract class SapeBase
                     if (substr($data, 0, 12) == 'FATAL ERROR:') {
                         $this->raiseError($data);
                     } else {
-                        // [псевдо]проверка целостности:
                         $data = @unserialize($data);
-                        if ($data != false) {
-                            // попытаемся записать кодировку в кеш
-                            $data['__sape_charset__'] = $this->_charset;
-                            $data['__last_update__'] = time();
-                            $data['__multi_site__'] = $this->_multi_site;
-                            $data['__fetch_remote_type__'] = $this->_fetch_remote_type;
-                            $data['__ignore_case__'] = $this->_ignore_case;
-                            $data['__php_version__'] = phpversion();
-                            $data['__server_software__'] = isset($_SERVER['SERVER_SOFTWARE']) ? : '';
-
-                            $this->write($this->_db_file, $data);
-                            break;
-                        }
+                        $ttl = $this->_cache_lifetime;
+                        break;
                     }
                 }
             }
+
+            if (!$data) {
+                $data['__sape_charset__'] = $this->_charset;
+                $data['__last_update__'] = time();
+                $data['__multi_site__'] = $this->_multi_site;
+                $data['__fetch_remote_type__'] = $this->_fetch_remote_type;
+                $data['__ignore_case__'] = $this->_ignore_case;
+                $data['__php_version__'] = phpversion();
+                $data['__server_software__'] = isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : '';
+                $ttl = $this->_cache_reloadtime;
+            }
+
+            $this->write($this->_db_file, $data, $ttl);
         }
 
         // Убиваем PHPSESSID
@@ -201,20 +201,19 @@ abstract class SapeBase
         $this->setData($data);
     }
 
-    /**
-     * Функция чтения из локального файла
-     */
     protected function read($filename)
     {
-        $cache = \Core\ServiceLocator\Locator::get('CACHE');
+        $cache = Locator::get('CACHE');
         return $cache->get(CP . $filename);
     }
 
-    abstract protected function getDispenserPath();
+    protected function write($filename, $data, $ttl)
+    {
+        $cache = Locator::get('CACHE');
 
-    /**
-     * Функция для подключения к удалённому серверу
-     */
+        return $cache->set(CP . $filename, $data, $ttl);
+    }
+
     protected function fetch_remote_file($host, $path)
     {
 
@@ -251,7 +250,7 @@ abstract class SapeBase
                 curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->_socket_timeout);
                 curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
 
-                $data = @curl_exec($ch);
+                $data = curl_exec($ch);
                 curl_close($ch);
 
                 if ($data) {
@@ -279,17 +278,8 @@ abstract class SapeBase
         return $this->raiseError('Не могу подключиться к серверу: ' . $host . $path . ', type: ' . $this->_fetch_remote_type);
     }
 
-    /**
-     * Функция записи в локальный файл
-     */
-    protected function write($filename, $data)
-    {
-        $cache = \Core\ServiceLocator\Locator::get('CACHE');
-
-        return $cache->set(CP . $filename, $data);
-    }
-
     abstract protected function setData($data);
+    abstract protected function getDispenserPath();
 }
 
 /**

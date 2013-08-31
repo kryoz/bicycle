@@ -12,7 +12,7 @@ class CacheApc implements ICache
 	public function __construct()
 	{
 		if (!function_exists('apc_cache_info'))
-			throw new Exception(__CLASS__.' class error: APC module does not exist');
+			throw new \Exception(__CLASS__.' class error: APC module does not exist');
 	}
 
 	public function has($scope)
