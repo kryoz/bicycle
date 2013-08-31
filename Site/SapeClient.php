@@ -297,7 +297,6 @@ class SapeClient extends SapeBase implements IService
     protected function __construct($options = null)
     {
         parent::__construct($options);
-        $this->loadData();
     }
 
     /**
@@ -341,7 +340,7 @@ class SapeClient extends SapeBase implements IService
      */
     public function returnLinks($n = null, $offset = 0, $options = null)
     {
-
+        $this->loadData();
         //Опрелелить, как выводить ссылки
         $as_block = $this->_show_only_block;
 
@@ -431,7 +430,7 @@ class SapeClient extends SapeBase implements IService
      */
     public function returnBlockLinks($n = null, $offset = 0, $options = null)
     {
-
+        $this->loadData();
         // Объединить параметры
         if (empty($options)) {
             $options = array();
