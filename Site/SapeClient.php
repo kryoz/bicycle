@@ -179,15 +179,16 @@ abstract class SapeBase
             }
 
             if (!$data) {
-                $data['__sape_charset__'] = $this->_charset;
-                $data['__last_update__'] = time();
-                $data['__multi_site__'] = $this->_multi_site;
-                $data['__fetch_remote_type__'] = $this->_fetch_remote_type;
-                $data['__ignore_case__'] = $this->_ignore_case;
-                $data['__php_version__'] = phpversion();
-                $data['__server_software__'] = isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : '';
                 $ttl = $this->_cache_reloadtime;
             }
+
+            $data['__sape_charset__'] = $this->_charset;
+            $data['__last_update__'] = time();
+            $data['__multi_site__'] = $this->_multi_site;
+            $data['__fetch_remote_type__'] = $this->_fetch_remote_type;
+            $data['__ignore_case__'] = $this->_ignore_case;
+            $data['__php_version__'] = phpversion();
+            $data['__server_software__'] = isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : '';
 
             $this->write($this->_db_file, $data, $ttl);
         }
