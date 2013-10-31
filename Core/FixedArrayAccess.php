@@ -4,7 +4,7 @@ namespace Core;
 
 abstract class FixedArrayAccess implements \ArrayAccess
 {
-    protected $propertyNames = array();
+    protected $propertyNames = [];
     protected $properties;
     
     public function __construct($propertyNames = null)
@@ -17,13 +17,20 @@ abstract class FixedArrayAccess implements \ArrayAccess
             $this->properties[$propertyName] = null;
         }
     }
-    
-    protected function addProperty($property, $val = 0)
+
+	/**
+	 * @param string $property
+	 * @param mixed $val
+	 * @return $this
+	 */
+	protected function addProperty($property, $val = null)
     {
         if (!$this->offsetExists($property)) {
-            $this->propertyNames = array_merge($this->propertyNames, array($property));
+            $this->propertyNames = array_merge($this->propertyNames, [$property]);
             $this->properties[$property] = $val;
         }
+
+	    return $this;
     }
 
     public function offsetExists($offset)

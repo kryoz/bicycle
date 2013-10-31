@@ -55,10 +55,10 @@ class Debug
 
         if ($obj instanceof Exception) {
             $debug->log[] = $obj->getMessage()."\n".$obj->getTraceAsString();
+	        return;
         }
-        else {
-            $debug->log[] = $obj;
-        }
+
+        $debug->log[] = $obj;
     }
     
     public static function pstart($title = 'your code')

@@ -6,8 +6,6 @@
  */
 namespace Site;
 
-use Core\View\View;
-
 abstract class BaseController
 {
     protected $vars;

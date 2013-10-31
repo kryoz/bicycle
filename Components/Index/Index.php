@@ -35,7 +35,7 @@ class Index extends BaseController
             ->render();
     }
 
-    public function tokencheck($args, $params)
+    public function tokenCheck($args, $params)
     {
         session_set_cookie_params(3600);
         session_start();

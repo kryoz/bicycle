@@ -28,10 +28,10 @@ class DB implements ServiceLocator\IService
 	protected static $instance;
 
 	/**
-	 *
-	 * @param string $scheme db type scheme
-	 * @param string $db address string for connection
-	 * @throws Exception
+	 * @param string $scheme
+	 * @param string $db
+	 * @param string $user
+	 * @param string $pass
 	 */
 	public function __construct($scheme = SCHEME, $db = DBADDRESS, $user = DBUSER, $pass = DBPASS)
 	{
@@ -70,11 +70,11 @@ class DB implements ServiceLocator\IService
 	}
 
 	/**
-	 * query with fetching all data in return
-	 * @param string $sql
+	 * @param $sql
 	 * @param array $params
 	 * @param int $fetchFlags
 	 * @return array
+	 * @throws \PDOException
 	 */
 	public function query($sql, array $params = array(), $fetchFlags = \PDO::FETCH_ASSOC)
 	{
@@ -86,7 +86,7 @@ class DB implements ServiceLocator\IService
 			$result = $sth->fetchAll($fetchFlags);
 			$sth->closeCursor();
 		} catch (\PDOException $e) {
-			if (!DEBUG) {
+			if (!SETTINGS_IS_DEBUG) {
                 Debug::log(self::ERR_SQL_ERROR . ': ' . $e->getMessage());
 				Debug::log('QUERY: ' . $sql);
 				Debug::log('PARAMS: ' . print_r($params, true));
@@ -101,10 +101,10 @@ class DB implements ServiceLocator\IService
 	}
 
 	/**
-	 * Perform query without fetching it
-	 * @param string $sql
+	 * @param $sql
 	 * @param array $params
-	 * @return array
+	 * @return $this
+	 * @throws \PDOException
 	 */
 	public function get($sql, array $params = array())
 	{
@@ -114,20 +114,20 @@ class DB implements ServiceLocator\IService
 			$this->result = $this->dbh->prepare($sql);
 			$this->result->execute($params);
 		} catch (\PDOException $e) {
-			if (DEBUG) {
+			if (SETTINGS_IS_DEBUG) {
 				Debug::log('QUERY: ' . $sql);
 				Debug::log('PARAMS: ' . print_r($params, true));
 			}
 			throw new \PDOException(self::ERR_SQL_ERROR . ': ' . $e->getMessage());
 		}
 
-		return $result;
+		return $this;
 	}
 
 	/**
-	 * fetch a row from query result $this->get()
-	 * @param int $fetchFlags
-	 * @return array
+	 * @param $fetchFlags
+	 * @return mixed
+	 * @throws \PDOException
 	 */
 	public function fetchRow($fetchFlags = PDO::FETCH_ASSOC)
 	{
@@ -145,10 +145,10 @@ class DB implements ServiceLocator\IService
 	}
 
 	/**
-	 * query without data return
-	 * @param string $sql
+	 * @param $sql
 	 * @param array $params
-	 * @return int last row_id
+	 * @return string
+	 * @throws \PDOException
 	 */
 	public function exec($sql, array $params = array())
 	{
@@ -160,7 +160,7 @@ class DB implements ServiceLocator\IService
 			$sth->closeCursor();
 			unset($sth);
 		} catch (PDOException $e) {
-			if (DEBUG) {
+			if (SETTINGS_IS_DEBUG) {
 				Debug::log('QUERY: ' . $sql);
 				Debug::log('PARAMS: ' . print_r($params, true));
 			}
@@ -246,8 +246,8 @@ class DB implements ServiceLocator\IService
 
 				$this->dbh->exec('SET NAMES ' . INNERCODEPAGE);
 
-				$serverversion = $this->dbh->getAttribute(\PDO::ATTR_SERVER_VERSION);
-				$emulate_prepares = version_compare($serverversion, '5.1.17', '<');
+				$serverVersion = $this->dbh->getAttribute(\PDO::ATTR_SERVER_VERSION);
+				$emulate_prepares = version_compare($serverVersion, '5.1.17', '<');
 
 				$this->dbh->setAttribute(\PDO::ATTR_EMULATE_PREPARES, $emulate_prepares);
 			}

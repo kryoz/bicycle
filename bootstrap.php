@@ -1,13 +1,12 @@
 <?php
 
 use Core\Autoloader;
-use Core\Cache\Cache;
+use Core\Cache\CacheFile;
 use Core\DB;
 use Core\ServiceLocator\Locator;
-use Core\SessionAPC;
 use Site\SapeClient;
 
-define ('DEBUG', true); //dev mode on
+define ('SETTINGS_IS_DEBUG', true); //dev mode on
 
 define ('DS', DIRECTORY_SEPARATOR);
 define ('DOCROOT', $_SERVER['DOCUMENT_ROOT'] . DS); // root directory of the site
@@ -17,10 +16,10 @@ define ('URLROOT', ''); // URL root of framework
 define ('PROTOCOL', 'http'); // HTTP or HTTPS
 define ('SEFENABLED', false); // SEF-url routes
 
-define ('COMPONENTS', DOCROOT . 'Components' . DS); // path to your applications
+define ('SETTINGS_COMPONENTS_DIR', DOCROOT . 'Components' . DS); // path to your applications
 define ('LIBS', ROOT . 'Core'); // path to shared libraries
 define ('LIBS2', ROOT . 'Site'); // site specific libs
-define ('GLOBALVIEWS', DOCROOT . 'tmpl' . DS); // path to global templates
+define ('SETTINGS_GLOBALVIEWS_DIR', DOCROOT . 'tmpl' . DS); // path to global templates
 define ('LOGFILE', DOCROOT . 'debug.log'); // make sure that file has write-enable rights
 
 define ('CACHEDIR', DS . 'tmp' . DS);
@@ -39,9 +38,9 @@ define ('DBADDRESS', 'dbname=test;host=localhost');
 define ('DBUSER', 'test');
 define ('DBPASS', '123');
 
-define ('_SAPE_USER', '2b6b81f35caca7b76766fa558d1eadd1'); // your SAPE id
+define ('_SAPE_USER', ''); // your SAPE id
 
-if (DEBUG) {
+if (SETTINGS_IS_DEBUG) {
     error_reporting(E_ALL ^ E_NOTICE);
     ini_set('display_errors', true);
 }
@@ -54,8 +53,5 @@ date_default_timezone_set('Europe/Moscow');
 require_once LIBS . DS . "Autoloader.php";
 Autoloader::register();
 
-Locator::add(Cache::getInstance());
-//Locator::add(DB::getInstance());
-//Locator::add(SapeClient::getInstance());
-
-$sessionHandler = new SessionAPC(['ttl' => 3600]);
+Locator::add(CacheFile::getInstance()); // you can try CacheAPC if you have php APC extension
+Locator::add(DB::getInstance());

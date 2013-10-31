@@ -13,16 +13,8 @@ abstract class DAOBase extends FixedArrayAccess
      * @var DB
      */
     protected $db;
-
-    /**
-     * свойства объекта БД, которые непосредственно в нём не присутствуют
-     */
-    protected $fictiveProperties = array();
-
-    /**
-     * название таблицы БД
-     */
-    protected $table;
+    protected $fictiveProperties = [];
+    protected $dbTable;
 
     public function __construct($propertyNames = null)
     {
@@ -45,7 +37,7 @@ abstract class DAOBase extends FixedArrayAccess
     public function getById($id)
     {
         if ($id) {
-            $query = "SELECT * FROM {$this->table} WHERE id = ?";
+            $query = "SELECT * FROM {$this->dbTable} WHERE id = ?";
             if ($data = $this->db->query($query, array($id))) {
                 $this->fillParams($data[0]);
             }
@@ -91,10 +83,6 @@ abstract class DAOBase extends FixedArrayAccess
         return $result;
     }
 
-    /**
-     * Возвращает хэш по содержимому объекта
-     * @return string
-     */
     public function getUID()
     {
         return md5(serialize($this->properties));
@@ -105,9 +93,6 @@ abstract class DAOBase extends FixedArrayAccess
         return $this[self::ID];
     }
 
-    /**
-     * сохраняет объект БД или создает новый
-     */
     public function save()
     {
         $params = array_diff_key($this->properties, $this->fictiveProperties);
@@ -115,7 +100,7 @@ abstract class DAOBase extends FixedArrayAccess
             unset($params[self::ID]);
             $keys = array_keys($params);
 
-            $query = "INSERT INTO {$this->table} (".implode(', ', $keys).") VALUES ";
+            $query = "INSERT INTO {$this->dbTable} (".implode(', ', $keys).") VALUES ";
 
             foreach ($keys as $key) {
                 $placeholders[] = "?";
@@ -124,7 +109,7 @@ abstract class DAOBase extends FixedArrayAccess
             $query .= "(".implode(', ', $placeholders). ")";
             $this[self::ID] = $this->db->exec($query, array_values($params));
         } else {
-            $query = "UPDATE {$this->table} SET ";
+            $query = "UPDATE {$this->dbTable} SET ";
             $queryParts = [];
 
             foreach ($params as $key => $val) {

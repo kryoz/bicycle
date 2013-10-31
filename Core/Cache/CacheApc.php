@@ -6,7 +6,7 @@
 
 namespace Core\Cache;
 
-class CacheApc implements ICache
+class CacheApc extends Cache
 {
 
 	public function __construct()

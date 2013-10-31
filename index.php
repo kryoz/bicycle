@@ -6,7 +6,16 @@
  */
 
 namespace Site;
-require_once 'bootstrap.php';
 
-$router = new Router();
-$router->delegate();
+use Core\Debug;
+
+try {
+	require_once 'bootstrap.php';
+	$router = new Router();
+	$router->delegate();
+} catch (\Exception $e) {
+	Debug::log($e);
+	if (SETTINGS_IS_DEBUG) {
+		echo Debug::getlog();
+	}
+}

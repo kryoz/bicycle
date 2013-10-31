@@ -6,14 +6,14 @@
 
 namespace Core\Cache;
 
-class CacheFile implements ICache
+class CacheFile extends Cache
 {
 	const EXT = '.cache';
 
 	public function __construct()
 	{
 		if (!is_dir(CACHEDIR))
-			throw new Exception(__CLASS__ . '::' . __FUNCTION__ . ': cache directory "' . CACHEDIR . '" does not exist!');
+			throw new \Exception(__CLASS__ .'::'. __FUNCTION__.': cache directory "' . CACHEDIR . '" does not exist!');
 	}
 
 	public function has($scope)

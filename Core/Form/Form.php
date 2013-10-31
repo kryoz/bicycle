@@ -9,8 +9,12 @@ class Form extends FixedArrayAccess
     protected $rulesMessages;
     protected $errors;
 
-
-    public function import(FixedArrayAccess $identifiable)
+	/**
+	 * Import object to validate
+	 * @param FixedArrayAccess $identifiable
+	 * @return $this
+	 */
+	public function import(FixedArrayAccess $identifiable)
     {
         $this->propertyNames = $identifiable->propertyNames;
         $this->properties = $identifiable->properties;
@@ -36,15 +40,22 @@ class Form extends FixedArrayAccess
         
         return $this;
     }
-    
-    public function addRules(array $rules)
+
+	/**
+	 * @param array $rules
+	 */
+	public function addRules(array $rules)
     {
         foreach ($rules as $property => $item) {
-            $this->addRule($property, $item[0], $item[1]);
+	        list($rule, $message) = $item;
+            $this->addRule($property, $rule, $message);
         }
     }
-    
-    public function validate()
+
+	/**
+	 * @return bool
+	 */
+	public function validate()
     {
         $this->errors = array();
         
@@ -53,14 +64,23 @@ class Form extends FixedArrayAccess
                 $this->errors[$property] = $this->rulesMessages[$property];
             }
         }
+
+	    return $this->hasErrors();
     }
-    
-    public function hasErrors()
+
+	/**
+	 * @return bool
+	 */
+	public function hasErrors()
     {
         return !empty($this->errors);
     }
-    
-    public function getErrMsg($property)
+
+	/**
+	 * @param $property
+	 * @return mixed
+	 */
+	public function getErrMsg($property)
     {
         if (isset($this->errors[$property])) {
             return $this->errors[$property];

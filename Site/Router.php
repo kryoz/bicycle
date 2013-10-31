@@ -3,8 +3,12 @@
 namespace Site;
 
 use Components\Error404\Error404;
-use Core\Debug;
 
+
+/**
+ * Number one for serious refactoring. Shame for me :( Hope to do soon
+ * @package Site
+ */
 class Router
 {
 
@@ -19,7 +23,7 @@ class Router
 
     public function __construct()
     {
-        $this->setPath(COMPONENTS);
+        $this->setPath(SETTINGS_COMPONENTS_DIR);
     }
 
     /**
