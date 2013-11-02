@@ -1,0 +1,6 @@
+{
+    "require": {
+        "monolog/monolog": "1.*",
+        "filp/whoops": "1.*"
+    }
+}
