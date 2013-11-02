@@ -12,8 +12,9 @@ class CacheFile extends Cache
 
 	public function __construct()
 	{
-		if (!is_dir(CACHEDIR))
-			throw new \Exception(__CLASS__ .'::'. __FUNCTION__.': cache directory "' . CACHEDIR . '" does not exist!');
+		if (!is_dir(SETTINGS_CACHE_DIR)) {
+			throw new \Exception('Cache directory "' . SETTINGS_CACHE_DIR . '" does not exist!');
+        }
 	}
 
 	public function has($scope)
@@ -21,12 +22,11 @@ class CacheFile extends Cache
 		return file_exists($this->getCacheFile($scope));
 	}
 
-	/**
-	 * 
-	 * @param string cell name corresponds to filename.txt
-	 * @return mixed 
-	 */
-	public function get($scope)
+    /**
+     * @param $scope
+     * @return bool
+     */
+    public function get($scope)
 	{
 		if (!$this->has($scope))
 			return false;
@@ -34,7 +34,7 @@ class CacheFile extends Cache
 		$filename = $this->getCacheFile($scope);
 		$age = time() - @filemtime($filename);
 		
-		if (CACHETTL == 0 || (file_exists($filename) && $age >= CACHETTL)) {
+		if (SETTINGS_CACHE_TTL == 0 || (file_exists($filename) && $age >= SETTINGS_CACHE_TTL)) {
 			$this->flush($scope);
 			return false;
 		}
@@ -43,47 +43,43 @@ class CacheFile extends Cache
 		
 		if ($age <= $ttl) {
 			return $data;
-		} else {
-			$this->flush($scope);
-			return false;
 		}
+
+        $this->flush($scope);
+		return false;
 	}
 
-	/**
-	 * 
-	 * @param string $scope 
-	 * @param mixed $data 
-	 * @return boolean
-	 */
-	public function set($scope, $data = null, $ttl = null)
+
+    /**
+     * @param $scope
+     * @param null $data
+     * @param null $ttl
+     * @return bool
+     * @throws \Exception
+     */
+    public function set($scope, $data = null, $ttl = SETTINGS_CACHE_TTL)
 	{
 		$filename = $this->getCacheFile($scope);
-		
-		try {
-			if ($data !== null) {
-				$fh = @fopen($filename, 'w');
-				if ($fh === false) {
-					throw new Exception('Cache directory is not write enabled!');
-				}
-				
-				$data = array($data, $ttl);
-				
-				fwrite($fh, serialize($data));
-				fclose($fh);
-				return true;
-			}
-		} catch (Exception $e) {
-			Debug::log(__CLASS__ . '::' . __FUNCTION__ . ': ' . $e->getMessage());
-			
-			return false;
-		}
+
+        if ($data !== null) {
+            $fh = @fopen($filename, 'w');
+            if ($fh === false) {
+                throw new \Exception('Cache directory is not write enabled!');
+            }
+
+            $data = [$data, $ttl];
+
+            fwrite($fh, serialize($data));
+            fclose($fh);
+            return true;
+        }
 	}
 
-	/**
-	 * 
-	 * @param string $scope
-	 */
-	public function flush($scope, $regular = false)
+    /**
+     * @param $scope
+     * @param bool $regular
+     */
+    public function flush($scope, $regular = false)
 	{
 		// @TODO regexp search
 		if (file_exists($this->getCacheFile($scope))) {
@@ -93,7 +89,7 @@ class CacheFile extends Cache
 	
 	private function getCacheFile($name)
 	{
-		return CACHEDIR . $name . self::EXT;
+		return SETTINGS_CACHE_DIR . $name . self::EXT;
 	}
 
 }

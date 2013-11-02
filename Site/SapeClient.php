@@ -83,7 +83,7 @@ abstract class SapeBase
         }
 
         // Определяем наш ли робот
-        if (isset($_COOKIE['sape_cookie']) && ($_COOKIE['sape_cookie'] == _SAPE_USER)) {
+        if (isset($_COOKIE['sape_cookie']) && ($_COOKIE['sape_cookie'] == SETTINGS_SAPE_USER)) {
             $this->_is_our_bot = true;
             if (isset($_COOKIE['sape_debug']) && ($_COOKIE['sape_debug'] == 1)) {
                 $this->_debug = true;
@@ -91,7 +91,7 @@ abstract class SapeBase
                 $this->_options = $options;
                 $this->_server_request_uri = $this->_request_uri = $_SERVER['REQUEST_URI'];
                 $this->_getenv_request_uri = getenv('REQUEST_URI');
-                $this->_SAPE_USER = _SAPE_USER;
+                $this->_SAPE_USER = SETTINGS_SAPE_USER;
             }
             if (isset($_COOKIE['sape_updatedb']) && ($_COOKIE['sape_updatedb'] == 1)) {
                 $this->_force_update_db = true;
@@ -712,7 +712,7 @@ class SapeClient extends SapeBase implements IService
 
     protected function getDispenserPath()
     {
-        return '/code.php?user=' . _SAPE_USER . '&host=' . $this->_host;
+        return '/code.php?user=' . SETTINGS_SAPE_USER . '&host=' . $this->_host;
     }
 
     protected function setData($data)

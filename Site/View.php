@@ -4,9 +4,7 @@
  *
  * @author kubintsev
  */
-namespace Site\View;
-
-use Core\Debug;
+namespace Site;
 
 class View
 {
@@ -82,7 +80,6 @@ class View
 	public function prepare()
     {
         $template = $this->component_path . $this->template . '.php';
-        $content = '';
 
         if (file_exists($template)) {
             if (is_array($this->vars))
@@ -92,20 +89,15 @@ class View
             try {
                 include $template;
             } catch (\Exception $e) {
-	            Debug::log($e);
+
             }
 
             $content = ob_get_contents();
             ob_end_clean();
-        } else {
-            Debug::log('"' . $template . '" not found!');
+            return $content;
         }
 
-        if (SETTINGS_IS_DEBUG) {
-            $content .= Debug::getlog();
-        }
-
-        return $content;
+        throw new \Exception($template.' not found!');
     }
 
 	/**
@@ -116,7 +108,7 @@ class View
     {
         $content = $this->prepare();
 
-        header('Content-Type: text/html; charset=' . CODEPAGE);
+        header('Content-Type: text/html; charset='.SETTINGS_CODEPAGE);
         header('P3P: CP="CAO PSA OUR"');
 
         if (is_array($this->vars))
@@ -124,7 +116,7 @@ class View
 
         if (!$renderWithGlobal) {
 	       	if (!file_exists(SETTINGS_GLOBALVIEWS_DIR . $this->globalTemplate)) {
-		        throw new \Exception(__CLASS__ . '::' . __FUNCTION__ . ': No global view found '.$this->globalTemplate);
+		        throw new \Exception('No global view found '.$this->globalTemplate);
 	        }
 	        include_once SETTINGS_GLOBALVIEWS_DIR . $this->globalTemplate;
 	        return;

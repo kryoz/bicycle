@@ -6,19 +6,11 @@
 
 namespace Core;
 
+require_once 'TSingleton.php';
+
 class Autoloader
 {
-
-    private static $instance;
-
-    private static function getInstance()
-    {
-        if (empty(self::$instance)) {
-            self::$instance = new static();
-        }
-
-        return self::$instance;
-    }
+    use TSingleton;
 
     private function getClassPath($className)
     {
@@ -30,19 +22,17 @@ class Autoloader
             $filename = $className;
         }
 
-        return $filename;
+        return SETTINGS_ROOT.$filename;
     }
 
     public static function classLoader($className)
     {
-
         $autoLoader = self::getInstance();
 
         $file = $autoLoader->getClassPath($className);
 
         if (!file_exists($file)) {
-            throw new \Exception(__CLASS__ . ": Tried to call <b>$className</b>, but none was found.
-					There's no <b>$file</b>");
+            throw new \Exception(__CLASS__ . ": Can't load <b>$className</b> class ($file)");
         }
 
         require_once $file;

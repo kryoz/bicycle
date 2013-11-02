@@ -14,7 +14,7 @@ class Index extends BaseController
         $model = new CacheTest();
 
         $vars['title'] = 'Example to show work of caching';
-        $vars['prev'] = $model->getCache();
+        $vars['prev'] = $model->getCache() ? : [];
         $vars['data'] = $model->generate();
         $vars['token'] = FormToken::create()->getToken();
 

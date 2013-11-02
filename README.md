@@ -1,7 +1,7 @@
 <h1>What is it?</h1>
-This is very simple framework which should satisfy for purposes of:
+This demo is to show very simple framework which should satisfy for purposes of:
 <ul>
-<li>creation of MVC application with SEF URL hierarhy</li>
+<li>creation of MVC application with SEF URL hierarchy</li>
 <li>simple page structure (no dedicated entities for modules or plugins yet)</li>
 <li>AJAX capability</li>
 <li>various databases support via PDO</li>
@@ -18,17 +18,17 @@ Also it helps me to practice new programming techniques<br><br>
 <pre>
 ROOT
 |
-|-- Site  - application
-|-- Core  - shared/specific libraries
-|-- tmpl  - global templates for views
-|
+|-- Site   - application
+|-- Core   - shared/specific libraries
+|-- tmpl   - global templates for views
+|-- vendor - 3rd party libraries from Composer
 |- bootstrap.php   - configuration of framework
 |- index.php    - application entry
 |- .htaccess    - Apache directives for SEF support (very simple and easily can be rewritten for nginx)
 </pre>
 
 <h1>Usage</h1>
-The framework is easy to integrate with your current project as library tool.<br><br>
-First, copy <i>Core</i> and <i>bootstrap.php</i> to the root of your project<br><br>
-Second, check configuration in <i>bootstrap.php</i>.<br><br>
-The call example is in index.php.
+"git clone https://github.com/kryoz/bicycle"
+This demo utilizes Composer's Packagist so you have to have install composer and run "composer install"
+in the root of Bicycle to satisfy dependencies, i.e. Monolog and Whoops.
+

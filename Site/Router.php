@@ -51,21 +51,21 @@ class Router
 
         // Cutting root url from url string
         if ($route)
-            $route = substr($route, strlen(URLROOT));
+            $route = substr($route, strlen(SETTINGS_URLROOT));
 
         // Avoiding duplicates
         $mainpage = [
-            INDEX . '.php',
-            INDEX,
-            INDEX . '/',
-            INDEX . VIRT_EXT
+            SETTINGS_INDEX . '.php',
+            SETTINGS_INDEX,
+            SETTINGS_INDEX . '/',
+            SETTINGS_INDEX . SETTINGS_VIRT_EXT
         ];
 
         if (in_array($route, $mainpage))
             self::redirect();
 
         if (empty($route))
-            $route = INDEX;
+            $route = SETTINGS_INDEX;
         else
             $route = trim($route, '/\\');
 
@@ -81,26 +81,26 @@ class Router
                     $query[$pair[0]] = $pair[1];
                 }
             }
-            if (SEFENABLED) {
+            if (SETTINGS_SEFENABLED) {
                 $route = $params[0];
             } else {
                 $route = $query;
             }
         }
 
-        if (SEFENABLED) {
+        if (SETTINGS_SEFENABLED) {
             //Filtering "-" by transforming it to "_"
             $route = preg_replace('#(\-)#', '_', $route);
 
             //Cutting virtual file extension
-            $pattern = '#(\\' . VIRT_EXT . ')$#';
+            $pattern = '#(\\' . SETTINGS_VIRT_EXT . ')$#';
             $route = preg_replace($pattern, '', $route);
 
             /* Main router logic */
             $parts = explode('/', $route);
 
             if (is_array($parts)) {
-                if ($parts[0] == INDEX) {
+                if ($parts[0] == SETTINGS_INDEX) {
                     $controller = array_shift($parts);
                     if (!empty($parts))
                         self::redirect(implode('/', $parts));
@@ -114,7 +114,7 @@ class Router
 
             self::$controller = $controller;
             self::$args = is_array($args) ? $args : [$args];
-            self::$page = isset(self::$args[0]) ? array_shift(self::$args) : INDEX;
+            self::$page = isset(self::$args[0]) ? array_shift(self::$args) : SETTINGS_INDEX;
             self::$params = $params;
 
             // Case of hidden controller and assuming INDEX
@@ -124,21 +124,21 @@ class Router
                 if (self::$controller) {
                     self::$page = self::$controller;
                 }
-                self::$controller = INDEX;
+                self::$controller = SETTINGS_INDEX;
             }
         } else {
             if (isset($route[self::CONTROLLER])) {
                 self::$controller = $route[self::CONTROLLER];
                 unset($route[self::CONTROLLER]);
             } else {
-                self::$controller = INDEX;
+                self::$controller = SETTINGS_INDEX;
             }
 
             if (isset($route[self::PAGE])) {
                 self::$page = $route[self::PAGE];
                 unset($route[self::PAGE]);
             } else {
-                self::$page = INDEX;
+                self::$page = SETTINGS_INDEX;
             }
 
             self::$args = $route;
@@ -175,7 +175,7 @@ class Router
 
     public static function redirect($url = '', $raw = false)
     {
-        $address = $raw ? $url : PROTOCOL . '://' . $_SERVER['HTTP_HOST'] . URLROOT . $url;
+        $address = $raw ? $url : SETTINGS_PROTOCOL . '://' . $_SERVER['HTTP_HOST'] . SETTINGS_URLROOT . $url;
         header("HTTP/1.1 301 Moved Permanently");
         header('Location: ' . $address);
         exit();

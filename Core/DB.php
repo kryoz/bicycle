@@ -9,6 +9,7 @@ namespace Core;
 
 class DB implements ServiceLocator\IService
 {
+    use TSingleton;
 
 	const ERR_NO_CONNECTION = 'PDO connection fail';
 	const ERR_INIT_FAIL = 'PDO init error';
@@ -20,12 +21,10 @@ class DB implements ServiceLocator\IService
 	protected $pass;
 
 	/**
-	 *
 	 * @var \PDO
 	 */
 	protected $dbh;
 	protected $result;
-	protected static $instance;
 
 	/**
 	 * @param string $scheme
@@ -33,7 +32,7 @@ class DB implements ServiceLocator\IService
 	 * @param string $user
 	 * @param string $pass
 	 */
-	public function __construct($scheme = SCHEME, $db = DBADDRESS, $user = DBUSER, $pass = DBPASS)
+	public function __construct($scheme = SETTINGS_DB_SCHEME, $db = SETTINGS_DB_ADDRESS, $user = SETTINGS_DB_USER, $pass = SETTINGS_DB_PASS)
 	{
 		$this->scheme = $scheme;
 		$this->db = $db;
@@ -48,25 +47,7 @@ class DB implements ServiceLocator\IService
 
 	public function getServiceName()
 	{
-		return 'DB';
-	}
-
-	private function isSQlite()
-	{
-		return ($this->scheme == 'sqlite');
-	}
-
-	/**
-	 *
-	 * @return DB
-	 */
-	public static function getInstance()
-	{
-		if (empty(self::$instance)) {
-			self::$instance = new static();
-		}
-
-		return self::$instance;
+		return 'db';
 	}
 
 	/**
@@ -86,14 +67,9 @@ class DB implements ServiceLocator\IService
 			$result = $sth->fetchAll($fetchFlags);
 			$sth->closeCursor();
 		} catch (\PDOException $e) {
-			if (!SETTINGS_IS_DEBUG) {
-                Debug::log(self::ERR_SQL_ERROR . ': ' . $e->getMessage());
-				Debug::log('QUERY: ' . $sql);
-				Debug::log('PARAMS: ' . print_r($params, true));
-			}
 			throw new \PDOException(
-                self::ERR_SQL_ERROR . ': ' . $e->getMessage().
-                "\n".'QUERY: ' . $sql ."\n".'PARAMS: ' . print_r($params, true)
+                self::ERR_SQL_ERROR . ': ' . $e->getMessage()
+                ."\n".'QUERY: ' . $sql ."\n".'PARAMS: ' . print_r($params, 1)
                 );
 		}
 
@@ -106,7 +82,7 @@ class DB implements ServiceLocator\IService
 	 * @return $this
 	 * @throws \PDOException
 	 */
-	public function get($sql, array $params = array())
+	public function get($sql, array $params = [])
 	{
 		$this->checkConnection();
 
@@ -114,11 +90,10 @@ class DB implements ServiceLocator\IService
 			$this->result = $this->dbh->prepare($sql);
 			$this->result->execute($params);
 		} catch (\PDOException $e) {
-			if (SETTINGS_IS_DEBUG) {
-				Debug::log('QUERY: ' . $sql);
-				Debug::log('PARAMS: ' . print_r($params, true));
-			}
-			throw new \PDOException(self::ERR_SQL_ERROR . ': ' . $e->getMessage());
+			throw new \PDOException(
+                self::ERR_SQL_ERROR.': '.$e->getMessage()."\n".'QUERY: ' . $sql ."\n".'PARAMS: '
+                . print_r($params, 1)
+            );
 		}
 
 		return $this;
@@ -160,11 +135,10 @@ class DB implements ServiceLocator\IService
 			$sth->closeCursor();
 			unset($sth);
 		} catch (PDOException $e) {
-			if (SETTINGS_IS_DEBUG) {
-				Debug::log('QUERY: ' . $sql);
-				Debug::log('PARAMS: ' . print_r($params, true));
-			}
-			throw new \PDOException(self::ERR_SQL_ERROR . ': ' . $e->getMessage());
+            throw new \PDOException(
+                self::ERR_SQL_ERROR.': '.$e->getMessage()."\n".'QUERY: ' . $sql ."\n".'PARAMS: '
+                . print_r($params, 1)
+            );
 		}
 
 		return $this->dbh->lastInsertId();
@@ -231,6 +205,11 @@ class DB implements ServiceLocator\IService
 		return $this->dbh;
 	}
 
+    private function isSQlite()
+    {
+        return ($this->scheme == 'sqlite');
+    }
+
 	protected function checkConnection()
 	{
 		if(empty($this->dbh)) {
@@ -244,7 +223,7 @@ class DB implements ServiceLocator\IService
 			if (!$this->isSQlite()) {
 				$this->dbh = new \PDO($this->scheme . ':' . $this->db, $this->user, $this->pass);
 
-				$this->dbh->exec('SET NAMES ' . INNERCODEPAGE);
+				$this->dbh->exec('SET NAMES ' . SETTINGS_INNERCODEPAGE);
 
 				$serverVersion = $this->dbh->getAttribute(\PDO::ATTR_SERVER_VERSION);
 				$emulate_prepares = version_compare($serverVersion, '5.1.17', '<');

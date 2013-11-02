@@ -20,7 +20,7 @@ abstract class DAOBase extends FixedArrayAccess
     {
         $properties = [self::ID];
         $properties = array_merge($properties, $propertyNames);
-        $this->db = Locator::get('DB');
+        $this->db = Locator::get('db');
 
         parent::__construct($properties);
     }
@@ -123,7 +123,7 @@ abstract class DAOBase extends FixedArrayAccess
 
     public function __wakeup()
     {
-        $this->db = Locator::get('DB');
+        $this->db = Locator::get('db');
     }
 
     public function __sleep()

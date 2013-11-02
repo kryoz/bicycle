@@ -7,15 +7,17 @@
 
 namespace Site;
 
-use Core\Debug;
+use Core\Cache\CacheFile;
+use Core\DB;
+use Core\ServiceLocator\Locator;
+
+require_once 'bootstrap.php';
+Locator::add(CacheFile::getInstance()); // you can try CacheAPC if you have php APC extension
+Locator::add(DB::getInstance());
 
 try {
-	require_once 'bootstrap.php';
-	$router = new Router();
-	$router->delegate();
+    $router = new Router();
+    $router->delegate();
 } catch (\Exception $e) {
-	Debug::log($e);
-	if (SETTINGS_IS_DEBUG) {
-		echo Debug::getlog();
-	}
+    Locator::get('logger')->warn($e->getMessage()."\n".$e->getTraceAsString(), ['Uncaught Exception']);
 }

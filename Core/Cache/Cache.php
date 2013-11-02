@@ -8,26 +8,15 @@
 namespace Core\Cache;
 
 use Core\ServiceLocator\IService;
+use Core\TSingleton;
 
 abstract class Cache implements IService
 {
-	protected static $instance;
+    use TSingleton;
 
 	public function getServiceName()
 	{
-		return 'CACHE';
-	}
-
-	/**
-	 * @return static
-	 */
-	final static function getInstance()
-	{
-		if (empty(self::$instance)) {
-			self::$instance = new static();
-		}
-		
-		return static::$instance;
+		return 'cache';
 	}
 
 	abstract public function has($scope);

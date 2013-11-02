@@ -30,22 +30,23 @@ class CacheApc extends Cache
 		return apc_fetch($scope);
 	}
 
-	/**
-	 * 
-	 * @param string $scope 
-	 * @param mixed $data 
-	 * @return boolean
-	 */
-	public function set($scope, $data = null, $ttl = null)
+    /**
+     * @param $scope
+     * @param null $data
+     * @param null $ttl
+     * @return array|bool
+     */
+    public function set($scope, $data = null, $ttl = null)
 	{
 		return apc_store($scope, $data, $ttl);
 	}
 
-	/**
-	 * 
-	 * @param string $scope
-	 */
-	public function flush($scope, $regular = false)
+    /**
+     * @param $scope
+     * @param bool $regular
+     * @return bool|\string[]
+     */
+    public function flush($scope, $regular = false)
 	{
 		if ($regular) {
 			foreach (new APCIterator('user', $scope) as $counter) {
