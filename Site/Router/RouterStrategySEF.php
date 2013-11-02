@@ -21,7 +21,7 @@ class RouterStrategySEF extends RouterStrategy
 
     public function getControllerClass(HttpRequest $request)
     {
-        $requestUrl = $request->getRequest();
+        $requestUrl = $request->getRequestUrl();
 
         if ($requestUrl) {
             $requestUrl = substr($requestUrl, strlen(SETTINGS_URLROOT));
@@ -37,12 +37,12 @@ class RouterStrategySEF extends RouterStrategy
         $parts = explode('/', $requestUrl);
         $page = 'defaultAction';
 
-        if (is_array($parts)) {
+        if (count($parts) > 1) {
             $requestUrl = $parts[0];
             $page = $parts[1];
         }
 
-        if (in_array($requestUrl, $this->controllerMap)) {
+        if (isset($requestUrl, $this->controllerMap)) {
             self::$page = $page;
             return $this->controllerMap[$requestUrl];
         }
@@ -56,7 +56,7 @@ class RouterStrategySEF extends RouterStrategy
      */
     private function extractPathString($requestUrl)
     {
-        if (empty($requestUrl)) {
+        if (empty($requestUrl) || $requestUrl === '/') {
             $requestUrl = 'index';
         } else {
             $requestUrl = trim($requestUrl, '/\\');

@@ -11,7 +11,7 @@ use Site\BaseController;
 
 class Index extends BaseController
 {
-    public function handleRequest(HttpRequest $request)
+    public function defaultAction(HttpRequest $request)
     {
         $this->defaultView
             ->setGlobalTemplate('404.php')
