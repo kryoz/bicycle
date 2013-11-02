@@ -1,29 +1,30 @@
 <?php
-/**
- * Controller base class
- *
- * @author kryoz
- */
 namespace Site;
+
+use Core\HttpRequest;
+use Site\Router\RouterStrategy;
 
 abstract class BaseController
 {
-    protected $vars;
-    protected static $args;
-
-    protected $view;
+    protected $defaultView;
+    protected $map = null;
 
     public function __construct()
     {
-        $this->view = new View();
+        $this->defaultView = new View();
         $classInfo = new \ReflectionClass($this);
-        $this->view->setPath(dirname($classInfo->getFileName()) . DS);
+        $this->defaultView->setPath(dirname($classInfo->getFileName()) . DS);
     }
 
-    /**
-     * Entry point to controller
-     * @param mixed $args string or array from
-     * @param array $params array of key=value pairs from url
-     */
-    abstract function index($args, $params);
+    public function handleRequest(HttpRequest $request)
+    {
+        if (!isset($this->map[RouterStrategy::getPage()])) {
+            $this->defaultAction($request);
+            return;
+        }
+
+        $this->{$this->map[RouterStrategy::getPage()]}($request);
+    }
+
+    abstract protected function defaultAction(HttpRequest $request);
 }

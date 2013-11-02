@@ -1,12 +1,18 @@
 <?php
 namespace Components\Index;
 
+use Core\HttpRequest;
 use Site\BaseController;
 use Site\FormToken;
 
 class Index extends BaseController
 {
-    public function index($args, $params)
+    protected $map = [
+        'second' => 'second',
+        'tokencheck' => 'verifyToken'
+    ];
+
+    protected function defaultAction(HttpRequest $request)
     {
         session_set_cookie_params(3600);
         session_start();
@@ -18,32 +24,32 @@ class Index extends BaseController
         $vars['data'] = $model->generate();
         $vars['token'] = FormToken::create()->getToken();
 
-        $this->view
+        $this->defaultView
             ->loadTemplate("view_index")
             ->loadVars($vars)
             ->render();
     }
 
-    public function second($args, $params)
+    protected function second(HttpRequest $request)
     {
         $vars['title'] = 'You called parameterized action';
-        $vars['args'] = print_r($args, 1);
+        $vars['args'] = print_r($request->getGet(), 1);
 
-        $this->view
+        $this->defaultView
             ->loadTemplate("view_second")
             ->loadVars($vars)
             ->render();
     }
 
-    public function tokenCheck($args, $params)
+    protected function verifyToken(HttpRequest $request)
     {
         session_set_cookie_params(3600);
         session_start();
 
-        $vars['input'] = $_POST['sometext'];
+        $vars['input'] = $request->getPost()['sometext'];
         $vars['valid'] = FormToken::create()->validateToken(true);
 
-        $this->view
+        $this->defaultView
             ->loadTemplate("view_validation")
             ->loadVars($vars)
             ->render();

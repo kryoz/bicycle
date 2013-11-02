@@ -6,13 +6,14 @@
  */
 namespace Components\Error404;
 
+use Core\HttpRequest;
 use Site\BaseController;
 
-class Error404 extends BaseController
+class Index extends BaseController
 {
-    public function index($args, $params)
+    public function handleRequest(HttpRequest $request)
     {
-        $this->view
+        $this->defaultView
             ->setGlobalTemplate('404.php')
             ->loadTemplate("view_error404")
             ->render();

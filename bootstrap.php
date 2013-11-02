@@ -28,9 +28,6 @@ define ('CP', md5(SETTINGS_DOCROOT) . '_'); // cache prefix
 define ('SETTINGS_CODEPAGE', 'utf-8'); // HTML codepage
 define ('SETTINGS_INNERCODEPAGE', 'utf8'); // inner codepage
 
-define ('SETTINGS_VIRT_EXT', '.html');
-define ('SETTINGS_INDEX', 'index');
-
 /* DB connection settings */
 define ('SETTINGS_DB_SCHEME', 'mysql');
 define ('SETTINGS_DB_ADDRESS', 'dbname=test;host=localhost');

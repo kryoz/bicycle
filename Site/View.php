@@ -8,13 +8,12 @@ namespace Site;
 
 class View
 {
-    protected $component_path;
+    protected $componentPath;
 	protected $globalTemplate;
 	protected $template;
 	protected $vars;
 
     /**
-     *
      * @param string $tmpl the name of global template
      */
     public function __construct($tmpl = null)
@@ -43,7 +42,7 @@ class View
 	 */
 	public function setPath($path)
     {
-        $this->component_path = $path;
+        $this->componentPath = $path;
         return $this;
     }
 
@@ -79,7 +78,7 @@ class View
 	 */
 	public function prepare()
     {
-        $template = $this->component_path . $this->template . '.php';
+        $template = $this->componentPath . $this->template . '.php';
 
         if (file_exists($template)) {
             if (is_array($this->vars))

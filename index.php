@@ -10,14 +10,20 @@ namespace Site;
 use Core\Cache\CacheFile;
 use Core\DB;
 use Core\ServiceLocator\Locator;
+use Site\Router\Router;
+use Site\Router\RouterStrategyRaw;
 
 require_once 'bootstrap.php';
 Locator::add(CacheFile::getInstance()); // you can try CacheAPC if you have php APC extension
 Locator::add(DB::getInstance());
 
 try {
-    $router = new Router();
-    $router->delegate();
+    $router = new Router(new RouterStrategyRaw()); // Site\Router\RouterStrategySEF for SEF mode
+    $router->delegateControl();
 } catch (\Exception $e) {
-    Locator::get('logger')->warn($e->getMessage()."\n".$e->getTraceAsString(), ['Uncaught Exception']);
+    if (SETTINGS_IS_DEBUG) {
+        throw $e; // 'Whoops' will intercept it
+    }
+    Locator::get('logger')
+        ->warn($e->getMessage()."\n".$e->getTraceAsString(), ['Uncaught Exception']);
 }
