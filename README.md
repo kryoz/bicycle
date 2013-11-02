@@ -11,8 +11,7 @@ This demo is to show very simple framework which should satisfy for purposes of:
 <li>Email handling</li>
 <li>Basic debugging</li>
 </ul>
-Actually it develops because of my work where I use this framework and meet new requirements for completion of goals.<br>
-Also it helps me to practice new programming techniques<br><br>
+It was born at my old job where nobody even knew what code style and standards are.
 <br>
 <h2>Framework structure:</h2>
 <pre>
@@ -28,7 +27,7 @@ ROOT
 </pre>
 
 <h1>Usage</h1>
-"git clone https://github.com/kryoz/bicycle"
+"git clone https://github.com/kryoz/bicycle"<br>
 This demo utilizes Composer's Packagist so you have to have install composer and run "composer install"
 in the root of Bicycle to satisfy dependencies, i.e. Monolog and Whoops.
 
