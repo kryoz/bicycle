@@ -35,7 +35,7 @@ Main application represents Chain-of-Responsibility pattern filled with 'Filters
 At this time there are only two filters : SessionFilter and RouterFilter. <br><br>
 The SessionManager responds for authentication<br><br>
 The Router uses Strategy pattern for parsing HttpRequest in different ways.<br>
-I wrote primitive SEF and non-SEF parsers RouteStrategySEF and RouteStrategySEF.<br>
+I wrote primitive SEF and non-SEF parsers RouteStrategySEF and RouteStrategyRaw.<br>
 It's easy to modify them or to create your own one. Just pass it in RouterFilter to Router's constructor.<br><br>
 Then Router delegates control to one of the Controllers. It's mandatory to specify controller request alias for real controller class in RouterStrategy::$controllerMap.<br>
 Each Controller also has its own actions map but there's 'defaultAction' anyway by default (see BaseController).<br><br>
