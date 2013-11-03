@@ -8,13 +8,13 @@ class Locator
     use TSingleton;
 	protected $registry;
 
-	public static function add(IService $service)
+	public static function add($name, $service)
 	{
 		$locator = self::getInstance();
-		if (isset($locator->registry[$service->getServiceName()])) {
+		if (isset($locator->registry[$name])) {
 			throw new ServiceAlreadyExistsException();
 		}
-		$locator->registry[$service->getServiceName()] = $service;
+		$locator->registry[$name] = $service;
 		
 		return $locator;
 	}

@@ -10,14 +10,9 @@ namespace Core\Cache;
 use Core\ServiceLocator\IService;
 use Core\TSingleton;
 
-abstract class Cache implements IService
+abstract class Cache
 {
     use TSingleton;
-
-	public function getServiceName()
-	{
-		return 'cache';
-	}
 
 	abstract public function has($scope);
 	abstract public function get($scope);

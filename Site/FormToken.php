@@ -1,6 +1,8 @@
 <?php
 namespace Site;
 
+use Core\HttpRequest;
+
 /**
  * This class helps to protect forms from CSRF vulnarability
  *
@@ -11,42 +13,9 @@ class FormToken
 	const FIELDNAME = 'formtoken';
 	const TTL = '7200';
 
-    private static $instance;
-
-	private function getSessionToken($prop)
-	{
-		return isset($this->getSession()[self::FIELDNAME][$prop]) ? $this->getSession()[self::FIELDNAME][$prop] : false;
-	}
-
-	private function setSessionToken($prop, $val)
-	{
-        $_SESSION[self::FIELDNAME][$prop] = $val;
-	}
-
-    private function getSession()
-    {
-        return $_SESSION;
-    }
-
-    private function getRequest()
-    {
-        return $_REQUEST;
-    }
-
-    public function __construct()
-    {
-        if (session_status() !== PHP_SESSION_ACTIVE) {
-            throw new \Exception('Session has not been initialized');
-        }
-    }
-
     public static function create()
     {
-        if (!self::$instance) {
-            self::$instance = new self();
-        }
-
-        return self::$instance;
+        return new static;
     }
 
 	public function getToken()
@@ -59,10 +28,14 @@ class FormToken
 		return "<input name='" . self::FIELDNAME . "' value='{$token}' type='hidden' />";
 	}
 
-	public function validateToken($clear = true)
+	public function validateToken(HttpRequest $request, $clear = true)
 	{
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            return false;
+        }
+
 		$valid = false;
-		$posted = isset($this->getRequest()[self::FIELDNAME]) ? $this->getRequest()[self::FIELDNAME] : '';
+		$posted = isset($request->getPost()[self::FIELDNAME]) ? $request->getPost()[self::FIELDNAME] : '';
 
 		if (!empty($posted)) {
 			if ($this->getSessionToken($posted)) {
@@ -77,4 +50,18 @@ class FormToken
 		return $valid;
 	}
 
+    private function getSessionToken($prop)
+    {
+        return isset($this->getSession()[self::FIELDNAME][$prop]) ? $this->getSession()[self::FIELDNAME][$prop] : false;
+    }
+
+    private function setSessionToken($prop, $val)
+    {
+        $_SESSION[self::FIELDNAME][$prop] = $val;
+    }
+
+    private function getSession()
+    {
+        return $_SESSION;
+    }
 }

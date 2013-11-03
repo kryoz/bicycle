@@ -13,14 +13,9 @@ use Core\ServiceLocator\IService;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 
-class Log extends Logger implements IService
+class Log extends Logger
 {
     use TSingleton;
-
-    public function getServiceName()
-    {
-        return 'logger';
-    }
 
     public function __construct()
     {

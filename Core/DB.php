@@ -7,7 +7,7 @@
 
 namespace Core;
 
-class DB implements ServiceLocator\IService
+class DB
 {
     use TSingleton;
 
@@ -43,11 +43,6 @@ class DB implements ServiceLocator\IService
 	public function __destruct()
 	{
 		unset($this->dbh);
-	}
-
-	public function getServiceName()
-	{
-		return 'db';
 	}
 
 	/**

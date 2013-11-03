@@ -2,35 +2,24 @@
 namespace Components\Index;
 
 use Core\HttpRequest;
+use Core\ServiceLocator\Locator;
 use Site\BaseController;
 use Site\FormToken;
 
 class Index extends BaseController
 {
     protected $map = [
-        'second' => 'second',
-        'tokencheck' => 'verifyToken'
+        'second' => 'secondAction',
+        'tokencheck' => 'verifyAction',
+        'logout' => 'logoutAction'
     ];
 
     public function defaultAction(HttpRequest $request)
     {
-        session_set_cookie_params(3600);
-        session_start();
-
-        $model = new CacheTest();
-
-        $vars['title'] = 'Example to show work of caching';
-        $vars['prev'] = $model->getCache() ? : [];
-        $vars['data'] = $model->generate();
-        $vars['token'] = FormToken::create()->getToken();
-
-        $this->defaultView
-            ->loadTemplate("view_index")
-            ->loadVars($vars)
-            ->render();
+        $this->fillIndexPage();
     }
 
-    public function second(HttpRequest $request)
+    public function secondAction(HttpRequest $request)
     {
         $vars['title'] = 'You called parameterized action';
         $vars['args'] = print_r($request->getGet(), 1);
@@ -41,18 +30,34 @@ class Index extends BaseController
             ->render();
     }
 
-    public function verifyToken(HttpRequest $request)
+    public function verifyAction(HttpRequest $request)
     {
-        session_set_cookie_params(3600);
-        session_start();
+        $user = Locator::get('sessionManager')->getUser();
 
-        $vars['input'] = $request->getPost()['sometext'];
-        $vars['valid'] = FormToken::create()->validateToken(true);
-
+        $vars['loginResult'] = $user ? 'Успешная авторизация!' : 'Неудачная попытка входа';
         $this->defaultView
             ->loadTemplate("view_validation")
             ->loadVars($vars)
             ->render();
     }
 
+    public function logoutAction(HttpRequest $request)
+    {
+        Locator::get('sessionManager')->logout();
+        $this->fillIndexPage();
+    }
+
+    private function fillIndexPage()
+    {
+        $model = new CacheTest();
+
+        $vars['prev'] = $model->getCache() ? : [];
+        $vars['data'] = $model->generate();
+        $vars['token'] = FormToken::create()->getToken();
+
+        $this->defaultView
+            ->loadTemplate("view_index")
+            ->loadVars($vars)
+            ->render();
+    }
 }

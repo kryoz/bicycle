@@ -11,15 +11,19 @@ use Core\Chain\ChainContainer;
 use Core\HttpRequest;
 use Core\ServiceLocator\Locator;
 use Site\Filters\RouterFilter;
+use Site\Filters\SessionFilter;
 
 require_once 'bootstrap.php';
 
-$chain = new ChainContainer();
+$app = new ChainContainer();
+
 try {
-    $chain
+    $app
         ->setRequest(new HttpRequest())
-        ->addHandler(new RouterFilter())
-        ->run();
+        ->addHandler(new SessionFilter())
+        ->addHandler(new RouterFilter());
+
+    $app->run();
 } catch (\Exception $e) {
     if (SETTINGS_IS_DEBUG) {
         throw $e; // 'Whoops' will intercept it

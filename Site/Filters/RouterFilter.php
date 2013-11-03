@@ -16,7 +16,7 @@ class RouterFilter implements ChainInterface
 {
     public function handleRequest($request)
     {
-        $router = new Router(new RouterStrategyRaw()); // Site\Router\RouterStrategySEF for SEF mode
+        $router = new Router(new RouterStrategyRaw()); // can use \Site\Router\RouterStrategySEF for SEF url mode
         $router->delegateControl($request);
     }
 

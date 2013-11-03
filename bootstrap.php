@@ -53,7 +53,7 @@ Autoloader::register();
 
 require_once  SETTINGS_ROOT.DS."vendor/autoload.php";
 
-Locator::add(Log::getInstance());
-Locator::add(ErrorHandler::getInstance());
-Locator::add(CacheFile::getInstance()); // you can try CacheAPC if you have php APC extension
-Locator::add(DB::getInstance());
+Locator::add('logger', Log::getInstance());
+Locator::add('errorHandler', ErrorHandler::getInstance());
+Locator::add('cache', CacheFile::getInstance()); // you can try CacheAPC if you have php APC extension
+Locator::add('db', DB::getInstance());
