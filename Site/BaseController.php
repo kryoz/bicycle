@@ -2,28 +2,23 @@
 namespace Site;
 
 use Core\HttpRequest;
-use Site\Router\RouterStrategy;
 
 abstract class BaseController
 {
     protected $defaultView;
-    protected $map = null;
+    protected $map = [];
 
     public function __construct()
     {
         $this->defaultView = new View();
         $classInfo = new \ReflectionClass($this);
         $this->defaultView->setPath(dirname($classInfo->getFileName()) . DS);
+        $this->map += ['defaultAction' => 'defaultAction'];
     }
 
-    public function handleRequest(HttpRequest $request)
+    public function getMap()
     {
-        if (!isset($this->map[RouterStrategy::getPage()])) {
-            $this->defaultAction($request);
-            return;
-        }
-
-        $this->{$this->map[RouterStrategy::getPage()]}($request);
+        return $this->map;
     }
 
     abstract protected function defaultAction(HttpRequest $request);

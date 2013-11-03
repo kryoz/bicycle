@@ -3,6 +3,7 @@
 namespace Site\Router;
 
 use Core\HttpRequest;
+use Site\BaseController;
 
 
 class Router
@@ -14,18 +15,24 @@ class Router
         $this->controllerFinder = $controllerFinder;
     }
 
-    public function delegateControl()
+    public function delegateControl(HttpRequest $request)
     {
-        $request = new HttpRequest();
         try {
             $controllerClass = $this->controllerFinder->getControllerClass($request);
+            $controllerAction = $this->controllerFinder->getControllerAction($request);
+
+            $controller = new $controllerClass();
+            /* @var $controller BaseController */
+
+            if (!isset($controller->getMap()[$controllerAction])) {
+                throw new RouteNotFoundException;
+            }
+
+            $controller->{$controller->getMap()[$controllerAction]}($request);
         } catch(RouteNotFoundException $e) {
             self::NoPage();
             return;
         }
-
-        $controller = new $controllerClass();
-        $controller->handleRequest($request);
     }
 
     public static function redirect($url = '', $raw = false)
@@ -42,6 +49,6 @@ class Router
         $request = new HttpRequest();
         /** @noinspection PhpUnnecessaryFullyQualifiedNameInspection */
         $controller = new \Components\Error404\Index();
-        $controller->handleRequest($request);
+        $controller->defaultAction($request);
     }
 }

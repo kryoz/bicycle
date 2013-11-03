@@ -17,10 +17,14 @@ class RouterStrategyRaw extends RouterStrategy
         $controller = isset($request->getGet()['c']) ? strtolower($request->getGet()['c']) : 'index';
 
         if (isset($this->controllerMap[$controller])) {
-            self::$page = isset($request->getGet()['p']) ? strtolower($request->getGet()['p']) : 'defaultAction';
             return $this->controllerMap[$controller];
         }
 
         throw new RouteNotFoundException;
+    }
+
+    public function getControllerAction(HttpRequest $request)
+    {
+        return isset($request->getGet()['p']) ? strtolower($request->getGet()['p']) : 'defaultAction';
     }
 }

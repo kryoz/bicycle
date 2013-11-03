@@ -1,6 +1,8 @@
 <?php
 
 use Core\Autoloader;
+use Core\Cache\CacheFile;
+use Core\DB;
 use Core\ErrorHandler;
 use Core\Log;
 use Core\ServiceLocator\Locator;
@@ -53,3 +55,5 @@ require_once  SETTINGS_ROOT.DS."vendor/autoload.php";
 
 Locator::add(Log::getInstance());
 Locator::add(ErrorHandler::getInstance());
+Locator::add(CacheFile::getInstance()); // you can try CacheAPC if you have php APC extension
+Locator::add(DB::getInstance());

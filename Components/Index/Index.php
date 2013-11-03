@@ -12,7 +12,7 @@ class Index extends BaseController
         'tokencheck' => 'verifyToken'
     ];
 
-    protected function defaultAction(HttpRequest $request)
+    public function defaultAction(HttpRequest $request)
     {
         session_set_cookie_params(3600);
         session_start();
@@ -30,7 +30,7 @@ class Index extends BaseController
             ->render();
     }
 
-    protected function second(HttpRequest $request)
+    public function second(HttpRequest $request)
     {
         $vars['title'] = 'You called parameterized action';
         $vars['args'] = print_r($request->getGet(), 1);
@@ -41,7 +41,7 @@ class Index extends BaseController
             ->render();
     }
 
-    protected function verifyToken(HttpRequest $request)
+    public function verifyToken(HttpRequest $request)
     {
         session_set_cookie_params(3600);
         session_start();

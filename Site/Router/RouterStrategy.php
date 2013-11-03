@@ -18,12 +18,6 @@ abstract class RouterStrategy
         'test' => 'Components\Test\Index'
     ];
 
-    protected static $page;
-
-    static public function getPage()
-    {
-        return self::$page;
-    }
-
     abstract public function getControllerClass(HttpRequest $request);
+    abstract public function getControllerAction(HttpRequest $request);
 }

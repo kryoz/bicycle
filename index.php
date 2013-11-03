@@ -7,19 +7,19 @@
 
 namespace Site;
 
-use Core\Cache\CacheFile;
-use Core\DB;
+use Core\Chain\ChainContainer;
+use Core\HttpRequest;
 use Core\ServiceLocator\Locator;
-use Site\Router\Router;
-use Site\Router\RouterStrategyRaw;
+use Site\Filters\RouterFilter;
 
 require_once 'bootstrap.php';
-Locator::add(CacheFile::getInstance()); // you can try CacheAPC if you have php APC extension
-Locator::add(DB::getInstance());
 
+$chain = new ChainContainer();
 try {
-    $router = new Router(new RouterStrategyRaw()); // Site\Router\RouterStrategySEF for SEF mode
-    $router->delegateControl();
+    $chain
+        ->setRequest(new HttpRequest())
+        ->addHandler(new RouterFilter())
+        ->run();
 } catch (\Exception $e) {
     if (SETTINGS_IS_DEBUG) {
         throw $e; // 'Whoops' will intercept it

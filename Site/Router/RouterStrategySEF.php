@@ -19,6 +19,8 @@ class RouterStrategySEF extends RouterStrategy
         'index.html'
     ];
 
+    protected $pathParts;
+
     public function getControllerClass(HttpRequest $request)
     {
         $requestUrl = $request->getRequestUrl();
@@ -34,20 +36,19 @@ class RouterStrategySEF extends RouterStrategy
 
         $requestUrl = $this->extractPathString($requestUrl);
 
-        $parts = explode('/', $requestUrl);
-        $page = 'defaultAction';
-
-        if (count($parts) > 1) {
-            $requestUrl = $parts[0];
-            $page = $parts[1];
-        }
+        $this->$pathParts = explode('/', $requestUrl);
+        $requestUrl = $this->$pathParts[0];
 
         if (isset($requestUrl, $this->controllerMap)) {
-            self::$page = $page;
             return $this->controllerMap[$requestUrl];
         }
 
         throw new RouteNotFoundException;
+    }
+
+    public function getControllerAction(HttpRequest $request)
+    {
+        return isset($this->pathParts[1]) ? $this->pathParts[1] : 'defaultAction';
     }
 
     /**
