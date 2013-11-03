@@ -34,7 +34,7 @@ class Index extends BaseController
     {
         $user = Locator::get('sessionManager')->getUser();
 
-        $vars['loginResult'] = $user ? 'Успешная авторизация!' : 'Неудачная попытка входа';
+        $vars['loginResult'] = $user ? 'Success!' : 'Failed to login!';
         $this->defaultView
             ->loadTemplate("view_validation")
             ->loadVars($vars)

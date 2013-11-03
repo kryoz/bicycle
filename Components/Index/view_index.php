@@ -12,7 +12,7 @@ if ($userData = Locator::get('sessionManager')->getUser()) {
 ?>
 <h1>Hi, <?=$user ?: 'anonymous'?></h1>
 <? if ($userData) { ?>
-    <a href="/?c=index&p=logout">Logout?</a>
+    <a href="<?=SETTINGS_URLROOT?>/index.php?c=index&p=logout">Logout?</a>
 <? } ?>
 
 <br /><br />

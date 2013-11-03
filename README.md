@@ -33,6 +33,7 @@ in the root of Bicycle to satisfy dependencies, i.e. Monolog and Whoops.
 <h1>How it works</h1>
 Main application represents Chain-of-Responsibility pattern filled with 'Filters'<br><br>
 At this time there are only two filters : SessionFilter and RouterFilter. <br><br>
+The SessionManager responds for authentication<br><br>
 The Router uses Strategy pattern for parsing HttpRequest in different ways.<br>
 I wrote primitive SEF and non-SEF parsers RouteStrategySEF and RouteStrategySEF.<br>
 It's easy to modify them or to create your own one. Just pass it in RouterFilter to Router's constructor.<br><br>

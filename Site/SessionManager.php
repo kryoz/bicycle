@@ -45,7 +45,7 @@ class SessionManager
     public function logout()
     {
         $this->setUser(null);
-        session_destroy();
+        unset($_SESSION['user']);
     }
 
     /**

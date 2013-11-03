@@ -1,2 +1,2 @@
 <?=$loginResult?><br>
-<a href="/">Назад</a>
+<a href="/">go back</a>
