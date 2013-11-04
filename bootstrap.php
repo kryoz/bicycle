@@ -21,7 +21,7 @@ define ('SETTINGS_SEFENABLED', false); // SEF-url routes
 define ('SETTINGS_COMPONENTS_DIR', SETTINGS_DOCROOT . 'Components' . DS); // path to your applications
 define ('SETTINGS_LIBS', SETTINGS_ROOT . 'Core'); // path to shared libraries
 define ('SETTINGS_LIBS2', SETTINGS_ROOT . 'Site'); // site specific libs
-define ('SETTINGS_GLOBALVIEWS_DIR', SETTINGS_DOCROOT . 'tmpl' . DS); // path to global templates
+define ('SETTINGS_GLOBALVIEWS_DIR', SETTINGS_ROOT . 'tmpl' . DS); // path to global templates
 
 define ('SETTINGS_CACHE_DIR', DS . 'tmp' . DS);
 define ('SETTINGS_CACHE_TTL', 3600); // cache time to live. '0' to disable
