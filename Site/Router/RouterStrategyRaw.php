@@ -14,13 +14,7 @@ class RouterStrategyRaw extends RouterStrategy
 {
     public function getControllerClass(HttpRequest $request)
     {
-        $controller = isset($request->getGet()['c']) ? strtolower($request->getGet()['c']) : 'index';
-
-        if (isset($this->controllerMap[$controller])) {
-            return $this->controllerMap[$controller];
-        }
-
-        throw new RouteNotFoundException;
+        return isset($request->getGet()['c']) ? strtolower($request->getGet()['c']) : 'index';
     }
 
     public function getControllerAction(HttpRequest $request)

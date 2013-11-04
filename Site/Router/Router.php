@@ -23,17 +23,13 @@ class Router
     public function delegateControl(HttpRequest $request)
     {
         try {
-            $controllerClass = $this->controllerFinder->getControllerClass($request);
-            $controllerAction = $this->controllerFinder->getControllerAction($request);
-
+            $controllerClass = $this->getControllerClass($request);
             $controller = new $controllerClass();
             /* @var $controller BaseController */
 
-            if (!isset($this->controllerMap[$controllerAction])) {
-                throw new RouteNotFoundException;
-            }
+            $controllerAction = $this->getControllerAction($request, $controller);
 
-            $controller->{$this->controllerMap[$controllerAction]}($request);
+            $controller->{$controllerAction}($request);
         } catch(RouteNotFoundException $e) {
             self::NoPage();
             return;
@@ -55,5 +51,47 @@ class Router
         /** @noinspection PhpUnnecessaryFullyQualifiedNameInspection */
         $controller = new \Components\Error404\Index();
         $controller->defaultAction($request);
+    }
+
+    public static function NoAccess()
+    {
+        header("HTTP/1.1 403 Forbidden");
+
+        $request = new HttpRequest();
+        /** @noinspection PhpUnnecessaryFullyQualifiedNameInspection */
+        $controller = new \Components\Error403\Index();
+        $controller->defaultAction($request);
+    }
+
+    /**
+     * @param HttpRequest $request
+     * @return string
+     * @throws RouteNotFoundException
+     */
+    private function getControllerClass(HttpRequest $request)
+    {
+        $controller = $this->controllerFinder->getControllerClass($request);
+
+        if (!isset($this->controllerMap[$controller])) {
+            throw new RouteNotFoundException;
+        }
+
+        $controllerClass = $this->controllerMap[$controller];
+        return $controllerClass;
+    }
+
+    /**
+     * @param HttpRequest $request
+     * @param BaseController $controller
+     * @return string
+     * @throws RouteNotFoundException
+     */
+    private function getControllerAction(HttpRequest $request, BaseController $controller)
+    {
+        $controllerAction = $this->controllerFinder->getControllerAction($request);
+        if (!isset($controller->getActionMap()[$controllerAction])) {
+            throw new RouteNotFoundException;
+        }
+        return $controller->getActionMap()[$controllerAction];
     }
 }

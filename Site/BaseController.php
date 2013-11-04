@@ -16,7 +16,7 @@ abstract class BaseController
         $this->map += ['defaultAction' => 'defaultAction'];
     }
 
-    public function getMap()
+    public function getActionMap()
     {
         return $this->map;
     }

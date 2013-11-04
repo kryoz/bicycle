@@ -34,7 +34,7 @@ Type demo/demo and submit to check form verification token and authorize
 </form>
 <br>
 You can also try <a href="<?=SETTINGS_URLROOT?>index.php?c=index&p=second">alternate action</a> for <b>index</b> component<br><br>
-or <a href="<?=SETTINGS_URLROOT?>index.php?c=test">Test component</a><br><br>
+or <a href="<?=SETTINGS_URLROOT?>index.php?c=test">test restricted access controller</a><br><br>
 This is new randomly generated array:<br>
 <?php show($data); ?>
 <br><br>

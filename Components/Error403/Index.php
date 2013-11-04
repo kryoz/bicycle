@@ -4,7 +4,7 @@
  *
  * @author kubintsev
  */
-namespace Components\Error404;
+namespace Components\Error403;
 
 use Core\HttpRequest;
 use Site\BaseController;
@@ -15,7 +15,7 @@ class Index extends BaseController
     {
         $this->defaultView
             ->setGlobalTemplate('error.php')
-            ->loadTemplate("view_error404")
+            ->loadTemplate("view_error403")
             ->render();
     }
 }
