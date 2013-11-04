@@ -9,7 +9,7 @@ This demo is to show very simple framework which should satisfy for purposes of:
 <li>Debugging and logging</li>
 <li>Expandability with Composer and OOP techniques</li>
 </ul>
-
+<a href="http://kubintsev.ru/bicycle/" target="_blank">Live demo</a>
 <br>
 <h2>Framework structure:</h2>
 <pre>
