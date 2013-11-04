@@ -1,2 +1,2 @@
 <?=$loginResult?><br>
-<a href="/">go back</a>
+<a href="<?=SETTINGS_URLROOT?>">go back</a>
