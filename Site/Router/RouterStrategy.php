@@ -13,11 +13,6 @@ use Core\HttpRequest;
 
 abstract class RouterStrategy
 {
-    protected $controllerMap = [
-        'index' => 'Components\Index\Index',
-        'test' => 'Components\Test\Index'
-    ];
-
     abstract public function getControllerClass(HttpRequest $request);
     abstract public function getControllerAction(HttpRequest $request);
 }

@@ -10,6 +10,11 @@ class Router
 {
     protected $controllerFinder;
 
+    protected $controllerMap = [
+        'index' => 'Components\Index\Index',
+        'test' => 'Components\Test\Index'
+    ];
+
     public function __construct(RouterStrategy $controllerFinder)
     {
         $this->controllerFinder = $controllerFinder;
@@ -24,11 +29,11 @@ class Router
             $controller = new $controllerClass();
             /* @var $controller BaseController */
 
-            if (!isset($controller->getMap()[$controllerAction])) {
+            if (!isset($this->controllerMap[$controllerAction])) {
                 throw new RouteNotFoundException;
             }
 
-            $controller->{$controller->getMap()[$controllerAction]}($request);
+            $controller->{$this->controllerMap[$controllerAction]}($request);
         } catch(RouteNotFoundException $e) {
             self::NoPage();
             return;
