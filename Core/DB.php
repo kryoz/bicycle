@@ -1,6 +1,6 @@
 <?php
 
-namespace SocioChat;
+namespace Components\Index;
 
 use PDO;
 use PDOException;
