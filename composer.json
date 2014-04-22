@@ -1,6 +1,9 @@
 {
     "require": {
-        "monolog/monolog": "1.*",
-        "filp/whoops": "1.*"
+        "filp/whoops": "1.*",
+        "zendframework/zend-config": "2.2.*",
+        "monolog/monolog": "1.8.*",
+        "orno/di": "2.0.*",
+        "orno/cache": "1.0.*"
     }
 }
