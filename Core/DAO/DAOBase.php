@@ -13,22 +13,19 @@ abstract class DAOBase extends FixedArrayAccess
      * @var DB
      */
     protected $db;
-    protected $fictiveProperties = [];
+    protected $relativeProperties = [];
+
     protected $dbTable;
 
     public function __construct($propertyNames = null)
     {
         $properties = [self::ID];
         $properties = array_merge($properties, $propertyNames);
-        $this->db = Locator::get('db');
+        $this->db = DI::get()->container()->get('db');
 
         parent::__construct($properties);
     }
 
-    /**
-     *
-     * @return DAOBase
-     */
     public static function create()
     {
         return new static();
@@ -36,11 +33,9 @@ abstract class DAOBase extends FixedArrayAccess
 
     public function getById($id)
     {
-        if ($id) {
-            $query = "SELECT * FROM {$this->dbTable} WHERE id = ?";
-            if ($data = $this->db->query($query, array($id))) {
-                $this->fillParams($data[0]);
-            }
+        $query = "SELECT * FROM {$this->dbTable} WHERE id = ?";
+        if ($data = $this->db->query($query, [$id])) {
+            $this->fillParams($data[0]);
         }
 
         return $this;
@@ -53,41 +48,6 @@ abstract class DAOBase extends FixedArrayAccess
         }
     }
 
-    protected function addFictiveProperty($propertyName)
-    {
-        $this->addProperty($propertyName);
-        $this->fictiveProperties = array_merge($this->fictiveProperties, array($propertyName => null));
-    }
-
-    /**
-     *
-     * @param string $query
-     * @param array $params
-     * @param string null|string
-     * @return array
-     */
-    protected function getListByQuery($query, $params, $type = null)
-    {
-        $result = [];
-
-        foreach ($this->db->query($query, $params) as $item) {
-            if ($type) {
-                $entity = new $type;
-            } else {
-                $entity = static::create();
-            }
-            $entity->fillParams($item);
-            $result[] = $entity;
-        }
-
-        return $result;
-    }
-
-    public function getUID()
-    {
-        return md5(serialize($this->properties));
-    }
-
     public function getId()
     {
         return $this[self::ID];
@@ -95,39 +55,118 @@ abstract class DAOBase extends FixedArrayAccess
 
     public function save()
     {
-        $params = array_diff_key($this->properties, $this->fictiveProperties);
+        $params = array_diff_key($this->properties, $this->relativeProperties + [self::ID => null]);
+
         if (!$this->getId()) {
-            unset($params[self::ID]);
             $keys = array_keys($params);
 
             $query = "INSERT INTO {$this->dbTable} (".implode(', ', $keys).") VALUES ";
 
-            foreach ($keys as $key) {
-                $placeholders[] = "?";
-            }
+	        foreach ($keys as &$key) {
+		        $key = ':'.$key;
+	        }
+            $query .= "(".implode(', ', $keys). ")";
 
-            $query .= "(".implode(', ', $placeholders). ")";
-            $this[self::ID] = $this->db->exec($query, array_values($params));
+            $this[self::ID] = $this->db->exec($query, $params, $this->dbTable.'_id_seq');
         } else {
             $query = "UPDATE {$this->dbTable} SET ";
             $queryParts = [];
 
             foreach ($params as $key => $val) {
-                $queryParts[] = "$key = ?";
+                $queryParts[] = "$key = :{$key}";
             }
 
             $query .= implode(", ", $queryParts). " WHERE id = :".self::ID;
-            $this->db->exec($query, array_values($params));
+	        $params += [self::ID => $this->getId()];
+
+            $this->db->exec($query, $params);
         }
-    }
+
+	    $this->flushRelatives($this->getForeignProperties());
+}
+
+	public function getAllList()
+	{
+		$query = "SELECT * FROM {$this->dbTable}";
+
+		return $this->getListByQuery($query);
+	}
+
+	/**
+	 *
+	 * @param string $query
+	 * @param array $params
+	 * @param string null|string
+	 * @return array
+	 */
+	public function getListByQuery($query, array $params = [], $type = null)
+	{
+		$result = [];
+
+		foreach ($this->db->query($query, $params) as $item) {
+			if ($type) {
+				$entity = new $type;
+			} else {
+				$entity = static::create();
+			}
+			$entity->fillParams($item);
+			$result[] = $entity;
+		}
+
+		return $result;
+	}
+
+	public function dropById($id, $dbKey = null)
+	{
+		$dbKey = $dbKey ?: 'id';
+		$this->db->exec("DELETE FROM {$this->dbTable} WHERE $dbKey = :id", ['id' => $id]);
+	}
 
     public function __wakeup()
     {
-        $this->db = Locator::get('db');
+        $this->db = DI::get()->container()->get('db');
     }
 
     public function __sleep()
     {
         return array('properties', 'propertyNames');
     }
+
+	protected function addRelativeProperty($propertyName)
+	{
+		$this->addProperty($propertyName);
+		$this->relativeProperties = array_merge($this->relativeProperties, [$propertyName => null]);
+	}
+
+	protected function getByPropId($propName, $id)
+	{
+		if (!in_array($propName, $this->propertyNames)) {
+			throw new \Exception('Undefined property name '.$propName);
+		}
+
+		$query = "SELECT * FROM {$this->dbTable} WHERE $propName = ?";
+		if ($data = $this->db->query($query, [$id])) {
+			$this->fillParams($data[0]);
+		}
+
+		return $this;
+	}
+
+	protected function flushProperty($propName)
+	{
+		if (!in_array($propName, $this->propertyNames)) {
+			throw new \Exception('Undefined property name '.$propName);
+		}
+
+		$this[$propName] = null;
+	}
+
+	protected function flushRelatives(array $properties)
+	{
+		foreach ($properties as $prop) {
+			$this->flushProperty($prop);
+		}
+	}
+
+	abstract protected function getForeignProperties();
 }
