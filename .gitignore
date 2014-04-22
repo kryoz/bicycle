@@ -1,7 +1,5 @@
-/nbproject/
 .gitignore
 .DS_Store
 /vendor/
 composer.lock
 /.idea/
-/logs/
