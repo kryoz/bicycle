@@ -1,7 +1,6 @@
 <?php
 
-namespace Core\Forms;
-
+namespace Core\Form;
 
 class WrongRuleNameException extends \Exception
 {

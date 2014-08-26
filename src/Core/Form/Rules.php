@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Forms;
+namespace Core\Form;
 
 class Rules
 {
@@ -18,12 +18,14 @@ class Rules
 		};
 	}
 
-	public static function namePattern()
+	public static function namePattern($c = 20, $hasSpaces = false)
 	{
-		return function ($val) {
+		return function ($val) use ($c, $hasSpaces) {
 			$name = trim($val);
-			if (preg_match("~^([\d\w]+)$~uis", $name)) {
-				return mb_strlen($name) <= 20;
+			$pattern = "~^([A-Za-zА-Яа-я0-9_-".($hasSpaces ? '\s' : '')."]+)$~uis";
+
+			if (preg_match($pattern, $name)) {
+				return mb_strlen($name) <= $c;
 			}
 		};
 	}

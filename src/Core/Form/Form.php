@@ -1,6 +1,8 @@
 <?php
 
-namespace Core\Forms;
+namespace Core\Form;
+
+use Core\Utils\WrongArgumentException;
 
 class Form
 {
@@ -42,6 +44,7 @@ class Form
 			$rule = $ruleData['rule'];
 			$property = $ruleData['property'];
 
+			// @TODO pass Form in callable
 			if (!$result = $rule($this->input[$property])) {
 				$this->errors[$ruleName] = $this->rulesMessages[$ruleName];
 				break;
@@ -90,5 +93,14 @@ class Form
 	public function markWrong($property, $errMsg)
 	{
 		$this->errors[$property] = $errMsg;
+	}
+
+	public function getValue($property)
+	{
+		if (!isset($this->input[$property])) {
+			throw new WrongArgumentException('Invalid property name '.$property);
+		}
+
+		return $this->input[$property];
 	}
 }

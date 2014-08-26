@@ -1,6 +1,6 @@
 <?php
 
-namespace Components\Index;
+namespace Core\DB;
 
 use Core\DI;
 use Monolog\Logger;
@@ -39,7 +39,7 @@ class DB
 		$this->dbURL = "dbname=".$settings->name.";host=".$settings->host;
 		$this->user = $settings->user;
 		$this->pass = $settings->pass;
-		$this->logging = $settings->logging;
+		$this->isLogQueries = $settings->logging;
 
 		$this->init();
 	}
@@ -53,16 +53,18 @@ class DB
 	 * @param $sql
 	 * @param array $params
 	 * @param int $fetchFlags
+	 * @param array $types
+	 * @throws \PDOException
 	 * @return array
-	 * @throws PDOException
 	 */
-	public function query($sql, array $params = [], $fetchFlags = PDO::FETCH_ASSOC)
+	public function query($sql, array $params = [], $fetchFlags = PDO::FETCH_ASSOC, array $types = [])
 	{
 		$this->checkConnection();
 
 		try {
 			$sth = $this->dbh->prepare($sql);
-			$sth->execute($params);
+			$this->bindParams($sth, $params, $types);
+			$sth->execute();
 			$this->logQuery($sql, $params);
 			$result = $sth->fetchAll($fetchFlags);
 			$sth->closeCursor();
@@ -98,15 +100,17 @@ class DB
 	 * @param $sql
 	 * @param array $params
 	 * @param string|null $sequence
-	 * @return string
+	 * @param array $types
 	 * @throws \PDOException
+	 * @return string
 	 */
-	public function exec($sql, array $params = [], $sequence = null)
+	public function exec($sql, array $params = [], $sequence = null, array $types = [])
 	{
 		$this->checkConnection();
 		try {
 			$sth = $this->dbh->prepare($sql);
-			$sth->execute($params);
+			$this->bindParams($sth, $params, $types);
+			$sth->execute();
 			$this->logQuery($sql, $params);
 			$sth->closeCursor();
 			unset($sth);
@@ -142,11 +146,19 @@ class DB
 		return $this->dbh;
 	}
 
+	protected function bindParams(PDOStatement $sth, array $params, array $types)
+	{
+		foreach ($params as $pName => $pVal) {
+			$type = isset($types[$pName]) ? $types[$pName] : PDO::PARAM_STR;
+			$sth->bindValue(':'.$pName, $pVal, $type);
+		}
+	}
+
 	protected function checkConnection()
 	{
 		try {
 			@$this->dbh->query('select 1');
-        } catch (\Exception $e) {
+		} catch (\Exception $e) {
 			$this->init();
 		}
 	}
@@ -160,7 +172,7 @@ class DB
 				$this->pass,
 				[
 					PDO::ATTR_PERSISTENT => true,
-					PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8",
+					1002 => "SET NAMES utf8",
 					PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
 				]
 			);
@@ -173,8 +185,8 @@ class DB
 	{
 		if ($this->isLogQueries) {
 			/** @var $logger Logger */
-			$logger = DI::get()->container()->get('logger');
-			$logger->info('SQL:'.$sql, $params);
+			$logger = DI::get()->getLogger();
+			$logger->info('SQL: '.$sql, $params);
 		}
 	}
 }
