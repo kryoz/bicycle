@@ -1,6 +1,7 @@
 {
-	"name": "Bicycle/bicycle",
+	"name": "kryoz/core",
 	"description": "shortcut tools for small projects",
+    "version": "2.1.0",
 	"minimum-stability": "stable",
 	"license": "MIT",
 	"authors": [
@@ -9,14 +10,16 @@
 			"email": "alex@kubintsev.ru"
 		}
 	],
+    "dist": {
+        "url": "http://phpmaster.pro/dists/core-2.1.0.zip",
+        "type": "zip"
+    },
     "autoload": {
         "psr-4": {
-            "": "src/",
-            "Test\\" : "tests/"
+            "": "src/"
         }
     },
     "require": {
-        "filp/whoops": "*@stable",
         "zendframework/zend-config": "2.*@stable",
         "monolog/monolog": "*@stable",
         "orno/di": "*@stable",

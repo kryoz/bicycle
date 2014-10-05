@@ -1,0 +1,7 @@
+{
+    "packages": {
+        "kryoz/core": {
+            "dev-master": { @composer.json }
+        }
+    }
+}

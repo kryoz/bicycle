@@ -1,6 +1,5 @@
 .gitignore
 .DS_Store
-/vendor/
-composer.lock
+vendor/
 composer.phar
-/.idea/
+.idea/
