@@ -1,6 +1,7 @@
 <?php
 namespace Core;
 
+use Core\DB\DB;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Orno\Di\Container;
