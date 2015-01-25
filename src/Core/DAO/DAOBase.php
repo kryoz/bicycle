@@ -54,9 +54,13 @@ abstract class DAOBase extends FixedArrayAccess
 		return $this[static::ID];
 	}
 
-	public function save()
+	public function save($allProperties = true)
 	{
-		$params = array_diff_key($this->properties, $this->relativeProperties + [static::ID => null]);
+		$params = array_diff_key(
+			$this->properties,
+			$this->relativeProperties + [static::ID => null]
+		);
+
 		$sequence = null;
 
 		$oldId = $this[static::ID];
@@ -78,6 +82,9 @@ abstract class DAOBase extends FixedArrayAccess
 			$queryParts = [];
 
 			foreach ($params as $key => $val) {
+				if ($val === null && !$allProperties) {
+					continue;
+				}
 				$queryParts[] = "$key = :{$key}";
 			}
 
