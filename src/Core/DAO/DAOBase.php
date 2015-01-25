@@ -80,17 +80,19 @@ abstract class DAOBase extends FixedArrayAccess
 		} else {
 			$query = "UPDATE {$this->dbTable} SET ";
 			$queryParts = [];
+			$emptyParams = [];
 
 			foreach ($params as $key => $val) {
 				if ($val === null && !$allProperties) {
+					$emptyParams[$key] = null;
 					continue;
 				}
 				$queryParts[] = "$key = :{$key}";
 			}
 
 			$query .= implode(", ", $queryParts). " WHERE id = :".static::ID;
+			$params = array_diff_key($params, $emptyParams);
 			$params += [static::ID => $this->getId()];
-
 			$this->db->exec($query, $params);
 		}
 
