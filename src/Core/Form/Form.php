@@ -19,13 +19,14 @@ class Form
 		return $this;
 	}
 
-	public function addRule($property, callable $rule, $message = null, $ruleName = null)
+	public function addRule($property, callable $rule, $message = null, $ruleName = null, $isRequired = true)
 	{
 		$ruleName = $ruleName ?: $property;
 		if (isset($this->input[$property])) {
 			$this->rules[$ruleName] = [
 				'property' => $property,
-				'rule' => $rule
+				'rule' => $rule,
+				'required' => $isRequired
 			];
 			$this->rulesMessages[$ruleName] = $message?: 'Invalid '.$property;
 			return $this;
@@ -44,8 +45,13 @@ class Form
 		foreach ($this->rules as $ruleName => $ruleData) {
 			$rule = $ruleData['rule'];
 			$property = $ruleData['property'];
+			$isRequired = $ruleData['required'];
 
 			$this->errorMessages[$ruleName] = $this->rulesMessages[$ruleName];
+
+			if (!$isRequired && empty($this->input[$property])) {
+				break;
+			}
 
 			if (!$result = $rule($this->input[$property], $this)) {
 				$this->errors[$ruleName] = true;
