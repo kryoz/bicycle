@@ -2,6 +2,8 @@
 
 namespace Core\Form;
 
+use Core\Utils\UUID;
+
 class Rules
 {
 	const LOWEST_YEAR = 1930;
@@ -39,6 +41,27 @@ class Rules
 		return function ($val) {
 			$len = mb_strlen(trim($val));
 			return $len >= 8 && $len <= 20;
+		};
+	}
+
+	public static function UUID()
+	{
+		return function ($val) {
+			return UUID::check($val);
+		};
+	}
+
+	public static function isArray()
+	{
+		return function ($val) {
+			return is_array($val) && !empty($val);
+		};
+	}
+
+	public static function string($length)
+	{
+		return function ($val) use ($length) {
+			return is_string($val) && (mb_strlen($val) <= $length);
 		};
 	}
 
