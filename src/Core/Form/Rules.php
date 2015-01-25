@@ -2,8 +2,6 @@
 
 namespace Core\Form;
 
-use SocioChat\Utils\RudeFilter;
-
 class Rules
 {
 	const LOWEST_YEAR = 1930;
@@ -49,10 +47,5 @@ class Rules
 		return function ($val) {
 			return preg_match("~^\#[0-9A-Z]{6}$~uis", trim($val));
 		};
-	}
-
-	public static function getBirthYearsRange()
-	{
-		return range(self::LOWEST_YEAR, date('Y') - 8);
 	}
 }
