@@ -11,7 +11,7 @@ class Rules
 	public static function notNull()
 	{
 		return function ($val) {
-			return true;
+			return is_null($val);
 		};
 	}
 
@@ -22,40 +22,10 @@ class Rules
 		};
 	}
 
-	public static function namePattern($c = 20, $hasSpaces = false)
-	{
-		return function ($val) use ($c, $hasSpaces) {
-			$name = trim($val);
-            $name = RudeFilter::parse($name);
-			$pattern = "~^([A-Za-zА-Яа-я0-9_-".($hasSpaces ? '\s' : '')."]+)$~uis";
-
-			if (preg_match($pattern, $name)) {
-				return mb_strlen($name) <= $c;
-			}
-		};
-	}
-
-	public static function cityPattern()
+	public static function integer()
 	{
 		return function ($val) {
-			$name = trim($val);
-			if (!$name) {
-				return true;
-			}
-            $name = RudeFilter::parse($name);
-			$pattern = "~^([A-Za-zА-Яа-я- ]+)$~uis";
-
-			if (preg_match($pattern, $name)) {
-				return mb_strlen($name) <= 50;
-			}
-		};
-	}
-
-	public static function birthYears()
-	{
-		return function ($val) {
-			$val = trim($val);
-			return in_array($val, self::getBirthYearsRange());
+			return is_integer($val);
 		};
 	}
 
