@@ -30,6 +30,8 @@ class Form
 			];
 			$this->rulesMessages[$ruleName] = $message?: 'Invalid '.$property;
 			return $this;
+		} elseif (!$isRequired) {
+			return $this;
 		}
 
 		throw new WrongRuleNameException($property);
