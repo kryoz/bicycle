@@ -27,7 +27,7 @@ class Form
 				'property' => $property,
 				'rule' => $rule
 			];
-			$this->rulesMessages[$ruleName] = $message;
+			$this->rulesMessages[$ruleName] = $message?: 'Invalid '.$property;
 			return $this;
 		}
 
