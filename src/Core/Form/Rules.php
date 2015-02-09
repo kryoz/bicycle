@@ -11,14 +11,14 @@ class Rules
 	public static function notNull()
 	{
 		return function ($val) {
-			return is_null($val);
+			return !is_null($val);
 		};
 	}
 
 	public static function boolean()
 	{
 		return function ($val) {
-			return $val === false || $val === true;
+			return $val === false || $val === true || $val === '0' || $val === '1';
 		};
 	}
 

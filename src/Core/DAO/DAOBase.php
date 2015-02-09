@@ -54,6 +54,9 @@ abstract class DAOBase extends FixedArrayAccess
 		return $this[static::ID];
 	}
 
+	/**
+	 * @param bool $allProperties Save all properties even with NULL value, otherwise skip them
+	 */
 	public function save($allProperties = true)
 	{
 		$params = array_diff_key(
