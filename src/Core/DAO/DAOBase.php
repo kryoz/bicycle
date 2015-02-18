@@ -96,7 +96,7 @@ abstract class DAOBase extends FixedArrayAccess
 			$query .= implode(", ", $queryParts). " WHERE id = :".static::ID;
 			$params = array_diff_key($params, $emptyParams);
 			$params += [static::ID => $this->getId()];
-			$this->db->exec($query, $params);
+			$this->db->exec($query, $params, null, $this->types);
 		}
 
 		if ($this[self::ID] != $oldId) {
