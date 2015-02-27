@@ -6,7 +6,6 @@ use Core\Utils\UUID;
 
 class Rules
 {
-	const LOWEST_YEAR = 1930;
 
 	public static function notNull()
 	{
