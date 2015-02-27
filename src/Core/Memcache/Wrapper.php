@@ -1,5 +1,5 @@
 <?php
-namespace Memcached;
+namespace Core\Memcached;
 
 use \Exception;
 use \Memcached;
