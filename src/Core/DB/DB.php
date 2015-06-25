@@ -20,6 +20,7 @@ class DB
     protected $dbURL;
     protected $user;
     protected $pass;
+	protected $isPersistent;
 
     protected $isLogQueries = false;
 
@@ -32,7 +33,7 @@ class DB
      */
     protected $result;
 
-    public function __construct(Config $config)
+    public function __construct(Config $config, $isPersistent = false)
     {
         $settings = $config->db;
 
@@ -41,6 +42,7 @@ class DB
         $this->user = $settings->user;
         $this->pass = $settings->pass;
         $this->isLogQueries = $settings->logging;
+	    $this->isPersistent = $isPersistent;
 
         $this->init();
     }
@@ -157,9 +159,13 @@ class DB
 
     protected function checkConnection()
     {
+	    if (!$this->isPersistent) {
+		    return;
+	    }
+
         try {
             @$this->dbh->query('select 1');
-        } catch (BaseException $e) {
+        } catch (PDOException $e) {
             $this->init();
         }
     }
