@@ -31,7 +31,7 @@ class Rules
 	public static function email()
 	{
 		return function ($val) {
-			return preg_match("~^[A-Z0-9._%-]+@[A-Z0-9._%-]+\.[A-Z]{2,4}$~uis", trim($val));
+			return preg_match("~^[A-Z0-9._%-]+@[A-Z0-9._%-]+\.[A-Z]{2,}$~uis", trim($val));
 		};
 	}
 
