@@ -8,10 +8,10 @@ class Form
 {
 	protected $rules;
 	protected $rulesMessages;
-	protected $errors;
+	protected $errors = [];
 	protected $input;
 	protected $results;
-	private $errorMessages;
+	protected $errorMessages = [];
 
 	public function import(array $input)
 	{
@@ -22,7 +22,7 @@ class Form
 	public function addRule($property, callable $rule, $message = null, $ruleName = null, $isRequired = true)
 	{
 		$ruleName = $ruleName ?: $property;
-		if (isset($this->input[$property])) {
+		if (array_key_exists($property, $this->input)) {
 			$this->rules[$ruleName] = [
 				'property' => $property,
 				'rule' => $rule,

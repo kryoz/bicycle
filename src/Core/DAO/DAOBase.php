@@ -85,12 +85,12 @@ abstract class DAOBase extends FixedArrayAccess
 			$queryParts = [];
 			$emptyParams = [];
 
-			foreach ($params as $key => $val) {
+			foreach ($params as $k => $val) {
 				if ($val === null && !$allProperties) {
-					$emptyParams[$key] = null;
+					$emptyParams[$k] = null;
 					continue;
 				}
-				$queryParts[] = "$key = :{$key}";
+				$queryParts[] = "$k = :{$k}";
 			}
 
 			$query .= implode(", ", $queryParts). " WHERE id = :".static::ID;
@@ -159,7 +159,7 @@ abstract class DAOBase extends FixedArrayAccess
 
 	protected function getByPropId($propName, $id)
 	{
-		if (!in_array($propName, $this->propertyNames)) {
+		if (!in_array($propName, $this->propertyNames, true)) {
 			throw new BaseException('Undefined property name '.$propName);
 		}
 
@@ -173,7 +173,7 @@ abstract class DAOBase extends FixedArrayAccess
 
 	protected function flushProperty($propName)
 	{
-		if (!in_array($propName, $this->propertyNames)) {
+		if (!in_array($propName, $this->propertyNames, true)) {
 			throw new BaseException('Undefined property name '.$propName);
 		}
 
