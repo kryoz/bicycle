@@ -42,7 +42,7 @@ class DB
         $this->user = $settings->user;
         $this->pass = $settings->pass;
         $this->isLogQueries = $settings->logging;
-	    $this->isPersistent = $isPersistent;
+	$this->isPersistent = $isPersistent;
 
         $this->init();
     }
@@ -124,7 +124,7 @@ class DB
             );
         }
 
-        return $this->dbh->lastInsertId($sequence);
+        return $sequence ? $this->dbh->lastInsertId($sequence) : null;
     }
 
     public function begin()
